@@ -22,14 +22,8 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text('Fila Virtual'),
-        actions: [
-          ElevatedButton(
-            onPressed: (){
-              Navigator.pushNamed(context, '/rating');
-            },
-            child: const Text('Calificanos'),
-          ),
-        ],
+        automaticallyImplyLeading: false,
+        centerTitle: true,
       ),
       body: ListView(
         padding: const EdgeInsets.all(16),
@@ -85,7 +79,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
           const SizedBox(height: 20),
           _buildListTile('Código de su turno:', queueCode),
           _buildListTile('Próximo turno a ser llamado:', nextNumber),
-          _buildListTile('Sucursal:', branch),
+          _buildListTile('Anden:', branch),
           const SizedBox(height: 20),
           AnimatedButton(
             text: 'Cancelar',
@@ -115,10 +109,18 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
                 btnOkOnPress: () {
                   Navigator.pop(context);
                 },
-                // autoHide: const Duration(seconds: 3)
               ).show();
             }
           ),
+          const SizedBox(height: 10),
+          AnimatedButton(
+            text: 'Volver',
+            width: 200,
+            color: Colors.greenAccent.shade400,
+            pressEvent: (){
+              Navigator.pushNamed(context, '/rating');
+            }
+          )
         ],
       ),
     );

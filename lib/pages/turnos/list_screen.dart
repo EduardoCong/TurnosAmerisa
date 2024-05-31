@@ -23,7 +23,7 @@ class ListTurn extends StatelessWidget {
       body: ListView.builder(
         itemCount: turnos.length,
         itemBuilder: (context, index) {
-          return TurnoItem(turno: turnos[index], onTap: () {
+          return TurnoItem(turno: turnos[index], onTap: () async{
             Navigator.push(
               context,
               MaterialPageRoute(

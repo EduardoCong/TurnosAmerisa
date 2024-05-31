@@ -46,7 +46,7 @@ class SignInScreen extends StatelessWidget {
                           ),
                           decoration: const InputDecoration(
                             border: OutlineInputBorder(),
-                            labelText: 'Username',
+                            labelText: 'Usuario',
                             prefixIcon: Icon(Icons.person_outline),
                             labelStyle: TextStyle(fontSize: 15),
                           ),
@@ -64,7 +64,7 @@ class SignInScreen extends StatelessWidget {
                         ),
                         decoration: const InputDecoration(
                           border: OutlineInputBorder(),
-                          labelText: 'Password',
+                          labelText: 'Contraseña',
                           prefixIcon: Icon(Icons.lock_outline),
                           labelStyle: TextStyle(fontSize: 15),
                         ),
@@ -83,7 +83,7 @@ class SignInScreen extends StatelessWidget {
                           } else {
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
-                                content: Text('Incorrect email or password.'),
+                                content: Text('Email o contraseña incorrecta.'),
                               ),
                             );
                           }
@@ -97,7 +97,7 @@ class SignInScreen extends StatelessWidget {
                           ),
                         ),
                         child: const Text(
-                          'SIGN IN',
+                          'Entrar',
                           style: TextStyle(
                             fontSize: 15,
                             fontFamily: 'SFUIDisplay',
@@ -111,7 +111,7 @@ class SignInScreen extends StatelessWidget {
                       padding: EdgeInsets.only(top: 20),
                       child: Center(
                         child: Text(
-                          'Forgot your password?',
+                          'Olvidaste tu contraseña?',
                           style: TextStyle(
                             fontFamily: 'SFUIDisplay',
                             fontSize: 15,

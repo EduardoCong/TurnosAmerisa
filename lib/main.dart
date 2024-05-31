@@ -1,7 +1,6 @@
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
-import 'package:turnos_amerisa/pages/home/count_down.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
 import 'package:turnos_amerisa/pages/login/login_screen.dart';
 import 'package:turnos_amerisa/pages/rating/rating_screen.dart';
@@ -45,7 +44,6 @@ class MyApp extends StatelessWidget {
         '/calendario': (context) => const Calendar(),
         '/list': (context) => ListTurn(),
         '/rating': (context) => const RatingScreen(),
-        '/timer': (context) => const CountdownWidget(10)
       },
     );
   }

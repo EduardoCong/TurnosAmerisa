@@ -11,16 +11,7 @@ class HomePage extends StatelessWidget {
     return Scaffold(
       key: scaffoldKey,
       appBar: AppBar(
-        title: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Center(
-                child: Image.network(
-                  "https://pbs.twimg.com/profile_images/814281946180231169/E7Z0c1Hy_400x400.jpg",
-                  width: 100,
-                  height: 100,
-                ),
-              ),
-            ),
+        automaticallyImplyLeading: false,
         backgroundColor: const Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
           icon: const Icon(Icons.menu),
@@ -29,44 +20,67 @@ class HomePage extends StatelessWidget {
           },
         ),
       ),
-     drawer: const CustomDrawer(),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Text(
-              "¿Qué tipo de atención deseas?",
-              style: TextStyle(
-                fontSize: 23,
-                fontWeight: FontWeight.w500,
-              ),
+      drawer: const CustomDrawer(),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 14),
+            child: Image.network(
+              "https://pbs.twimg.com/profile_images/814281946180231169/E7Z0c1Hy_400x400.jpg",
+              width: 600,
+              height: 300,
             ),
-            const SizedBox(height: 10),
-            ElevatedButton(
-              child: const ListTile(
-                contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 80),
-                title: Text("Pedir Turno"),
-                leading: Icon(Icons.phone_android),
-              ),
-              onPressed: () {
-                Navigator.pushNamed(context, '/turnos');
-              },
-            ),
-            const SizedBox(height: 10),
-            SizedBox(
-              child: ElevatedButton(
-                child: const ListTile(
-                  contentPadding: EdgeInsets.symmetric(vertical: 20, horizontal: 80),
-                  title: Text("Pedir Cita"),
-                  leading: Icon(Icons.calendar_month),
+          ),
+          const SizedBox(height: 20),
+          Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                const Text(
+                  "¿Qué tipo de atención deseas?",
+                  style: TextStyle(
+                    fontSize: 23,
+                    fontWeight: FontWeight.w500,
+                  ),
                 ),
-                onPressed: () {
-                  Navigator.pushNamed(context, '/calendario');
-                },
-              ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 200,
+                  height: 100,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/turnos');
+                    },
+                    icon: const Icon(Icons.phone_android),
+                    label: const Text("Pedir Turno", style: TextStyle(fontSize: 22)),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                ),
+                const SizedBox(height: 20),
+                SizedBox(
+                  width: 200,
+                  height: 100,
+                  child: ElevatedButton.icon(
+                    onPressed: () {
+                      Navigator.pushNamed(context, '/calendario');
+                    },
+                    icon: const Icon(Icons.calendar_today),
+                    label: const Text("Pedir Cita" , style: TextStyle(fontSize: 22)),
+                    style: ElevatedButton.styleFrom(
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
       backgroundColor: Colors.white,
     );

@@ -85,7 +85,7 @@ class _RatingScreenState extends State<RatingScreen> {
                   ScaffoldMessenger.of(context).showSnackBar(
                     SnackBar(content: Text('¡Gracias por tu calificación de $rating estrellas!')),
                   );
-                  Navigator.pop(context);
+                  Navigator.pushNamed(context, '/home');
                 },
                 child: const Text('Enviar'),
               ),

@@ -1,4 +1,6 @@
 
+import 'dart:async';
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:table_calendar/table_calendar.dart';
@@ -29,6 +31,9 @@ class _CalendarState extends State<Calendar> {
       '3:00 PM',
       '5:00 PM'
     ];
+    late Timer _timer;
+    int _counter = 300; // 5 minutos en segundos
+    bool _showCounter = true;
 
   @override
   void initState() {
@@ -39,8 +44,30 @@ class _CalendarState extends State<Calendar> {
       }
     );
     super.initState();
+    _startTimer();
     _selectedDay = _today;
     _selectedEvents = ValueNotifier(_getEventForDay(_selectedDay!));
+  }
+
+  @override
+  void dispose() {
+    _timer.cancel();
+    super.dispose();
+  }
+
+  void _startTimer() {
+    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+      setState(() {
+        if (_counter > 0) {
+          _counter--;
+        } else {
+          timer.cancel();
+          _showCounter = false; // Ocultar el contador cuando se termina el tiempo
+          // Cerrar el diálogo y volver a la pantalla de elección
+          Navigator.pushNamed(context, '/home');
+        }
+      });
+    });
   }
 
   List<Event> _getEventForDay(DateTime day) {
@@ -68,6 +95,26 @@ class _CalendarState extends State<Calendar> {
       body: SingleChildScrollView(
         child: Column(
           children: [
+            if (_showCounter)
+            Positioned(
+              top: -40,
+              right: 16,
+              child: Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: Colors.blue, // Cambiar el color a azul
+                  borderRadius: BorderRadius.circular(8),
+                ),
+                child: Text(
+                  'Tiempo restante: ${_counter ~/ 60}:${(_counter % 60).toString().padLeft(2, '0')}',
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.white,
+                  ),
+                ),
+              ),
+            ),
             TableCalendar(
               focusedDay: _today,
               firstDay: DateTime.now(),
@@ -172,6 +219,10 @@ class _CalendarState extends State<Calendar> {
                                   title: 'Generado con éxito',
                                   descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
                                   btnOkOnPress: () async {
+                                    _timer.cancel(); // Detener el contador
+                                    setState(() {
+                                      _showCounter = false; 
+                                    });
                                     scheduleNotification();
                                     Navigator.pushNamed(context, '/rows');
                                   },

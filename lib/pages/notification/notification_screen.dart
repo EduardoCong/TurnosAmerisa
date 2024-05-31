@@ -1,3 +1,5 @@
+// ignore_for_file: use_build_context_synchronously
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 
@@ -26,14 +28,20 @@ void turnOnNotification() {
   );
 }
 
-void turnOffNotification(context) {
+void showNotification(BuildContext context) async {
+  NotificationActionButton button = NotificationActionButton(
+    key: 'OPEN_PAGE',
+    label: 'Calificanos',
+  );
   AwesomeNotifications().createNotification(
     content: NotificationContent(
-      id: 3,
+      id: 10,
       channelKey: 'basic_channel',
-      title: '¡Proceso Hecho!✅',
-      body: 'Calificanos',
-      backgroundColor: Colors.blue,
+      title: '¡Turno terminado!',
+      body: '¡Gracias!',
     ),
+    actionButtons: [button],
   );
+  await Future.delayed(const Duration(seconds: 1));
+  Navigator.pushNamed(context, '/rating');
 }
