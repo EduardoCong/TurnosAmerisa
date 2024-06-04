@@ -62,8 +62,7 @@ class _CalendarState extends State<Calendar> {
           _counter--;
         } else {
           timer.cancel();
-          _showCounter = false; // Ocultar el contador cuando se termina el tiempo
-          // Cerrar el diálogo y volver a la pantalla de elección
+          _showCounter = false;
           Navigator.pushNamed(context, '/home');
         }
       });
@@ -275,7 +274,7 @@ class _CalendarState extends State<Calendar> {
           id: 2,
           channelKey: 'basic_channel',
           title: 'Horario Confirmado el día $selectedDayFormatted de $selectedMonth',
-          body: 'Horario elegido: $_selectedTime',
+          body: 'Horario elegida: $_selectedTime',
           backgroundColor: Colors.blue
         )
       );
