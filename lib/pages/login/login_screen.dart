@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:turnos_amerisa/model/services/login_service.dart';
 
 class SignInScreen extends StatelessWidget {
-  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final _fbrmKey = GlobalKey<FormState>();
 
   SignInScreen({super.key});
 
@@ -39,7 +41,7 @@ class SignInScreen extends StatelessWidget {
                       child: Container(
                         color: const Color(0xfff5f5f5),
                         child: TextFormField(
-                          controller: _emailController,
+                          controller: _userController,
                           style: const TextStyle(
                             color: Colors.black,
                             fontFamily: 'SFUIDisplay',
@@ -73,20 +75,10 @@ class SignInScreen extends StatelessWidget {
                     Padding(
                       padding: const EdgeInsets.only(top: 20),
                       child: ElevatedButton(
-                        onPressed: () {
-                          String email = _emailController.text.trim().toLowerCase();
+                        onPressed: (){
+                          String usuarios = _userController.text;
                           String password = _passwordController.text;
-                          if (email == 'alejandro.cong13@gmail.com' && password == '12345') {
-                            Navigator.pushNamed(context, '/home');
-                          } else if (email == '22090441@softbox.com' && password == '54321') {
-                            Navigator.pushNamed(context, '/list');
-                          } else {
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text('Email o contraseña incorrecta.'),
-                              ),
-                            );
-                          }
+                          loginUsers(context, usuarios, password);
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromARGB(255, 35, 38, 204),

@@ -91,7 +91,7 @@ class _TurnosScheduleState extends State<TurnosSchedule> {
                             width: 200,
                             color: Colors.blue,
                             pressEvent: () {
-                              _timer.cancel(); // Detener el contador
+                              _timer.cancel();
                               setState(() {
                                 _showCounter = false; 
                               });
@@ -158,14 +158,14 @@ class _TurnosScheduleState extends State<TurnosSchedule> {
               ),
             ],
           ),
-          if (_showCounter) // Mostrar el contador solo si _showCounter es verdadero
+          if (_showCounter)
             Positioned(
               top: 200,
               right: 16,
               child: Container(
                 padding: const EdgeInsets.all(8),
                 decoration: BoxDecoration(
-                  color: Colors.blue, // Cambiar el color a azul
+                  color: Colors.blue,
                   borderRadius: BorderRadius.circular(8),
                 ),
                 child: Text(

@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:turnos_amerisa/model/services/login_service.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -24,7 +25,7 @@ class CustomDrawer extends StatelessWidget {
                 ),
                 SizedBox(height: 10),
                 Text(
-                  'Your App Name',
+                  'Amerisa Logistics',
                   style: TextStyle(
                     color: Colors.white,
                     fontSize: 20,
@@ -38,40 +39,35 @@ class CustomDrawer extends StatelessWidget {
             leading: const Icon(Icons.home),
             onTap: () {
               Navigator.pop(context);
-              // Navigate to home screen or perform any action here
             },
           ),
           ListTile(
-            title: const Text('Settings'),
+            title: const Text('Configuracion'),
             leading: const Icon(Icons.settings),
             onTap: () {
               Navigator.pop(context);
-              // Navigate to settings screen or perform any action here
             },
           ),
           const Divider(),
           ListTile(
-            title: const Text('Profile'),
+            title: const Text('Perfil'),
             leading: const Icon(Icons.person),
             onTap: () {
               Navigator.pop(context);
-              // Navigate to profile screen or perform any action here
             },
           ),
           ListTile(
-            title: const Text('Notifications'),
+            title: const Text('Notificaciones'),
             leading: const Icon(Icons.notifications),
             onTap: () {
               Navigator.pop(context);
-              // Navigate to notifications screen or perform any action here
             },
           ),
           ListTile(
-            title: const Text('Help & Feedback'),
+            title: const Text('Ayuda'),
             leading: const Icon(Icons.help),
             onTap: () {
               Navigator.pop(context);
-              // Navigate to help & feedback screen or perform any action here
             },
           ),
           const Divider(),
@@ -100,7 +96,7 @@ class CustomDrawer extends StatelessWidget {
                   descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
                   btnOkText: 'Si',
                   btnOkOnPress: () {
-                    Navigator.pushNamed(context, '/');
+                    logout(context);
                   },
                   btnCancelText: 'No',
                   btnCancelOnPress: () {

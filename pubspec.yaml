@@ -18,6 +18,11 @@ dependencies:
   flutter_rating_bar: ^4.0.1
   awesome_notifications_core: ^0.9.0
   awesome_notifications: ^0.9.3+1
+  http: ^1.2.1
+  fluttertoast: ^8.2.6
+  mysql1: ^0.20.0
+  shared_preferences: ^2.2.3
+  flutter_bloc: ^8.1.5
 
 dev_dependencies:
   flutter_test:

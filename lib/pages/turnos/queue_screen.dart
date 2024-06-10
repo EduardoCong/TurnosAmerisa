@@ -42,7 +42,7 @@ class QueueScreen extends StatelessWidget {
                 },
                 child: const Text('Aceptar'),
               ),
-              const SizedBox(width: 10), // Espacio entre los botones
+              const SizedBox(width: 10),
               ElevatedButton(
                 onPressed: () async {
                   Navigator.pop(context);

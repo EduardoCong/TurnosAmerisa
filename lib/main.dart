@@ -7,6 +7,8 @@ import 'package:turnos_amerisa/pages/rating/rating_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/list_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/turnos_screen.dart';
+import 'package:turnos_amerisa/prueba/loco.dart';
+import 'package:turnos_amerisa/prueba/turnos2.dart';
 
 
 void main(){
@@ -38,12 +40,14 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) =>  SignInScreen(),
-        '/home': (context) => const HomePage(),
-        '/turnos': (context) => const TurnosSchedule(),
-        '/rows': (context) => const VirtualQueueScreen(),
-        '/calendario': (context) => const Calendar(),
-        '/list': (context) => ListTurn(),
-        '/rating': (context) => const RatingScreen(),
+        // '/home': (context) => const HomePage(),
+        // '/turnos': (context) => const TurnosSchedule(),
+        // '/rows': (context) => const VirtualQueueScreen(),
+        // '/calendario': (context) => const Calendar(),
+        // '/list': (context) => ListTurn(),
+        // '/rating': (context) => const RatingScreen(),
+        // '/listuser': (context) =>  UserFetch()
+        '/turnos': (context) => GenerarTurnoScreen(),
       },
     );
   }
