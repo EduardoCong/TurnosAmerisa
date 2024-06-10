@@ -4,7 +4,6 @@ import 'package:turnos_amerisa/model/services/login_service.dart';
 class SignInScreen extends StatelessWidget {
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-  final _fbrmKey = GlobalKey<FormState>();
 
   SignInScreen({super.key});
 
@@ -79,6 +78,7 @@ class SignInScreen extends StatelessWidget {
                           String usuarios = _userController.text;
                           String password = _passwordController.text;
                           loginUsers(context, usuarios, password);
+                          // Navigator.pushNamed(context, '/home');
                         },
                         style: ElevatedButton.styleFrom(
                           backgroundColor: const Color.fromARGB(255, 35, 38, 204),

@@ -40,14 +40,14 @@ class MyApp extends StatelessWidget {
       initialRoute: '/',
       routes: {
         '/': (context) =>  SignInScreen(),
-        // '/home': (context) => const HomePage(),
-        // '/turnos': (context) => const TurnosSchedule(),
-        // '/rows': (context) => const VirtualQueueScreen(),
-        // '/calendario': (context) => const Calendar(),
-        // '/list': (context) => ListTurn(),
-        // '/rating': (context) => const RatingScreen(),
-        // '/listuser': (context) =>  UserFetch()
-        '/turnos': (context) => GenerarTurnoScreen(),
+        '/home': (context) => const HomePage(),
+        '/turnos': (context) => const TurnosSchedule(),
+        '/rows': (context) => const VirtualQueueScreen(),
+        '/calendario': (context) => const Calendar(),
+        '/list': (context) => ListTurn(),
+        '/rating': (context) => const RatingScreen(),
+        // '/listuser': (context) =>  UserFetch(),
+        // '/turnos': (context) => GenerarTurnoScreen(),
       },
     );
   }
