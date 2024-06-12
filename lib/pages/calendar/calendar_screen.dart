@@ -8,7 +8,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:turnos_amerisa/model/event.dart';
 
 class Calendar extends StatefulWidget {
-  const Calendar({super.key});
+  Calendar({super.key});
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -32,7 +32,7 @@ class _CalendarState extends State<Calendar> {
       '5:00 PM'
     ];
     late Timer _timer;
-    int _counter = 300; // 5 minutos en segundos
+    int _counter = 300;
     bool _showCounter = true;
 
   @override
@@ -56,7 +56,7 @@ class _CalendarState extends State<Calendar> {
   }
 
   void _startTimer() {
-    _timer = Timer.periodic(const Duration(seconds: 1), (Timer timer) {
+    _timer = Timer.periodic(Duration(seconds: 1), (Timer timer) {
       setState(() {
         if (_counter > 0) {
           _counter--;
@@ -88,177 +88,18 @@ class _CalendarState extends State<Calendar> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text("Agenda tu Cita"),
+        title: Text("Agenda tu Cita"),
         centerTitle: true,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
             if (_showCounter)
-            Positioned(
-              top: -40,
-              right: 16,
-              child: Container(
-                padding: const EdgeInsets.all(8),
-                decoration: BoxDecoration(
-                  color: Colors.blue, // Cambiar el color a azul
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                child: Text(
-                  'Tiempo restante: ${_counter ~/ 60}:${(_counter % 60).toString().padLeft(2, '0')}',
-                  style: const TextStyle(
-                    fontSize: 16,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ),
-            TableCalendar(
-              focusedDay: _today,
-              firstDay: DateTime.now(),
-              lastDay: DateTime.utc(2030, 3, 14),
-              selectedDayPredicate: ((day) => isSameDay(_selectedDay, day)),
-              calendarFormat: _calendarFormat,
-              startingDayOfWeek: StartingDayOfWeek.monday,
-              onDaySelected: _onDaySelected,
-              eventLoader: _getEventForDay,
-              calendarStyle: const CalendarStyle(
-                outsideDaysVisible: false,
-              ),
-              onFormatChanged: (format) {
-                if (_calendarFormat != format) {
-                  setState(() {
-                    _calendarFormat = format;
-                  });
-                }
-              },
-              onPageChanged: (focusedDay) {
-                setState(() {
-                  _today = focusedDay;
-                });
-              },
-            ),
-            const SizedBox(height: 16),
+            countCalendar(),
+            calendarTable(),
+            SizedBox(height: 16),
             if (_isTimeSelectorVisible)
-              Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 16),
-                child: Column(
-                  children: [
-                    const Text("Seleccione un horario disponible:"),
-                    ...availableTimes.map((time) {
-                      return ListTile(
-                        title: Text(time),
-                        onTap: () {
-                          setState(() {
-                            _selectedService = null;
-                            _selectedTime = time;
-                          });
-                          AwesomeDialog(
-                            context: context,
-                            dialogType: DialogType.info,
-                            borderSide: const BorderSide(
-                              color: Colors.blue,
-                              width: 2,
-                            ),
-                            width: 280,
-                            buttonsBorderRadius: const BorderRadius.all(
-                              Radius.circular(2),
-                            ),
-                            dismissOnTouchOutside: true,
-                            dismissOnBackKeyPress: false,
-                            onDismissCallback: (type) {
-                              debugPrint('Dialog Dismiss from callback $type');
-                            },
-                            headerAnimationLoop: false,
-                            animType: AnimType.bottomSlide,
-                            body: Column(
-                              children: [
-                                Text('Has seleccionado el horario de las $time'),
-                                const Text("Seleccione un tipo de servicio:"),
-                                DropdownButtonFormField<String>(
-                                  value: _selectedService,
-                                  items: _services.map((service) {
-                                    return DropdownMenuItem<String>(
-                                      value: service,
-                                      child: Text(service),
-                                    );
-                                  }).toList(),
-                                  onChanged: (value) {
-                                    setState(() {
-                                      _selectedService = value;
-                                    });
-                                  },
-                                  decoration: const InputDecoration(
-                                    labelText: 'Tipo de servicio',
-                                  ),
-                                ),
-                              ],
-                            ),
-                            btnOkOnPress: () {
-                              if (_selectedService != null) {
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.success,
-                                  borderSide: const BorderSide(
-                                    color: Colors.blue,
-                                    width: 2,
-                                  ),
-                                  width: 280,
-                                  buttonsBorderRadius: const BorderRadius.all(
-                                    Radius.circular(2),
-                                  ),
-                                  dismissOnTouchOutside: true,
-                                  dismissOnBackKeyPress: false,
-                                  onDismissCallback: (type) {
-                                    debugPrint('Dialog Dismiss from callback $type');
-                                  },
-                                  headerAnimationLoop: false,
-                                  animType: AnimType.topSlide,
-                                  title: 'Generado con éxito',
-                                  descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
-                                  btnOkOnPress: () async {
-                                    _timer.cancel(); // Detener el contador
-                                    setState(() {
-                                      _showCounter = false; 
-                                    });
-                                    scheduleNotification();
-                                    Navigator.pushNamed(context, '/rows');
-                                  },
-                                ).show();
-                              } else {
-                                AwesomeDialog(
-                                  context: context,
-                                  dialogType: DialogType.warning,
-                                  borderSide: const BorderSide(
-                                    color: Colors.orange,
-                                    width: 2,
-                                  ),
-                                  width: 280,
-                                  buttonsBorderRadius: const BorderRadius.all(
-                                    Radius.circular(2),
-                                  ),
-                                  dismissOnTouchOutside: true,
-                                  dismissOnBackKeyPress: false,
-                                  onDismissCallback: (type) {
-                                    debugPrint('Dialog Dismiss from callback $type');
-                                  },
-                                  headerAnimationLoop: false,
-                                  animType: AnimType.bottomSlide,
-                                  title: 'Seleccione un servicio',
-                                  desc: 'Debe seleccionar un tipo de servicio para continuar.',
-                                  btnOkOnPress: () {},
-                                ).show();
-                              }
-                            },
-                            btnCancelOnPress: () {},
-                          ).show();
-                        },
-                      );
-                    }),
-                  ],
-                ),
-              ),
+            servicesCalendar()
           ],
         ),
       ),
@@ -279,6 +120,177 @@ class _CalendarState extends State<Calendar> {
         )
       );
     }
+  }
+
+  Widget calendarTable(){
+    return TableCalendar(
+      focusedDay: _today,
+      firstDay: DateTime.now(),
+      lastDay: DateTime.utc(2030, 3, 14),
+      selectedDayPredicate: ((day) => isSameDay(_selectedDay, day)),
+      calendarFormat: _calendarFormat,
+      startingDayOfWeek: StartingDayOfWeek.monday,
+      onDaySelected: _onDaySelected,
+      eventLoader: _getEventForDay,
+      calendarStyle: CalendarStyle(
+        outsideDaysVisible: false,
+      ),
+      onFormatChanged: (format) {
+        if (_calendarFormat != format) {
+          setState(() {
+            _calendarFormat = format;
+          });
+        }
+      },
+      onPageChanged: (focusedDay) {
+        setState(() {
+          _today = focusedDay;
+        });
+      },
+    );
+  }
+
+  Widget countCalendar(){
+    return Positioned(
+      top: -40,
+      right: 16,
+      child: Container(
+        padding: EdgeInsets.all(8),
+        decoration: BoxDecoration(
+          color: Colors.blue,
+          borderRadius: BorderRadius.circular(8),
+        ),
+        child: Text(
+          'Tiempo restante: ${_counter ~/ 60}:${(_counter % 60).toString().padLeft(2, '0')}',
+          style: TextStyle(
+            fontSize: 16,
+            fontWeight: FontWeight.w500,
+            color: Colors.white,
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget servicesCalendar(){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          Text("Seleccione un horario disponible:"),
+          ...availableTimes.map((time) {
+            return ListTile(
+              title: Text(time),
+              onTap: () {
+                setState(() {
+                  _selectedService = null;
+                  _selectedTime = time;
+                });
+                AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.info,
+                  borderSide: BorderSide(
+                    color: Colors.blue,
+                    width: 2,
+                  ),
+                  width: 280,
+                  buttonsBorderRadius: BorderRadius.all(
+                    Radius.circular(2),
+                  ),
+                  dismissOnTouchOutside: true,
+                  dismissOnBackKeyPress: false,
+                  onDismissCallback: (type) {
+                    debugPrint('Dialog Dismiss from callback $type');
+                  },
+                  headerAnimationLoop: false,
+                  animType: AnimType.bottomSlide,
+                  body: Column(
+                    children: [
+                      Text('Has seleccionado el horario de las $time'),
+                      Text("Seleccione un tipo de servicio:"),
+                      DropdownButtonFormField<String>(
+                        value: _selectedService,
+                        items: _services.map((service) {
+                          return DropdownMenuItem<String>(
+                            value: service,
+                            child: Text(service),
+                          );
+                        }).toList(),
+                        onChanged: (value) {
+                          setState(() {
+                            _selectedService = value;
+                          });
+                        },
+                        decoration: InputDecoration(
+                          labelText: 'Tipo de servicio',
+                        ),
+                      ),
+                    ],
+                  ),
+                  btnOkOnPress: () {
+                    if (_selectedService != null) {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.success,
+                        borderSide: BorderSide(
+                          color: Colors.blue,
+                          width: 2,
+                        ),
+                        width: 280,
+                        buttonsBorderRadius: BorderRadius.all(
+                          Radius.circular(2),
+                        ),
+                        dismissOnTouchOutside: true,
+                        dismissOnBackKeyPress: false,
+                        onDismissCallback: (type) {
+                          debugPrint('Dialog Dismiss from callback $type');
+                        },
+                        headerAnimationLoop: false,
+                        animType: AnimType.topSlide,
+                        title: 'Generado con éxito',
+                        descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+                        btnOkOnPress: () async {
+                          _timer.cancel(); // Detener el contador
+                          setState(() {
+                            _showCounter = false; 
+                          });
+                          scheduleNotification();
+                          Navigator.pushNamed(context, '/rows');
+                        },
+                      ).show();
+                    } else {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.warning,
+                        borderSide: BorderSide(
+                          color: Colors.orange,
+                          width: 2,
+                        ),
+                        width: 280,
+                        buttonsBorderRadius: BorderRadius.all(
+                          Radius.circular(2),
+                        ),
+                        dismissOnTouchOutside: true,
+                        dismissOnBackKeyPress: false,
+                        onDismissCallback: (type) {
+                          debugPrint('Dialog Dismiss from callback $type');
+                        },
+                        headerAnimationLoop: false,
+                        animType: AnimType.bottomSlide,
+                        title: 'Seleccione un servicio',
+                        desc: 'Debe seleccionar un tipo de servicio para continuar.',
+                        btnOkOnPress: () {},
+                      ).show();
+                    }
+                  },
+                  btnCancelOnPress: () {},
+                ).show();
+              },
+            );
+          }),
+        ],
+      ),
+    );
   }
 }
 

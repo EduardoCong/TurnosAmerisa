@@ -1,5 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turnos_amerisa/model/services/login_cliente_service.dart';
 import 'package:turnos_amerisa/model/services/login_service.dart';
 
 class CustomDrawer extends StatelessWidget {
@@ -76,8 +78,9 @@ class CustomDrawer extends StatelessWidget {
             title: '¿Estas seguro que deseas salir de la sesion?',
             descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
             btnOkText: 'Si',
-            btnOkOnPress: () {
-              // logout(context);
+            btnOkOnPress: (){
+              logoutClient(context);
+              logout(context);
             },
             btnCancelText: 'No',
             btnCancelOnPress: () {

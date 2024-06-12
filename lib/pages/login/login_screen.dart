@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/model/services/login_service.dart';
 
 class SignInScreen extends StatelessWidget {
@@ -106,11 +107,19 @@ class SignInScreen extends StatelessWidget {
     return Padding(
       padding:  EdgeInsets.only(top: 20),
       child: ElevatedButton(
-        onPressed: (){
-          // String usuarios = _userController.text;
-          // String password = _passwordController.text;
-          // loginUsers(context, usuarios, password);
-          Navigator.pushNamed(context, '/home');
+        onPressed: () async {
+          SharedPreferences prefs = await SharedPreferences.getInstance();
+          String? users = prefs.getString('usuario');
+          String? passwordUser = prefs.getString('password');
+          String? client_user = prefs.getString('usuario_cliente');
+          String? client_password = prefs.getString('password_cliente');
+          String usuarios = _userController.text;
+          String password = _passwordController.text;
+          if(usuarios == users && password == passwordUser){
+            loginUsers(context, usuarios, password);
+          }else if(usuarios == client_user && password == client_password){
+            loginClients(context, usuarios, password);
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor:  Color.fromARGB(255, 35, 38, 204),
