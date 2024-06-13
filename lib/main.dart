@@ -45,7 +45,7 @@ class MyApp extends StatelessWidget {
         '/calendario': (context) => Calendar(),
         '/rating': (context) => RatingScreen(),
         // '/listuser': (context) =>  UserFetch(),
-        // '/turnos': (context) => GenerarTurnoScreen(),
+        '/prueba': (context) => PruebaDos(),
       },
     );
   }

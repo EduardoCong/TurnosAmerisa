@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:flutter/widgets.dart';
 import 'package:turnos_amerisa/pages/notification/notification_screen.dart';
 
 class TurnosSchedule extends StatefulWidget {

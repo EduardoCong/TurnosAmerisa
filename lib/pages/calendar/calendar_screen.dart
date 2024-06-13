@@ -250,7 +250,7 @@ class _CalendarState extends State<Calendar> {
                         title: 'Generado con éxito',
                         descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
                         btnOkOnPress: () async {
-                          _timer.cancel(); // Detener el contador
+                          _timer.cancel();
                           setState(() {
                             _showCounter = false; 
                           });

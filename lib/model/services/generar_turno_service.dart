@@ -1,12 +1,12 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const String url = 'http://localhost:3000/models/model_generar_turno.php';
+const String url = 'http://amigos.local/models/model_generar_turno.php';
 
-Future<Map<String, dynamic>> obtenerCliente(String numeroDocumento) async {
+Future<Map<String, dynamic>> obtenerCliente(int numeroDocumento) async {
   Map<String, String> parametros = {
     'accion': 'ObtenerCliente',
-    'datos': numeroDocumento,
+    'datos': numeroDocumento.toString(),
   };
 
   print('Haciendo solicitud para obtener cliente...');
