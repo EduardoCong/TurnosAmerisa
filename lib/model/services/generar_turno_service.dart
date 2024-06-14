@@ -3,48 +3,42 @@ import 'dart:convert';
 
 const String url = 'http://amigos.local/models/model_generar_turno.php';
 
-Future<Map<String, dynamic>> obtenerCliente(int numeroDocumento) async {
-  Map<String, String> parametros = {
-    'accion': 'ObtenerCliente',
-    'datos': numeroDocumento.toString(),
-  };
+Future<Map<String, dynamic>?> obtenerCliente(int datos) async {
+  var body = {'accion': 'ObtenerCliente', 'datos': datos.toString()};
 
-  print('Haciendo solicitud para obtener cliente...');
+  try {
+    var response = await http.post(Uri.parse(url), body: body);
 
-  var response = await http.post(Uri.parse(url), body: parametros);
-
-  if (response.statusCode == 200) {
-    print('Solicitud para obtener cliente completada');
-    return json.decode(response.body);
-  } else {
-    print('Error al cargar cliente');
-    throw Exception('Failed to load client');
-  }
-}
-
-Future<List<dynamic>> verServicios() async {
-  Map<String, String> parametros = {
-    'accion': 'VerServicios',
-  };
-
-  print('Haciendo solicitud para ver servicios...');
-
-  var response = await http.post(Uri.parse(url), body: parametros);
-
-  if (response.statusCode == 200) {
-    print('Solicitud para ver servicios completada');
-    var jsonResponse = json.decode(response.body);
-    if (jsonResponse['status']) {
-      return jsonResponse['data'];
+    if (response.statusCode == 200) {
+      var jsonResponse = json.decode(response.body);
+      return jsonResponse;
     } else {
-      print('No se encontraron datos de servicios');
-      throw Exception('No data found');
+      throw Exception('Error al obtener cliente: ${response.reasonPhrase}');
     }
-  } else {
-    print('Error al cargar servicios');
-    throw Exception('Failed to load services');
+  } catch (e) {
+    print('Error: $e');
+    return null;
   }
 }
+
+  Future<List<Map<String, dynamic>>> verServicios() async {
+    final response = await http.post(
+      Uri.parse(url),
+      body: {'accion': 'VerServicios'},
+    );
+
+    if (response.statusCode == 200) {
+      final Map<String, dynamic> data = json.decode(response.body);
+      if (data['status'] == true) {
+        return List<Map<String, dynamic>>.from(data['data']);
+      } else {
+        throw Exception(data['msg']);
+      }
+    } else {
+      throw Exception('Failed to load data');
+    }
+  }
+
 
 Future<Map<String, dynamic>> generarTurno(Map<String, dynamic> datosCliente) async {
   Map<String, dynamic> datos = {
@@ -52,12 +46,10 @@ Future<Map<String, dynamic>> generarTurno(Map<String, dynamic> datosCliente) asy
     'datos': json.encode(datosCliente),
   };
 
-  print('Haciendo solicitud para generar turno...');
-
   var response = await http.post(Uri.parse(url), body: datos);
 
   if (response.statusCode == 200) {
-    print('Solicitud para generar turno completada');
+    print('Turno generado con exito');
     return json.decode(response.body);
   } else {
     print('Error al generar turno');
