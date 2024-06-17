@@ -3,7 +3,7 @@ import 'package:http/http.dart' as http;
 import 'package:turnos_amerisa/model/api.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://localhost:3000/models/model_generar_turno.php';
+  static const String baseUrl = 'http://amigos.local/models/model_generar_turno.php';
 
   static Future<Cliente?> obtenerCliente(int numeroDocumento) async {
     try {
@@ -19,6 +19,31 @@ class ApiService {
         var jsonData = json.decode(response.body);
         if (jsonData['codigo'] == 0) {
           return Cliente.fromJson(jsonData);
+        } else {
+          return null;
+        }
+      } else {
+        throw Exception('Error al obtener cliente');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
+
+  static Future<Modulo?> obtenerModulo(int idModulo) async {
+    try {
+      var response = await http.post(
+        Uri.parse('http://amigos.local/models/model_modulos.php'),
+        body: {
+          'accion': 'ObtenerModulo',
+          'datos': idModulo.toString(),
+        },
+      );
+      
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        if (jsonData['codigo'] == 0) {
+          return Modulo.fromJson(jsonData);
         } else {
           return null;
         }

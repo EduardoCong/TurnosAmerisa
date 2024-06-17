@@ -27,6 +27,26 @@ class Cliente {
   }
 }
 
+class Modulo{
+  final int idModul;
+  final String nombreModulo;
+  final String serviciosModulo;
+
+  Modulo({
+    required this.idModul,
+    required this.nombreModulo,
+    required this.serviciosModulo
+  });
+
+  factory Modulo.fromJson(Map<String, dynamic> json){
+    return Modulo(
+      idModul: int.parse(json['id_modulo']),
+      nombreModulo: json['nombre_modulo'],
+      serviciosModulo: json['servicios']
+    );
+  }
+}
+
 class Servicio {
   final int id;
   final String nombre;
@@ -57,18 +77,21 @@ class Turno {
   final int id;
   final String turno;
   final String estado;
+  final String modulo;
 
   Turno({
     required this.id,
     required this.turno,
     required this.estado,
+    required this.modulo
   });
 
   factory Turno.fromJson(Map<String, dynamic> json) {
     return Turno(
-      id: json['id'],
+      id: int.parse(json['id']),
       turno: json['turno'],
       estado: json['estado_turno'],
+      modulo: json['modulo'],
     );
   }
 }

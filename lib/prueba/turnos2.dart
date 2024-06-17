@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:turnos_amerisa/model/api.dart';
@@ -16,6 +18,13 @@ class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
   TextEditingController snombreController = TextEditingController();
   TextEditingController papellidoController = TextEditingController();
   TextEditingController sapellidoController = TextEditingController();
+
+
+  TextEditingController moduloController = TextEditingController();
+  TextEditingController nombreModuloController = TextEditingController();
+  TextEditingController servicioModuloController = TextEditingController();
+
+
 
   Servicio? servicioSeleccionado;
 
@@ -90,6 +99,40 @@ class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
                 ],
               ),
             ),
+            SizedBox(height:40),
+            TextField(
+              controller: moduloController,
+              decoration: InputDecoration(
+              labelText: 'Id',
+              ),
+            ),
+            ElevatedButton(
+              onPressed: () => buscarModulo(context),
+              child: Text('Buscar Modulo'),
+            ),
+            SizedBox(height: 16.0),
+            Visibility(
+              visible: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: nombreModuloController,
+                    decoration: InputDecoration(
+                      labelText: 'Nombre Modulo',
+                    ),
+                    readOnly: true,
+                  ),
+                  TextField(
+                    controller: servicioModuloController,
+                    decoration: InputDecoration(
+                      labelText: 'Servicios',
+                    ),
+                    readOnly: true,
+                  ),
+                ],
+              ),
+            ),
             SizedBox(height: 16.0),
             ServiciosSelect(
               onServicioSelected: (servicio) {
@@ -149,6 +192,38 @@ class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
       Fluttertoast.showToast(msg: 'Error al buscar cliente: $e');
       print('Error al buscar cliente: $e');
     }
+  }
+
+  Future<void> buscarModulo(BuildContext context) async {
+    String? modulo = moduloController.text;
+      try {
+        if (modulo.isNotEmpty) {
+          int moduloInt = int.tryParse(modulo) ?? 0;
+
+          Modulo? modulos = await ApiService.obtenerModulo(moduloInt);
+
+          if (modulos != null) {
+            setState(() {
+              moduloController.text = modulos.idModul.toString();
+              nombreModuloController.text = modulos.nombreModulo;
+              servicioModuloController.text = jsonDecode(modulos.serviciosModulo);
+            });
+            Fluttertoast.showToast(msg: 'Modulo encontrado');
+          } else {
+            setState(() {
+              moduloController.text = '';
+              nombreModuloController.text = '';
+              servicioModuloController.text = '';
+            });
+            Fluttertoast.showToast(msg: 'No se encontraron modulos');
+          }
+        } else {
+          Fluttertoast.showToast(msg: 'Ingrese un número de documento válido');
+        }
+      } catch (e) {
+        Fluttertoast.showToast(msg: 'Error al buscar modulo: $e');
+        print('Error al buscar modulo: $e');
+      }
   }
 
   Future<void> generarTurno(BuildContext context) async {

@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const String url = 'http://localhost:3000/models/model_modulos.php';
+const String url = 'http://amigos.local/models/model_modulos.php';
 
 Future<List<dynamic>> listarModulos() async {
   Map<String, String> parametros = {'accion': 'ListarModulos'};

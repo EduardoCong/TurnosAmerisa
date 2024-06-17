@@ -27,7 +27,7 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
   Future<void> cargarServicios() async {
     try {
       final response = await http.post(
-        Uri.parse('http://localhost:3000/models/model_generar_turno.php'),
+        Uri.parse('http://amigos.local/models/model_generar_turno.php'),
         body: {'accion': 'VerServicios'},
       );
 
@@ -62,7 +62,7 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
                 setState(() {
                   servicioSeleccionado = value;
                 });
-                widget.onServicioSelected(value); // Notificar al padre sobre el servicio seleccionado
+                widget.onServicioSelected(value);
               },
               items: servicios.map((Servicio servicio) {
                 return DropdownMenuItem<Servicio>(
