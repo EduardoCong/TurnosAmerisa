@@ -1,56 +1,80 @@
 import 'package:flutter/material.dart';
-import 'package:turnos_amerisa/model/services/generar_turno_service.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
-class DropdownFromAPI extends StatefulWidget {
+import 'package:turnos_amerisa/model/api.dart';
+
+class ServiciosSelect extends StatefulWidget {
+  final Function(Servicio?) onServicioSelected;
+
+  const ServiciosSelect({Key? key, required this.onServicioSelected}) : super(key: key);
+
   @override
-  _DropdownFromAPIState createState() => _DropdownFromAPIState();
+  _ServiciosSelectState createState() => _ServiciosSelectState();
 }
 
-class _DropdownFromAPIState extends State<DropdownFromAPI> {
-  String? _selectedItem;
-  List<Map<String, dynamic>> _servicios = [];
-  bool _isLoading = true;
+class _ServiciosSelectState extends State<ServiciosSelect> {
+  Servicio? servicioSeleccionado;
+  List<Servicio> servicios = [];
 
   @override
   void initState() {
     super.initState();
-    _fetchData();
+    cargarServicios();
   }
 
-  Future<void> _fetchData() async {
+  Future<void> cargarServicios() async {
     try {
-      final servicios = await verServicios();
-      setState(() {
-        _servicios = servicios;
-        _isLoading = false;
-      });
-    } catch (error) {
-      print('Error: $error');
-      setState(() {
-        _isLoading = false;
-      });
+      final response = await http.post(
+        Uri.parse('http://localhost:3000/models/model_generar_turno.php'),
+        body: {'accion': 'VerServicios'},
+      );
+
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        if (jsonData['status']) {
+          List<dynamic> data = jsonData['data'];
+          setState(() {
+            servicios = data.map((item) => Servicio.fromJson(item)).toList();
+          });
+          Fluttertoast.showToast(msg: 'Servicios cargados correctamente');
+        } else {
+          Fluttertoast.showToast(msg: 'Error: ${jsonData['msg']}');
+        }
+      } else {
+        Fluttertoast.showToast(msg: 'Error en la conexión: ${response.statusCode}');
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error: $e');
+      print(e);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: _isLoading
-        ? CircularProgressIndicator()
-        : DropdownButton<String>(
-            value: _selectedItem,
-            onChanged: (String? newValue) {
-              setState(() {
-                _selectedItem = newValue;
-              });
-            },
-            items: _servicios.map<DropdownMenuItem<String>>((servicio) {
-              return DropdownMenuItem<String>(
-                value: servicio['id'].toString(),
-                child: Text(servicio['nombre_servicio']),
-              );
-            }).toList(),
-          ),
+    return Center(
+      child: servicios.isEmpty
+          ? CircularProgressIndicator()
+          : DropdownButtonFormField<Servicio>(
+              value: servicioSeleccionado,
+              onChanged: (Servicio? value) {
+                setState(() {
+                  servicioSeleccionado = value;
+                });
+                widget.onServicioSelected(value); // Notificar al padre sobre el servicio seleccionado
+              },
+              items: servicios.map((Servicio servicio) {
+                return DropdownMenuItem<Servicio>(
+                  value: servicio,
+                  child: Text(servicio.nombre),
+                );
+              }).toList(),
+              decoration: InputDecoration(
+                labelText: 'Seleccionar Servicio',
+                border: OutlineInputBorder(),
+              ),
+            ),
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:turnos_amerisa/pages/rating/rating_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/turnos_screen.dart';
 import 'package:turnos_amerisa/prueba/loco.dart';
+import 'package:turnos_amerisa/prueba/prueba.dart';
 import 'package:turnos_amerisa/prueba/turnos2.dart';
 
 
@@ -44,8 +45,9 @@ class MyApp extends StatelessWidget {
         // '/rows': (context) => VirtualQueueScreen(),
         // '/calendario': (context) => Calendar(),
         // '/rating': (context) => RatingScreen(),
-        // // '/listuser': (context) =>  UserFetch(),
-        '/': (context) => GenerarTurno()
+        // '/listuser': (context) =>  UserFetch(),
+        // '/':(context) => PerfilClienteScreen()
+        '/': (context) => GenerarTurnoView2()
       },
     );
   }

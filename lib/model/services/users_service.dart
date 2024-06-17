@@ -79,23 +79,6 @@ Future<Map<String, dynamic>> actualizarEstadoUsuario(String idUsuario, String es
   }
 }
 
-Future<List<dynamic>> verServicios() async {
-  Map<String, String> parametros = {'accion': 'VerServicios'};
-
-  var response = await http.post(Uri.parse(url), body: parametros);
-
-  if (response.statusCode == 200) {
-    var jsonResponse = json.decode(response.body);
-    if (jsonResponse['status']) {
-      return jsonResponse['data'];
-    } else {
-      throw Exception('No se encontraron datos de servicios');
-    }
-  } else {
-    throw Exception('Error al cargar los servicios');
-  }
-}
-
 Future<List<dynamic>> verModulos() async {
   Map<String, String> parametros = {'accion': 'VerModulos'};
 

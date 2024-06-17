@@ -1,58 +1,106 @@
-import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:turnos_amerisa/model/api.dart';
 
-const String url = 'http://amigos.local/models/model_generar_turno.php';
+class ApiService {
+  static const String baseUrl = 'http://localhost:3000/models/model_generar_turno.php';
 
-Future<Map<String, dynamic>?> obtenerCliente(int datos) async {
-  var body = {'accion': 'ObtenerCliente', 'datos': datos.toString()};
-
-  try {
-    var response = await http.post(Uri.parse(url), body: body);
-
-    if (response.statusCode == 200) {
-      var jsonResponse = json.decode(response.body);
-      return jsonResponse;
-    } else {
-      throw Exception('Error al obtener cliente: ${response.reasonPhrase}');
-    }
-  } catch (e) {
-    print('Error: $e');
-    return null;
-  }
-}
-
-  Future<List<Map<String, dynamic>>> verServicios() async {
-    final response = await http.post(
-      Uri.parse(url),
-      body: {'accion': 'VerServicios'},
-    );
-
-    if (response.statusCode == 200) {
-      final Map<String, dynamic> data = json.decode(response.body);
-      if (data['status'] == true) {
-        return List<Map<String, dynamic>>.from(data['data']);
+  static Future<Cliente?> obtenerCliente(int numeroDocumento) async {
+    try {
+      var response = await http.post(
+        Uri.parse('$baseUrl/model_generar_turno.php'),
+        body: {
+          'accion': 'ObtenerCliente',
+          'datos': numeroDocumento.toString(),
+        },
+      );
+      
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        if (jsonData['codigo'] == 0) {
+          return Cliente.fromJson(jsonData);
+        } else {
+          return null;
+        }
       } else {
-        throw Exception(data['msg']);
+        throw Exception('Error al obtener cliente');
       }
-    } else {
-      throw Exception('Failed to load data');
+    } catch (e) {
+      throw Exception('Error de red: $e');
     }
   }
 
+  // static Future<Servicio> seleccionarServicio(int idServicio) async {
+  //   try {
+  //     var url = Uri.parse('$baseUrl/selectServicio.php');
+  //     var response = await http.post(
+  //       url,
+  //       body: {'accion': 'selectServicio', 'id': idServicio.toString()},
+  //     );
 
-Future<Map<String, dynamic>> generarTurno(Map<String, dynamic> datosCliente) async {
-  Map<String, dynamic> datos = {
-    'accion': 'GenerarTurno',
-    'datos': json.encode(datosCliente),
-  };
+  //     if (response.statusCode == 200) {
+  //       var jsonData = json.decode(response.body);
+  //       if (jsonData['status']) {
+  //         var servicioData = jsonData['data'][0];
+  //         return Servicio.fromJson(servicioData);
+  //       } else {
+  //         throw Exception(jsonData['msg']);
+  //       }
+  //     } else {
+  //       throw Exception('Error en la solicitud: ${response.statusCode}');
+  //     }
+  //   } catch (e) {
+  //     throw Exception('Error de red: $e');
+  //   }
+  // }
 
-  var response = await http.post(Uri.parse(url), body: datos);
+  static Future<Turno> generarTurno(Map<String, dynamic> datos) async {
+    try {
+      var response = await http.post(
+        Uri.parse('$baseUrl/model_generar_turno.php'),
+        body: {
+          'accion': 'GenerarTurno',
+          'datos': json.encode(datos),
+        },
+      );
+      
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        if (jsonData['codigo'] == 0) {
+          return Turno.fromJson(jsonData);
+        } else {
+          throw Exception('Error al generar turno: ${jsonData['respuesta']}');
+        }
+      } else {
+        throw Exception('Error al generar turno: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
+  }
 
-  if (response.statusCode == 200) {
-    print('Turno generado con exito');
-    return json.decode(response.body);
-  } else {
-    print('Error al generar turno');
-    throw Exception('Failed to generate turn');
+  static Future<Turno> actualizarTurno(Map<String, dynamic> datos) async {
+    try {
+      var response = await http.post(
+        Uri.parse('$baseUrl/model_generar_turno.php'),
+        body: {
+          'accion': 'ActualizarTurno',
+          'datos': json.encode(datos),
+        },
+      );
+      
+      if (response.statusCode == 200) {
+        var jsonData = json.decode(response.body);
+        if (jsonData['codigo'] == 0) {
+          return Turno.fromJson(jsonData);
+        } else {
+          throw Exception('Error al actualizar turno: ${jsonData['respuesta']}');
+        }
+      } else {
+        throw Exception('Error al actualizar turno: ${response.statusCode}');
+      }
+    } catch (e) {
+      throw Exception('Error de red: $e');
+    }
   }
 }

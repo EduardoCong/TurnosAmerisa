@@ -1,50 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/model/services/generar_turno_service.dart';
+import 'package:turnos_amerisa/prueba/loco.dart';
 
-class GenerarTurno extends StatefulWidget {
+class GenerarTurnoView2 extends StatefulWidget {
   @override
-  _GenerarTurnoState createState() => _GenerarTurnoState();
+  _GenerarTurnoView2State createState() => _GenerarTurnoView2State();
 }
 
-class _GenerarTurnoState extends State<GenerarTurno> {
-  final TextEditingController _datosController = TextEditingController();
-  Map<String, dynamic>? _respuesta;
-  String? _selectedItem;
-  List<Map<String, dynamic>> _servicios = [];
-  bool _isLoading = true;
+class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
+  TextEditingController numeroDocumentoController = TextEditingController();
+  TextEditingController numeroController = TextEditingController();
+  TextEditingController pnombreController = TextEditingController();
+  TextEditingController snombreController = TextEditingController();
+  TextEditingController papellidoController = TextEditingController();
+  TextEditingController sapellidoController = TextEditingController();
 
+  Servicio? servicioSeleccionado;
+
+  @override
   void initState() {
     super.initState();
-    _fetchData();
-  }
-
-  Future<void> _fetchData() async {
-    try {
-      final servicios = await verServicios();
-      setState(() {
-        _servicios = servicios;
-        _isLoading = false;
-      });
-    } catch (error) {
-      print('Error: $error');
-      setState(() {
-        _isLoading = false;
-      });
-    }
-  }
-
-  void _consultarCliente() async {
-    int? datos = int.tryParse(_datosController.text);
-    if (datos != null) {
-      var respuesta = await obtenerCliente(datos);
-      setState(() {
-        _respuesta = respuesta;
-      });
-    } else {
-      setState(() {
-        _respuesta = null;
-      });
-    }
   }
 
   @override
@@ -54,155 +31,156 @@ class _GenerarTurnoState extends State<GenerarTurno> {
         title: Text('Generar Turno'),
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(16.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              TextFormField(
-                controller: _datosController,
-                decoration: InputDecoration(labelText: 'Número de Datos'),
-                keyboardType: TextInputType.number,
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            TextField(
+              controller: numeroDocumentoController,
+              decoration: InputDecoration(
+                hintText: 'Número Documento',
               ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: _consultarCliente,
-                child: Text('Consultar Cliente'),
-              ),
-              SizedBox(height: 20),
-              _respuesta != null
-                  ? Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Documento: ${_respuesta!['documento']}'),
-                        Text('Número: ${_respuesta!['numero']}'),
-                        Text('Primer Nombre: ${_respuesta!['pnombre']}'),
-                        Text('Segundo Nombre: ${_respuesta!['snombre']}'),
-                        Text('Primer Apellido: ${_respuesta!['papellido']}'),
-                        Text('Segundo Apellido: ${_respuesta!['sapellido']}'),
-                      ],
-                    )
-                  : Container(),
-              SizedBox(height: 20),
-              _isLoading
-                ? CircularProgressIndicator()
-                : DropdownButton<String>(
-                    value: _selectedItem,
-                    onChanged: (String? newValue) {
-                      setState(() {
-                        _selectedItem = newValue;
-                      });
-                    },
-                    items: _servicios.map<DropdownMenuItem<String>>((servicio) {
-                      return DropdownMenuItem<String>(
-                        value: servicio['id'].toString(),
-                        child: Text(servicio['nombre_servicio']),
-                      );
-                    }).toList(),
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () => buscarCliente(context),
+              child: Text('Buscar Cliente'),
+            ),
+            SizedBox(height: 16.0),
+            Visibility(
+              visible: true,
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  TextField(
+                    controller: numeroController,
+                    decoration: InputDecoration(
+                      labelText: 'Número',
+                    ),
+                    readOnly: true,
                   ),
-              SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  if (_selectedItem == null) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Por favor, seleccione un servicio.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    return;
-                  }
-                  if (_respuesta == null) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Por favor, consulte un cliente primero.'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                    return;
-                  }
-        
-                  String idServicio = _selectedItem!;
-        
-                  Map<String, dynamic> datosClientes = {
-                    'numero': _respuesta!['numero'],
-                    'pnombre': _respuesta!['pnombre'],
-                    'snombre': _respuesta!['snombre'],
-                    'papellido': _respuesta!['papellido'],
-                    'sapellido': _respuesta!['sapellido'],
-                    'nombre_servicio': idServicio
-                  };
-        
-        
-                  try {
-                    Map<String, dynamic> respuesta = await generarTurno(datosClientes);
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return SingleChildScrollView(
-                          child: AlertDialog(
-                            title: Text('Éxito'),
-                            content: Text(respuesta['respuesta']),
-                            actions: [
-                              TextButton(
-                                onPressed: () {
-                                  Navigator.of(context).pop();
-                                },
-                                child: Text('OK'),
-                              ),
-                            ],
-                          ),
-                        );
-                      },
-                    );
-                  } catch (error) {
-                    showDialog(
-                      context: context,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text('Error'),
-                          content: Text('Ha ocurrido un error al generar el turno: $error'),
-                          actions: [
-                            TextButton(
-                              onPressed: () {
-                                Navigator.of(context).pop();
-                              },
-                              child: Text('OK'),
-                            ),
-                          ],
-                        );
-                      },
-                    );
-                  }
-                },
-                child: Text('Generar turno'),
+                  TextField(
+                    controller: pnombreController,
+                    decoration: InputDecoration(
+                      labelText: 'Primer Nombre',
+                    ),
+                    readOnly: true,
+                  ),
+                  TextField(
+                    controller: snombreController,
+                    decoration: InputDecoration(
+                      labelText: 'Segundo Nombre',
+                    ),
+                    readOnly: true,
+                  ),
+                  TextField(
+                    controller: papellidoController,
+                    decoration: InputDecoration(
+                      labelText: 'Primer Apellido',
+                    ),
+                    readOnly: true,
+                  ),
+                  TextField(
+                    controller: sapellidoController,
+                    decoration: InputDecoration(
+                      labelText: 'Segundo Apellido',
+                    ),
+                    readOnly: true,
+                  ),
+                ],
               ),
-            ],
-          ),
+            ),
+            SizedBox(height: 16.0),
+            ServiciosSelect(
+              onServicioSelected: (servicio) {
+                setState(() {
+                  servicioSeleccionado = servicio;
+                });
+              },
+            ),
+            SizedBox(height: 16.0),
+            ElevatedButton(
+              onPressed: () {
+                if (servicioSeleccionado != null) {
+                  generarTurno(context);
+                } else {
+                  Fluttertoast.showToast(msg: 'Selecciona un servicio primero');
+                }
+              },
+              child: Text('Generar Turno'),
+            ),
+          ],
         ),
       ),
     );
+  }
+
+  Future<void> buscarCliente(BuildContext context) async {
+  String? numeroDocumento = numeroDocumentoController.text;
+    try {
+      if (numeroDocumento.isNotEmpty) {
+        int numeroDocumentoInt = int.tryParse(numeroDocumento) ?? 0;
+
+        Cliente? cliente = await ApiService.obtenerCliente(numeroDocumentoInt);
+
+        if (cliente != null) {
+          setState(() {
+            numeroController.text = cliente.numero.toString();
+            pnombreController.text = cliente.pnombre;
+            snombreController.text = cliente.snombre;
+            papellidoController.text = cliente.papellido;
+            sapellidoController.text = cliente.sapellido;
+          });
+          Fluttertoast.showToast(msg: 'Cliente encontrado');
+        } else {
+          setState(() {
+            numeroController.text = '';
+            pnombreController.text = '';
+            snombreController.text = '';
+            papellidoController.text = '';
+            sapellidoController.text = '';
+          });
+          Fluttertoast.showToast(msg: 'No se encontraron datos de cliente');
+        }
+      } else {
+        Fluttertoast.showToast(msg: 'Ingrese un número de documento válido');
+      }
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error al buscar cliente: $e');
+      print('Error al buscar cliente: $e');
+    }
+  }
+
+  Future<void> generarTurno(BuildContext context) async {
+    if (servicioSeleccionado == null) {
+      Fluttertoast.showToast(msg: 'Selecciona un servicio primero');
+      return;
+    }
+
+    String numeroTexto = numeroController.text;
+    if (numeroTexto.isEmpty) {
+      Fluttertoast.showToast(msg: 'El número no puede estar vacío');
+      return;
+    }
+    int? amigos = int.tryParse(numeroTexto);
+    Map<String, dynamic> datos = {
+      'numero': amigos,
+      'pnombre': pnombreController.text,
+      'snombre': snombreController.text,
+      'papellido': papellidoController.text,
+      'sapellido': sapellidoController.text,
+      'registrarcliente': 'NO',
+      'id_servicio': servicioSeleccionado!.id,
+      'letra': servicioSeleccionado!.letra,
+      'fechaInicio': null,
+    };
+
+    try {
+      await ApiService.generarTurno(datos);
+      Fluttertoast.showToast(msg: 'Generar turno con datos: $datos');
+    } catch (e) {
+      Fluttertoast.showToast(msg: 'Error al generar turno: $e');
+      print('Error al generar turno: $e');
+    }
   }
 }
