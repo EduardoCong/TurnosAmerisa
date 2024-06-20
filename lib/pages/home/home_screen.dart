@@ -76,7 +76,7 @@ class HomePage extends StatelessWidget {
       height: 100,
       child: ElevatedButton.icon(
         onPressed: () {
-          Navigator.pushNamed(context, '/prueba');
+          Navigator.pushNamed(context, '/turnos');
         },
         icon: Icon(Icons.phone_android),
         label: Text("Pedir Turno", style: TextStyle(fontSize: 22)),

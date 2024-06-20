@@ -1,4 +1,7 @@
 import 'dart:convert';
+import 'package:awesome_dialog/awesome_dialog.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'package:turnos_amerisa/model/api.dart';
 
@@ -30,56 +33,7 @@ class ApiService {
     }
   }
 
-  static Future<Modulo?> obtenerModulo(int idModulo) async {
-    try {
-      var response = await http.post(
-        Uri.parse('http://amigos.local/models/model_modulos.php'),
-        body: {
-          'accion': 'ObtenerModulo',
-          'datos': idModulo.toString(),
-        },
-      );
-      
-      if (response.statusCode == 200) {
-        var jsonData = json.decode(response.body);
-        if (jsonData['codigo'] == 0) {
-          return Modulo.fromJson(jsonData);
-        } else {
-          return null;
-        }
-      } else {
-        throw Exception('Error al obtener cliente');
-      }
-    } catch (e) {
-      throw Exception('Error de red: $e');
-    }
-  }
-
-  // static Future<Servicio> seleccionarServicio(int idServicio) async {
-  //   try {
-  //     var url = Uri.parse('$baseUrl/selectServicio.php');
-  //     var response = await http.post(
-  //       url,
-  //       body: {'accion': 'selectServicio', 'id': idServicio.toString()},
-  //     );
-
-  //     if (response.statusCode == 200) {
-  //       var jsonData = json.decode(response.body);
-  //       if (jsonData['status']) {
-  //         var servicioData = jsonData['data'][0];
-  //         return Servicio.fromJson(servicioData);
-  //       } else {
-  //         throw Exception(jsonData['msg']);
-  //       }
-  //     } else {
-  //       throw Exception('Error en la solicitud: ${response.statusCode}');
-  //     }
-  //   } catch (e) {
-  //     throw Exception('Error de red: $e');
-  //   }
-  // }
-
-  static Future<Turno> generarTurno(Map<String, dynamic> datos) async {
+  static Future<Turno> generarTurno(Map<String, dynamic> datos, BuildContext context) async {
     try {
       var response = await http.post(
         Uri.parse('$baseUrl/model_generar_turno.php'),
@@ -91,8 +45,34 @@ class ApiService {
       
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
+        print('pasa esto ${jsonData['codigo']}');
         if (jsonData['codigo'] == 0) {
+         AwesomeDialog(
+            context: context,
+            dialogType: DialogType.success,
+            borderSide: BorderSide(
+              color: Colors.blue,
+              width: 2,
+            ),
+            width: 280,
+            buttonsBorderRadius: BorderRadius.all(
+              Radius.circular(2),
+            ),
+            dismissOnTouchOutside: true,
+            dismissOnBackKeyPress: false,
+            onDismissCallback: (type) {
+              debugPrint('Dialog Dismiss from callback $type');
+            },
+            headerAnimationLoop: false,
+            animType: AnimType.topSlide,
+            title: 'Turno generado con éxito',
+            descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+            btnOkOnPress: () async {
+              // Navigator.pushNamed(context, '/rows');
+            },
+          ).show();
           return Turno.fromJson(jsonData);
+
         } else {
           throw Exception('Error al generar turno: ${jsonData['respuesta']}');
         }
@@ -102,9 +82,10 @@ class ApiService {
     } catch (e) {
       throw Exception('Error de red: $e');
     }
+  
   }
 
-  static Future<Turno> actualizarTurno(Map<String, dynamic> datos) async {
+  static Future<Turno> actualizarTurno(Map<String, dynamic> datos, BuildContext context) async {
     try {
       var response = await http.post(
         Uri.parse('$baseUrl/model_generar_turno.php'),
@@ -117,6 +98,30 @@ class ApiService {
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         if (jsonData['codigo'] == 0) {
+          AwesomeDialog(
+            context: context,
+            dialogType: DialogType.success,
+            borderSide: BorderSide(
+              color: Colors.blue,
+              width: 2,
+            ),
+            width: 280,
+            buttonsBorderRadius: BorderRadius.all(
+              Radius.circular(2),
+            ),
+            dismissOnTouchOutside: true,
+            dismissOnBackKeyPress: false,
+            onDismissCallback: (type) {
+              debugPrint('Dialog Dismiss from callback $type');
+            },
+            headerAnimationLoop: false,
+            animType: AnimType.topSlide,
+            title: 'Turno actualizado correctamente',
+            descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+            btnOkOnPress: () async {
+              // Navigator.pushNamed(context, '/rows');
+            },
+          ).show();
           return Turno.fromJson(jsonData);
         } else {
           throw Exception('Error al actualizar turno: ${jsonData['respuesta']}');

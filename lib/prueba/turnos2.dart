@@ -1,29 +1,22 @@
-import 'dart:convert';
-
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/model/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/prueba/loco.dart';
 
-class GenerarTurnoView2 extends StatefulWidget {
+class GenerarTurnoView extends StatefulWidget {
   @override
-  _GenerarTurnoView2State createState() => _GenerarTurnoView2State();
+  _GenerarTurnoViewState createState() => _GenerarTurnoViewState();
 }
 
-class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
-  TextEditingController numeroDocumentoController = TextEditingController();
-  TextEditingController numeroController = TextEditingController();
-  TextEditingController pnombreController = TextEditingController();
-  TextEditingController snombreController = TextEditingController();
-  TextEditingController papellidoController = TextEditingController();
-  TextEditingController sapellidoController = TextEditingController();
-
-
-  TextEditingController moduloController = TextEditingController();
-  TextEditingController nombreModuloController = TextEditingController();
-  TextEditingController servicioModuloController = TextEditingController();
-
+class _GenerarTurnoViewState extends State<GenerarTurnoView> {
+    TextEditingController numeroDocumentoController = TextEditingController();
+    TextEditingController numeroController = TextEditingController();
+    TextEditingController pnombreController = TextEditingController();
+    TextEditingController snombreController = TextEditingController();
+    TextEditingController papellidoController = TextEditingController();
+    TextEditingController sapellidoController = TextEditingController();
 
 
   Servicio? servicioSeleccionado;
@@ -62,13 +55,6 @@ class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   TextField(
-                    controller: numeroController,
-                    decoration: InputDecoration(
-                      labelText: 'Número',
-                    ),
-                    readOnly: true,
-                  ),
-                  TextField(
                     controller: pnombreController,
                     decoration: InputDecoration(
                       labelText: 'Primer Nombre',
@@ -99,40 +85,6 @@ class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
                 ],
               ),
             ),
-            SizedBox(height:40),
-            TextField(
-              controller: moduloController,
-              decoration: InputDecoration(
-              labelText: 'Id',
-              ),
-            ),
-            ElevatedButton(
-              onPressed: () => buscarModulo(context),
-              child: Text('Buscar Modulo'),
-            ),
-            SizedBox(height: 16.0),
-            Visibility(
-              visible: true,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: nombreModuloController,
-                    decoration: InputDecoration(
-                      labelText: 'Nombre Modulo',
-                    ),
-                    readOnly: true,
-                  ),
-                  TextField(
-                    controller: servicioModuloController,
-                    decoration: InputDecoration(
-                      labelText: 'Servicios',
-                    ),
-                    readOnly: true,
-                  ),
-                ],
-              ),
-            ),
             SizedBox(height: 16.0),
             ServiciosSelect(
               onServicioSelected: (servicio) {
@@ -144,11 +96,7 @@ class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
             SizedBox(height: 16.0),
             ElevatedButton(
               onPressed: () {
-                if (servicioSeleccionado != null) {
-                  generarTurno(context);
-                } else {
-                  Fluttertoast.showToast(msg: 'Selecciona un servicio primero');
-                }
+                generarTurno(context);
               },
               child: Text('Generar Turno'),
             ),
@@ -194,47 +142,60 @@ class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
     }
   }
 
-  Future<void> buscarModulo(BuildContext context) async {
-    String? modulo = moduloController.text;
-      try {
-        if (modulo.isNotEmpty) {
-          int moduloInt = int.tryParse(modulo) ?? 0;
-
-          Modulo? modulos = await ApiService.obtenerModulo(moduloInt);
-
-          if (modulos != null) {
-            setState(() {
-              moduloController.text = modulos.idModul.toString();
-              nombreModuloController.text = modulos.nombreModulo;
-              servicioModuloController.text = jsonDecode(modulos.serviciosModulo);
-            });
-            Fluttertoast.showToast(msg: 'Modulo encontrado');
-          } else {
-            setState(() {
-              moduloController.text = '';
-              nombreModuloController.text = '';
-              servicioModuloController.text = '';
-            });
-            Fluttertoast.showToast(msg: 'No se encontraron modulos');
-          }
-        } else {
-          Fluttertoast.showToast(msg: 'Ingrese un número de documento válido');
-        }
-      } catch (e) {
-        Fluttertoast.showToast(msg: 'Error al buscar modulo: $e');
-        print('Error al buscar modulo: $e');
-      }
-  }
-
   Future<void> generarTurno(BuildContext context) async {
     if (servicioSeleccionado == null) {
-      Fluttertoast.showToast(msg: 'Selecciona un servicio primero');
+      AwesomeDialog(
+            context: context,
+            dialogType: DialogType.warning,
+            borderSide: BorderSide(
+              color: Colors.blue,
+              width: 2,
+            ),
+            width: 280,
+            buttonsBorderRadius: BorderRadius.all(
+              Radius.circular(2),
+            ),
+            dismissOnTouchOutside: true,
+            dismissOnBackKeyPress: false,
+            onDismissCallback: (type) {
+              debugPrint('Dialog Dismiss from callback $type');
+            },
+            headerAnimationLoop: false,
+            animType: AnimType.topSlide,
+            title: 'Selecciona un servicio primero',
+            descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+            btnOkOnPress: () async {
+            },
+          ).show();
       return;
     }
 
     String numeroTexto = numeroController.text;
     if (numeroTexto.isEmpty) {
-      Fluttertoast.showToast(msg: 'El número no puede estar vacío');
+      AwesomeDialog(
+            context: context,
+            dialogType: DialogType.warning,
+            borderSide: BorderSide(
+              color: Colors.blue,
+              width: 2,
+            ),
+            width: 280,
+            buttonsBorderRadius: BorderRadius.all(
+              Radius.circular(2),
+            ),
+            dismissOnTouchOutside: true,
+            dismissOnBackKeyPress: false,
+            onDismissCallback: (type) {
+              debugPrint('Dialog Dismiss from callback $type');
+            },
+            headerAnimationLoop: false,
+            animType: AnimType.topSlide,
+            title: 'Ingresa un numero',
+            descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+            btnOkOnPress: () async {
+              // Navigator.pushNamed(context, '/rows');
+            },
+          ).show();
       return;
     }
     int? amigos = int.tryParse(numeroTexto);
@@ -249,12 +210,10 @@ class _GenerarTurnoView2State extends State<GenerarTurnoView2> {
       'letra': servicioSeleccionado!.letra,
       'fechaInicio': null,
     };
-
+      print(datos);
     try {
-      await ApiService.generarTurno(datos);
-      Fluttertoast.showToast(msg: 'Generar turno con datos: $datos');
+      await ApiService.generarTurno(datos,context);
     } catch (e) {
-      Fluttertoast.showToast(msg: 'Error al generar turno: $e');
       print('Error al generar turno: $e');
     }
   }

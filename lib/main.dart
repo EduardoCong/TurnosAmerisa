@@ -39,15 +39,15 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        // '/': (context) =>  SignInScreen(),
-        // '/home': (context) => HomePage(),
+        '/': (context) =>  SignInScreen(),
+        '/home': (context) => HomePage(),
         // '/turnos': (context) => TurnosSchedule(),
         // '/rows': (context) => VirtualQueueScreen(),
-        // '/calendario': (context) => Calendar(),
+        '/calendario': (context) => Calendar(),
         // '/rating': (context) => RatingScreen(),
         // '/listuser': (context) =>  UserFetch(),
         // '/':(context) => PerfilClienteScreen()
-        '/': (context) => GenerarTurnoView2()
+        '/turnos': (context) => GenerarTurnoView()
       },
     );
   }
