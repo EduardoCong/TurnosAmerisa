@@ -35,13 +35,9 @@ class _CalendarState extends State<Calendar> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   bool _isTimeSelectorVisible = false;
   String? _selectedTime;
-  List<String> availableTimes = [
-      '9:00 AM',
-      '11:00 AM',
-      '1:00 PM',
-      '3:00 PM',
-      '5:00 PM'
-    ];
+  List<String> availableTimes = ['9:00 AM','9:20 AM','9:40 AM','10:00 AM','10:20 AM','10:40 AM','11:00 AM','11:20 AM','11:40 AM','12:00 PM','12:20 PM','12:40 AM','1:00 PM','1:20 AM','1:40 AM',
+  
+  ];
     late Timer _timer;
     int _counter = 300;
     bool _showCounter = true;
@@ -319,11 +315,13 @@ class _CalendarState extends State<Calendar> {
             title: 'Ingresa un numero',
             descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
             btnOkOnPress: () async {
-              // Navigator.pushNamed(context, '/rows');
+              Navigator.pushNamed(context, '/rows');
             },
           ).show();
       return;
     }
+    if (_selectedTime != null) {
+    String formattedDateTime = '${_selectedDay!.year}-${_selectedDay!.month.toString().padLeft(2, '0')}-${_selectedDay!.day.toString().padLeft(2, '0')} $_selectedTime';
     int? amigos = int.tryParse(numeroTexto);
     Map<String, dynamic> datos = {
       'numero': amigos,
@@ -334,14 +332,14 @@ class _CalendarState extends State<Calendar> {
       'registrarcliente': 'NO',
       'id_servicio': servicioSeleccionado!.id,
       'letra': servicioSeleccionado!.letra,
-      'fechaInicio': '$_selectedDay $_selectedTime',
+      'fechaInicio': '$formattedDateTime',
     };
-      print(datos);
     try {
       await ApiService.generarTurno(datos,context);
     } catch (e) {
       print('Error al generar turno: $e');
     }
+    } else {}
   }
 
   Widget GetDatos(){

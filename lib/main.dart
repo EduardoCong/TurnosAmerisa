@@ -42,7 +42,7 @@ class MyApp extends StatelessWidget {
         '/': (context) =>  SignInScreen(),
         '/home': (context) => HomePage(),
         // '/turnos': (context) => TurnosSchedule(),
-        // '/rows': (context) => VirtualQueueScreen(),
+        '/rows': (context) => VirtualQueueScreen(),
         '/calendario': (context) => Calendar(),
         // '/rating': (context) => RatingScreen(),
         // '/listuser': (context) =>  UserFetch(),
