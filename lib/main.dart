@@ -4,11 +4,10 @@ import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
 import 'package:turnos_amerisa/pages/login/login_screen.dart';
 import 'package:turnos_amerisa/pages/rating/rating_screen.dart';
+import 'package:turnos_amerisa/pages/turnos/actualizar_turno.dart';
+import 'package:turnos_amerisa/pages/turnos/cita_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
-import 'package:turnos_amerisa/pages/turnos/turnos_screen.dart';
-import 'package:turnos_amerisa/prueba/loco.dart';
-import 'package:turnos_amerisa/prueba/prueba.dart';
-import 'package:turnos_amerisa/prueba/turnos2.dart';
+import 'package:turnos_amerisa/pages/turnos/generar_turno.dart';
 
 
 void main(){
@@ -41,13 +40,12 @@ class MyApp extends StatelessWidget {
       routes: {
         '/': (context) =>  SignInScreen(),
         '/home': (context) => HomePage(),
-        // '/turnos': (context) => TurnosSchedule(),
-        '/rows': (context) => VirtualQueueScreen(),
+        '/verturno': (context) => VirtualQueueScreen(),
         '/calendario': (context) => Calendar(),
         // '/rating': (context) => RatingScreen(),
-        // '/listuser': (context) =>  UserFetch(),
-        // '/':(context) => PerfilClienteScreen()
-        '/turnos': (context) => GenerarTurnoView()
+        '/turno': (context) => GenerarTurnoView(),
+        '/vercita': (context) => CitaQueueScreen(),
+        '/actualizarturno': (context) => ActualizarTurnosScreen(),
       },
     );
   }

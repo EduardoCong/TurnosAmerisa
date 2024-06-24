@@ -9,7 +9,7 @@ import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/model/event.dart';
 import 'package:turnos_amerisa/model/services/generar_turno_service.dart';
-import 'package:turnos_amerisa/prueba/loco.dart';
+import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
 
 class Calendar extends StatefulWidget {
   Calendar({super.key});
@@ -35,9 +35,8 @@ class _CalendarState extends State<Calendar> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   bool _isTimeSelectorVisible = false;
   String? _selectedTime;
-  List<String> availableTimes = ['9:00 AM','9:20 AM','9:40 AM','10:00 AM','10:20 AM','10:40 AM','11:00 AM','11:20 AM','11:40 AM','12:00 PM','12:20 PM','12:40 AM','1:00 PM','1:20 AM','1:40 AM',
-  
-  ];
+  List<String> availableTimes = ['9:00 AM','9:20 AM','9:40 AM','10:00 AM','10:20 AM','10:40 AM','11:00 AM','11:20 AM','11:40 AM','12:00 PM','12:20 PM','12:40 PM','1:00 PM','1:20 AM','1:40 AM',
+  '2:00 PM','2:20 PM','2:40 PM','3:00 PM','3:20 PM','3:40 PM','4:00 PM','4:20 PM','4:40 PM','5:00 PM','5:20 PM','5:40 AM','6:00 PM'];
     late Timer _timer;
     int _counter = 300;
     bool _showCounter = true;
@@ -108,7 +107,6 @@ class _CalendarState extends State<Calendar> {
             SizedBox(height: 16),
             if (_isTimeSelectorVisible)
             servicesCalendar(),
-            buttonSubmmitTurno()
           ],
         ),
       ),
@@ -182,26 +180,55 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget servicesCalendar(){
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 16),
-      child: Column(
-        children: [
-          Text("Seleccione un horario disponible:"),
-          ...availableTimes.map((time) {
-            return ListTile(
-              title: Text(time),
-              onTap: () {
-                setState(() {
-                  _selectedTime = time;
-                });
-                alertDialog();
-              },
-            );
-          }),
-        ],
-      ),
-    );
+  return Padding(
+    padding: EdgeInsets.symmetric(horizontal: 16),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        SizedBox(height: 8),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              _selectedTime??'',
+              style: TextStyle(fontSize: 16),
+            ),
+            ElevatedButton(
+              child: Text('Selecciona una hora'),
+              onPressed: () => _selectTime(context),
+            ),
+          ],
+        ),
+      ],
+    ),
+  );
+}
+
+void _selectTime(BuildContext context) async {
+  String? selectedTime = await showDialog<String>(
+    context: context,
+    builder: (BuildContext context) {
+      return SimpleDialog(
+        title: Text('Seleccione un horario'),
+        children: availableTimes.map((time) {
+          return SimpleDialogOption(
+            onPressed: () {
+              Navigator.pop(context, time);
+            },
+            child: Text(time),
+          );
+        }).toList(),
+      );
+    },
+  );
+
+  if (selectedTime != null) {
+    setState(() {
+      _selectedTime = selectedTime;
+    });
+    alertDialog();
   }
+}
 
   Future alertDialog(){
     return showDialog(
@@ -211,20 +238,6 @@ class _CalendarState extends State<Calendar> {
           content: GetDatos(),
         );
       }
-    );
-  }
-
-  Widget buttonSubmmitTurno(){
-    return ElevatedButton(
-      onPressed: ()async {
-        _timer.cancel();
-      setState(() {
-        _showCounter = false; 
-      });
-      scheduleNotification();
-      Navigator.pushNamed(context, '/rows');
-      },
-      child: Text('Genera turno')
     );
   }
 
@@ -408,6 +421,12 @@ class _CalendarState extends State<Calendar> {
           ElevatedButton(
             onPressed: () {
               generarTurno(context);
+              _timer.cancel();
+              setState(() {
+                _showCounter = false; 
+              });
+              scheduleNotification();
+              Navigator.pushNamed(context, '/vercita');
             },
             child: Text('Generar Turno'),
           ),

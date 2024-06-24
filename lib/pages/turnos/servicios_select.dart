@@ -38,16 +38,15 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
           setState(() {
             servicios = data.map((item) => Servicio.fromJson(item)).toList();
           });
-          Fluttertoast.showToast(msg: 'Servicios cargados correctamente');
+          print( 'Servicios cargados correctamente');
         } else {
-          Fluttertoast.showToast(msg: 'Error: ${jsonData['msg']}');
+          print( 'Error: ${jsonData['msg']}');
         }
       } else {
-        Fluttertoast.showToast(msg: 'Error en la conexión: ${response.statusCode}');
+        print( 'Error en la conexión: ${response.statusCode}');
       }
     } catch (e) {
-      Fluttertoast.showToast(msg: 'Error: $e');
-      print(e);
+      print( 'Error: $e');
     }
   }
 

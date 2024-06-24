@@ -1,16 +1,14 @@
-// ignore_for_file: library_private_types_in_public_api
-
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 
-class VirtualQueueScreen extends StatefulWidget {
-  VirtualQueueScreen({super.key});
+class CitaQueueScreen extends StatefulWidget {
+  CitaQueueScreen({super.key});
 
   @override
-  _VirtualQueueScreenState createState() => _VirtualQueueScreenState();
+  _CitaQueueScreenState createState() => _CitaQueueScreenState();
 }
 
-class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
+class _CitaQueueScreenState extends State<CitaQueueScreen> {
   String ticketNumber = 'A2';
   String waitTime = '2 min';
   String queueCode = '4P96B7AL';
@@ -147,7 +145,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
           title: 'Turno Cancelado',
           descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
           btnOkOnPress: () {
-            Navigator.pop(context);
+            Navigator.pushNamed(context, '/home');
           },
         ).show();
       }

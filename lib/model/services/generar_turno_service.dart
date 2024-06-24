@@ -20,6 +20,7 @@ class ApiService {
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         if (jsonData['codigo'] == 0) {
+          print('Cliente obtenido');
           return Cliente.fromJson(jsonData);
         } else {
           return null;
@@ -46,30 +47,7 @@ class ApiService {
         var jsonData = json.decode(response.body);
         print('pasa esto ${jsonData['codigo']}');
         if (jsonData['codigo'] == 0) {
-         AwesomeDialog(
-            context: context,
-            dialogType: DialogType.success,
-            borderSide: BorderSide(
-              color: Colors.blue,
-              width: 2,
-            ),
-            width: 280,
-            buttonsBorderRadius: BorderRadius.all(
-              Radius.circular(2),
-            ),
-            dismissOnTouchOutside: true,
-            dismissOnBackKeyPress: false,
-            onDismissCallback: (type) {
-              debugPrint('Dialog Dismiss from callback $type');
-            },
-            headerAnimationLoop: false,
-            animType: AnimType.topSlide,
-            title: 'Turno generado con éxito',
-            descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-            btnOkOnPress: () async {
-              // Navigator.pushNamed(context, '/rows');
-            },
-          ).show();
+          print('Turno generado');
           return Turno.fromJson(jsonData);
 
         } else {
@@ -97,30 +75,7 @@ class ApiService {
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         if (jsonData['codigo'] == 0) {
-          AwesomeDialog(
-            context: context,
-            dialogType: DialogType.success,
-            borderSide: BorderSide(
-              color: Colors.blue,
-              width: 2,
-            ),
-            width: 280,
-            buttonsBorderRadius: BorderRadius.all(
-              Radius.circular(2),
-            ),
-            dismissOnTouchOutside: true,
-            dismissOnBackKeyPress: false,
-            onDismissCallback: (type) {
-              debugPrint('Dialog Dismiss from callback $type');
-            },
-            headerAnimationLoop: false,
-            animType: AnimType.topSlide,
-            title: 'Turno actualizado correctamente',
-            descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-            btnOkOnPress: () async {
-              // Navigator.pushNamed(context, '/rows');
-            },
-          ).show();
+          print('Turno actualizado');
           return Turno.fromJson(jsonData);
         } else {
           throw Exception('Error al actualizar turno: ${jsonData['respuesta']}');

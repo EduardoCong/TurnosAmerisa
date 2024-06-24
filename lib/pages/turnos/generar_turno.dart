@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/model/services/generar_turno_service.dart';
-import 'package:turnos_amerisa/prueba/loco.dart';
+import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
 
 class GenerarTurnoView extends StatefulWidget {
   @override
@@ -31,6 +31,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     return Scaffold(
       appBar: AppBar(
         title: Text('Generar Turno'),
+        automaticallyImplyLeading: false,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
@@ -210,7 +211,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       'letra': servicioSeleccionado!.letra,
       'fechaInicio': null,
     };
-      print(datos);
     try {
       await ApiService.generarTurno(datos,context);
     } catch (e) {

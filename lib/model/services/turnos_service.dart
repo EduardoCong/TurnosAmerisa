@@ -1,7 +1,7 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-const String url = 'http://localhost:3000/models/model_turnos.php';
+const String url = 'http://amigos.local/models/model_turnos.php';
 
 Future<List<dynamic>> verTurnos() async {
   Map<String, String> parametros = {'accion': 'Verturnos'};
