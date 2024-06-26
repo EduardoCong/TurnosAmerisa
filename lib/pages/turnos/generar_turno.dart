@@ -1,8 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:turnos_amerisa/model/api.dart';
-import 'package:turnos_amerisa/model/services/generar_turno_service.dart';
+import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
 
 class GenerarTurnoView extends StatefulWidget {
@@ -11,13 +10,12 @@ class GenerarTurnoView extends StatefulWidget {
 }
 
 class _GenerarTurnoViewState extends State<GenerarTurnoView> {
-    TextEditingController numeroDocumentoController = TextEditingController();
-    TextEditingController numeroController = TextEditingController();
-    TextEditingController pnombreController = TextEditingController();
-    TextEditingController snombreController = TextEditingController();
-    TextEditingController papellidoController = TextEditingController();
-    TextEditingController sapellidoController = TextEditingController();
-
+  TextEditingController numeroDocumentoController = TextEditingController();
+  TextEditingController numeroController = TextEditingController();
+  TextEditingController pnombreController = TextEditingController();
+  TextEditingController snombreController = TextEditingController();
+  TextEditingController papellidoController = TextEditingController();
+  TextEditingController sapellidoController = TextEditingController();
 
   Servicio? servicioSeleccionado;
 
@@ -29,77 +27,182 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Generar Turno'),
+        centerTitle: true,
         automaticallyImplyLeading: false,
+        backgroundColor: Colors.white,
       ),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
+            imageLogo(),
+            SizedBox(height: 20),
+            _buildTextField(
               controller: numeroDocumentoController,
-              decoration: InputDecoration(
-                hintText: 'Número Documento',
-              ),
+              label: 'Número Documento',
+              icon: Icons.document_scanner,
             ),
             SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () => buscarCliente(context),
-              child: Text('Buscar Cliente'),
+            Center(
+              child: ElevatedButton.icon(
+                onPressed: () => buscarCliente(context),
+                icon: Icon(Icons.search, color: Colors.white),
+                label: Text('Buscar Cliente', style: TextStyle(color: Colors.white)),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color.fromARGB(255, 35, 38, 204),
+                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 12.0),
+                  textStyle: TextStyle(fontSize: 16.0),
+                  minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                ),
+              ),
             ),
             SizedBox(height: 16.0),
             Visibility(
-              visible: true,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  TextField(
-                    controller: pnombreController,
-                    decoration: InputDecoration(
-                      labelText: 'Primer Nombre',
+              visible: false,
+              child: _buildClienteInfoSection(),
+            ),
+            SizedBox(height: 16.0),
+            Card(
+              elevation: 4.0,
+              margin: EdgeInsets.symmetric(vertical: 10.0),
+              child: Padding(
+                padding: EdgeInsets.all(16.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      'Seleccione el Servicio',
+                      style: TextStyle(
+                        fontSize: 18.0,
+                        fontWeight: FontWeight.bold,
+                      ),
                     ),
-                    readOnly: true,
-                  ),
-                  TextField(
-                    controller: snombreController,
-                    decoration: InputDecoration(
-                      labelText: 'Segundo Nombre',
+                    SizedBox(height: 10.0),
+                    ServiciosSelect(
+                      onServicioSelected: (servicio) {
+                        setState(() {
+                          servicioSeleccionado = servicio;
+                        });
+                      },
                     ),
-                    readOnly: true,
-                  ),
-                  TextField(
-                    controller: papellidoController,
-                    decoration: InputDecoration(
-                      labelText: 'Primer Apellido',
-                    ),
-                    readOnly: true,
-                  ),
-                  TextField(
-                    controller: sapellidoController,
-                    decoration: InputDecoration(
-                      labelText: 'Segundo Apellido',
-                    ),
-                    readOnly: true,
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
             SizedBox(height: 16.0),
-            ServiciosSelect(
-              onServicioSelected: (servicio) {
-                setState(() {
-                  servicioSeleccionado = servicio;
-                });
-              },
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: ElevatedButton.icon(
+                  onPressed: (){
+                     AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.warning,
+                      borderSide: BorderSide(
+                        color: Colors.blue,
+                        width: 2,
+                      ),
+                      width: 280,
+                      buttonsBorderRadius: BorderRadius.all(
+                        Radius.circular(2),
+                      ),
+                      dismissOnTouchOutside: true,
+                      dismissOnBackKeyPress: false,
+                      onDismissCallback: (type) {
+                        debugPrint('Dialog Dismiss from callback $type');
+                      },
+                      headerAnimationLoop: false,
+                      animType: AnimType.topSlide,
+                      title: 'message',
+                      descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+                      btnOkOnPress: () {
+                        generarTurno(context);
+                        Navigator.pushNamed(context, '/verturno');
+                      },
+                    ).show();
+                  },
+                  icon: Icon(Icons.schedule, color: Colors.white),
+                  label: Text('Generar', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    // padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+                    textStyle: TextStyle(fontSize: 16.0),
+                    minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                    backgroundColor: Color.fromARGB(255, 35, 38, 204),
+                  ),
+                ),
+              ),
             ),
-            SizedBox(height: 16.0),
-            ElevatedButton(
-              onPressed: () {
-                generarTurno(context);
-              },
-              child: Text('Generar Turno'),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget imageLogo(){
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 14),
+      child: Image.network(
+        "https://pbs.twimg.com/profile_images/814281946180231169/E7Z0c1Hy_400x400.jpg",
+        width: 600,
+        height: 300,
+      ),
+    );
+  }
+
+  Widget _buildTextField({
+    required TextEditingController controller,
+    required String label,
+    IconData? icon,
+  }) {
+    return TextField(
+      controller: controller,
+      decoration: InputDecoration(
+        border: OutlineInputBorder(),
+        labelText: label,
+        prefixIcon: icon != null ? Icon(icon) : null,
+      ),
+    );
+  }
+
+  Widget _buildClienteInfoSection() {
+    return Card(
+      elevation: 4.0,
+      margin: EdgeInsets.symmetric(vertical: 10.0),
+      child: Padding(
+        padding: EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Información del Cliente',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            SizedBox(height: 10.0),
+            _buildTextField(
+              controller: pnombreController,
+              label: 'Primer Nombre',
+            ),
+            SizedBox(height: 8.0),
+            _buildTextField(
+              controller: snombreController,
+              label: 'Segundo Nombre',
+            ),
+            SizedBox(height: 8.0),
+            _buildTextField(
+              controller: papellidoController,
+              label: 'Primer Apellido',
+            ),
+            SizedBox(height: 8.0),
+            _buildTextField(
+              controller: sapellidoController,
+              label: 'Segundo Apellido',
             ),
           ],
         ),
@@ -108,7 +211,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   }
 
   Future<void> buscarCliente(BuildContext context) async {
-  String? numeroDocumento = numeroDocumentoController.text;
+    String? numeroDocumento = numeroDocumentoController.text;
     try {
       if (numeroDocumento.isNotEmpty) {
         int numeroDocumentoInt = int.tryParse(numeroDocumento) ?? 0;
@@ -123,80 +226,38 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
             papellidoController.text = cliente.papellido;
             sapellidoController.text = cliente.sapellido;
           });
-          Fluttertoast.showToast(msg: 'Cliente encontrado');
+          print('Cliente encontrado');
         } else {
-          setState(() {
-            numeroController.text = '';
-            pnombreController.text = '';
-            snombreController.text = '';
-            papellidoController.text = '';
-            sapellidoController.text = '';
-          });
-          Fluttertoast.showToast(msg: 'No se encontraron datos de cliente');
+          _clearClienteInfo();
+          print('No se encontraron datos de cliente');
         }
       } else {
-        Fluttertoast.showToast(msg: 'Ingrese un número de documento válido');
+        print('Ingrese un número de documento válido');
       }
     } catch (e) {
-      Fluttertoast.showToast(msg: 'Error al buscar cliente: $e');
       print('Error al buscar cliente: $e');
     }
   }
 
+  void _clearClienteInfo() {
+    setState(() {
+      numeroController.clear();
+      pnombreController.clear();
+      snombreController.clear();
+      papellidoController.clear();
+      sapellidoController.clear();
+    });
+  }
+
   Future<void> generarTurno(BuildContext context) async {
     if (servicioSeleccionado == null) {
-      AwesomeDialog(
-            context: context,
-            dialogType: DialogType.warning,
-            borderSide: BorderSide(
-              color: Colors.blue,
-              width: 2,
-            ),
-            width: 280,
-            buttonsBorderRadius: BorderRadius.all(
-              Radius.circular(2),
-            ),
-            dismissOnTouchOutside: true,
-            dismissOnBackKeyPress: false,
-            onDismissCallback: (type) {
-              debugPrint('Dialog Dismiss from callback $type');
-            },
-            headerAnimationLoop: false,
-            animType: AnimType.topSlide,
-            title: 'Selecciona un servicio primero',
-            descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-            btnOkOnPress: () async {
-            },
-          ).show();
+      _showWarningDialog(context, 'Selecciona un servicio primero');
       return;
     }
 
     String numeroTexto = numeroController.text;
     if (numeroTexto.isEmpty) {
-      AwesomeDialog(
-            context: context,
-            dialogType: DialogType.warning,
-            borderSide: BorderSide(
-              color: Colors.blue,
-              width: 2,
-            ),
-            width: 280,
-            buttonsBorderRadius: BorderRadius.all(
-              Radius.circular(2),
-            ),
-            dismissOnTouchOutside: true,
-            dismissOnBackKeyPress: false,
-            onDismissCallback: (type) {
-              debugPrint('Dialog Dismiss from callback $type');
-            },
-            headerAnimationLoop: false,
-            animType: AnimType.topSlide,
-            title: 'Ingresa un numero',
-            descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-            btnOkOnPress: () async {
-              // Navigator.pushNamed(context, '/rows');
-            },
-          ).show();
+      _showWarningDialog(context, 'Ingresa un número');
       return;
     }
     int? amigos = int.tryParse(numeroTexto);
@@ -212,9 +273,34 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       'fechaInicio': null,
     };
     try {
-      await ApiService.generarTurno(datos,context);
+      await ApiService.generarTurno(datos, context);
     } catch (e) {
       print('Error al generar turno: $e');
     }
+  }
+
+  void _showWarningDialog(BuildContext context, String message) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.warning,
+      borderSide: BorderSide(
+        color: Colors.blue,
+        width: 2,
+      ),
+      width: 280,
+      buttonsBorderRadius: BorderRadius.all(
+        Radius.circular(2),
+      ),
+      dismissOnTouchOutside: true,
+      dismissOnBackKeyPress: false,
+      onDismissCallback: (type) {
+        debugPrint('Dialog Dismiss from callback $type');
+      },
+      headerAnimationLoop: false,
+      animType: AnimType.topSlide,
+      title: message,
+      descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+      btnOkOnPress: () {},
+    ).show();
   }
 }

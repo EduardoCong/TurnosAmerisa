@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
 import 'package:turnos_amerisa/pages/login/login_screen.dart';
-import 'package:turnos_amerisa/pages/rating/rating_screen.dart';
-import 'package:turnos_amerisa/pages/turnos/actualizar_turno.dart';
+// import 'package:turnos_amerisa/pages/rating/rating_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/cita_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/generar_turno.dart';
@@ -45,7 +44,6 @@ class MyApp extends StatelessWidget {
         // '/rating': (context) => RatingScreen(),
         '/turno': (context) => GenerarTurnoView(),
         '/vercita': (context) => CitaQueueScreen(),
-        '/actualizarturno': (context) => ActualizarTurnosScreen(),
       },
     );
   }

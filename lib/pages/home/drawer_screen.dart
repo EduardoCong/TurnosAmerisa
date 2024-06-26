@@ -1,6 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:turnos_amerisa/model/services/login_service.dart';
+import 'package:turnos_amerisa/services/login_service.dart';
 
 class CustomDrawer extends StatelessWidget {
   const CustomDrawer({super.key});
@@ -78,7 +78,7 @@ class CustomDrawer extends StatelessWidget {
             btnOkText: 'Si',
             btnOkOnPress: (){
               // logoutClient(context);
-              logout(context);
+              logoutClient(context);
             },
             btnCancelText: 'No',
             btnCancelOnPress: () {

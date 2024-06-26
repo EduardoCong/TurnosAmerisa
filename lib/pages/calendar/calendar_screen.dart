@@ -8,7 +8,7 @@ import 'package:table_calendar/table_calendar.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/model/event.dart';
-import 'package:turnos_amerisa/model/services/generar_turno_service.dart';
+import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
 
 class Calendar extends StatefulWidget {

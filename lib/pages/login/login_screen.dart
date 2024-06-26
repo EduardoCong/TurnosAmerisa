@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:turnos_amerisa/model/services/login_service.dart';
+import 'package:turnos_amerisa/services/login_service.dart';
 
 class SignInScreen extends StatelessWidget {
   final TextEditingController _userController = TextEditingController();

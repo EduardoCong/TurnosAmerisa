@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
@@ -27,7 +26,7 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
   Future<void> cargarServicios() async {
     try {
       final response = await http.post(
-        Uri.parse('http://amigos.local/models/model_generar_turno.php'),
+        Uri.parse('http://192.168.0.17/TurnosPHP/models/model_generar_turno.php'),
         body: {'accion': 'VerServicios'},
       );
 
