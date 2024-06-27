@@ -11,7 +11,6 @@ class GenerarTurnoView extends StatefulWidget {
 
 class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   TextEditingController numeroDocumentoController = TextEditingController();
-  TextEditingController numeroController = TextEditingController();
   TextEditingController pnombreController = TextEditingController();
   TextEditingController snombreController = TextEditingController();
   TextEditingController papellidoController = TextEditingController();
@@ -201,7 +200,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
 
         if (cliente != null) {
           setState(() {
-            numeroController.text = cliente.numero;
+            numeroDocumentoController.text = cliente.numero;
             pnombreController.text = cliente.pnombre;
             snombreController.text = cliente.snombre;
             papellidoController.text = cliente.papellido;
@@ -210,7 +209,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
           });
           print('Cliente encontrado');
         } else {
-          numeroController.text = '';
+          numeroDocumentoController.text = '';
           pnombreController.text = '';
           snombreController.text = '';
           papellidoController.text = '';
@@ -227,19 +226,19 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   }
 
   Future<void> generarTurno(BuildContext context) async {
-    if (servicioSeleccionado == null) {
-      _showWarningDialog(context, 'Selecciona un servicio primero');
-      return;
-    }
+    // if (servicioSeleccionado == null) {
+    //   _showWarningDialog(context, 'Selecciona un servicio primero');
+    //   return;
+    // }
 
-    String numeroTexto = numeroController.text;
-    if (numeroTexto.isEmpty) {
-      _showWarningDialog(context, 'Ingresa un número');
-      return;
-    }
+    // String numeroTexto = numeroController.text;
+    // if (numeroTexto.isEmpty) {
+    //   _showWarningDialog(context, 'Ingresa un número');
+    //   return;
+    // }
 
     Map<String, dynamic> datos = {
-      'numero': numeroTexto,
+      'numero': numeroDocumentoController.text,
       'documento': documentoController.text,
       'pnombre': pnombreController.text,
       'snombre': snombreController.text,
@@ -253,32 +252,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     try {
       await ApiService.generarTurno(datos, context);
     } catch (e) {
-      print('Error al generar turno: $e');
+      print('Error al generar turno_: $e');
     }
-  }
-
-  void _showWarningDialog(BuildContext context, String message) {
-    AwesomeDialog(
-      context: context,
-      dialogType: DialogType.warning,
-      borderSide: BorderSide(
-        color: Colors.blue,
-        width: 2,
-      ),
-      width: 280,
-      buttonsBorderRadius: BorderRadius.all(
-        Radius.circular(2),
-      ),
-      dismissOnTouchOutside: true,
-      dismissOnBackKeyPress: false,
-      onDismissCallback: (type) {
-        debugPrint('Dialog Dismiss from callback $type');
-      },
-      headerAnimationLoop: false,
-      animType: AnimType.topSlide,
-      title: message,
-      descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-      btnOkOnPress: () {},
-    ).show();
   }
 }

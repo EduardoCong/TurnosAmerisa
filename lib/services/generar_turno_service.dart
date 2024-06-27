@@ -32,7 +32,7 @@ class ApiService {
     }
   }
 
-  static Future<Turno> generarTurno(Map<String, dynamic> datos, BuildContext context) async {
+  static Future generarTurno(Map<String, dynamic> datos, BuildContext context) async {
     try {
       var response = await http.post(
         Uri.parse('$baseUrl'),
@@ -47,7 +47,9 @@ class ApiService {
         print('pasa esto ${jsonData['codigo']}');
         if (jsonData['codigo'] == 0) {
           print('Turno generado');
-          return Turno.fromJson(jsonData);
+         
+          print(jsonData);
+          return false;
 
         } else {
           throw Exception('Error al generar turno: ${jsonData['respuesta']}');
