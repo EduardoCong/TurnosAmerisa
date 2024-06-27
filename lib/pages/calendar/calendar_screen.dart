@@ -245,9 +245,8 @@ void _selectTime(BuildContext context) async {
   String? numeroDocumento = numeroDocumentoController.text;
     try {
       if (numeroDocumento.isNotEmpty) {
-        int numeroDocumentoInt = int.tryParse(numeroDocumento) ?? 0;
 
-        Cliente? cliente = await ApiService.obtenerCliente(numeroDocumentoInt);
+        Cliente? cliente = await ApiService.obtenerCliente(numeroDocumento);
 
         if (cliente != null) {
           setState(() {

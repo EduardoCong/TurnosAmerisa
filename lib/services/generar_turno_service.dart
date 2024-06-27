@@ -4,15 +4,15 @@ import 'package:http/http.dart' as http;
 import 'package:turnos_amerisa/model/api.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.0.17/TurnosPHP/models/model_generar_turno.php';
+  static const String baseUrl = 'http://amigos.local/models/model_generar_turno.php';
 
-  static Future<Cliente?> obtenerCliente(int numeroDocumento) async {
+  static Future<Cliente?> obtenerCliente(String numeroDocumento) async {
     try {
       var response = await http.post(
         Uri.parse('$baseUrl'),
         body: {
           'accion': 'ObtenerCliente',
-          'datos': numeroDocumento.toString(),
+          'datos': numeroDocumento,
         },
       );
       
@@ -20,7 +20,6 @@ class ApiService {
         var jsonData = json.decode(response.body);
         if (jsonData['codigo'] == 0) {
           print('Cliente obtenido');
-          print(jsonData['codigo']);
           return Cliente.fromJson(jsonData);
         } else {
           return null;
@@ -48,7 +47,6 @@ class ApiService {
         print('pasa esto ${jsonData['codigo']}');
         if (jsonData['codigo'] == 0) {
           print('Turno generado');
-          print(jsonData['id']);
           return Turno.fromJson(jsonData);
 
         } else {

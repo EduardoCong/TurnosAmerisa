@@ -1,6 +1,6 @@
 class Cliente {
   final String documento;
-  final int numero;
+  final String numero;
   final String pnombre;
   final String snombre;
   final String papellido;

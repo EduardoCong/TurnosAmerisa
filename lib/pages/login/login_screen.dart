@@ -108,9 +108,11 @@ class SignInScreen extends StatelessWidget {
       child: ElevatedButton(
         onPressed: () {
           String usuarios = _userController.text;
+          int clientes = int.parse(usuarios);
           String password = _passwordController.text;
-          // loginUsers(context, usuarios, password);
-          loginClients(context, usuarios, password);
+          print(clientes);
+          print(password);
+          loginClients(context, clientes.toString(), password);
         },
         style: ElevatedButton.styleFrom(
           backgroundColor:  Color.fromARGB(255, 35, 38, 204),

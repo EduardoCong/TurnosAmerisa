@@ -16,6 +16,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   TextEditingController snombreController = TextEditingController();
   TextEditingController papellidoController = TextEditingController();
   TextEditingController sapellidoController = TextEditingController();
+  TextEditingController documentoController = TextEditingController();
 
   Servicio? servicioSeleccionado;
 
@@ -99,31 +100,8 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                 padding: const EdgeInsets.only(top: 5),
                 child: ElevatedButton.icon(
                   onPressed: (){
-                     AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.warning,
-                      borderSide: BorderSide(
-                        color: Colors.blue,
-                        width: 2,
-                      ),
-                      width: 280,
-                      buttonsBorderRadius: BorderRadius.all(
-                        Radius.circular(2),
-                      ),
-                      dismissOnTouchOutside: true,
-                      dismissOnBackKeyPress: false,
-                      onDismissCallback: (type) {
-                        debugPrint('Dialog Dismiss from callback $type');
-                      },
-                      headerAnimationLoop: false,
-                      animType: AnimType.topSlide,
-                      title: 'message',
-                      descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-                      btnOkOnPress: () {
-                        generarTurno(context);
-                        Navigator.pushNamed(context, '/verturno');
-                      },
-                    ).show();
+                    generarTurno(context);
+                    Navigator.pushNamed(context, '/verturno');
                   },
                   icon: Icon(Icons.schedule, color: Colors.white),
                   label: Text('Generar', style: TextStyle(color: Colors.white)),
@@ -204,6 +182,11 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
               controller: sapellidoController,
               label: 'Segundo Apellido',
             ),
+            SizedBox(height: 8.0),
+            _buildTextField(
+              controller: documentoController,
+              label: 'Documento',
+            ),
           ],
         ),
       ),
@@ -214,21 +197,25 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     String? numeroDocumento = numeroDocumentoController.text;
     try {
       if (numeroDocumento.isNotEmpty) {
-        int numeroDocumentoInt = int.tryParse(numeroDocumento) ?? 0;
-
-        Cliente? cliente = await ApiService.obtenerCliente(numeroDocumentoInt);
+        Cliente? cliente = await ApiService.obtenerCliente(numeroDocumento);
 
         if (cliente != null) {
           setState(() {
-            numeroController.text = cliente.numero.toString();
+            numeroController.text = cliente.numero;
             pnombreController.text = cliente.pnombre;
             snombreController.text = cliente.snombre;
             papellidoController.text = cliente.papellido;
             sapellidoController.text = cliente.sapellido;
+            documentoController.text = cliente.documento;
           });
           print('Cliente encontrado');
         } else {
-          _clearClienteInfo();
+          numeroController.text = '';
+          pnombreController.text = '';
+          snombreController.text = '';
+          papellidoController.text = '';
+          sapellidoController.text = '';
+          documentoController.text = '';
           print('No se encontraron datos de cliente');
         }
       } else {
@@ -237,16 +224,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     } catch (e) {
       print('Error al buscar cliente: $e');
     }
-  }
-
-  void _clearClienteInfo() {
-    setState(() {
-      numeroController.clear();
-      pnombreController.clear();
-      snombreController.clear();
-      papellidoController.clear();
-      sapellidoController.clear();
-    });
   }
 
   Future<void> generarTurno(BuildContext context) async {
@@ -260,9 +237,10 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       _showWarningDialog(context, 'Ingresa un número');
       return;
     }
-    int? amigos = int.tryParse(numeroTexto);
+
     Map<String, dynamic> datos = {
-      'numero': amigos,
+      'numero': numeroTexto,
+      'documento': documentoController.text,
       'pnombre': pnombreController.text,
       'snombre': snombreController.text,
       'papellido': papellidoController.text,

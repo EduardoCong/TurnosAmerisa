@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
-const String url = 'http://192.168.0.17/TurnosPHP/models/login.php';
+const String url = 'http://turnos.soft-box.com.mx/models/login.php';
 
 // Future<void> loginUsers(BuildContext context, String usuario, String password) async {
 //   final Map<String, String> queryParams = {
@@ -58,7 +58,7 @@ const String url = 'http://192.168.0.17/TurnosPHP/models/login.php';
 Future<void> loginClients(BuildContext context, String usuario, String password) async {
   final Map<String, String> queryParams = {
     'accion': 'LoginCliente',
-    'usuario_cliente': usuario,
+    'numero_cliente': usuario,
     'password_cliente': password,
   };
 
@@ -71,11 +71,9 @@ Future<void> loginClients(BuildContext context, String usuario, String password)
       final String mensaje = responseData['mensaje'];
       if (codigo == 0) {
         print('Inicio de sesión exitoso: $mensaje');
-        print(responseData);
-
         SharedPreferences prefs = await SharedPreferences.getInstance();
         await prefs.setBool('isLoggedIn', true);
-        await prefs.setString('usuario_cliente', usuario);
+        await prefs.setString('numero_cliente', usuario);     
 
         Navigator.pushNamed(context, '/home');
       } else {
@@ -93,9 +91,9 @@ Future<void> loginClients(BuildContext context, String usuario, String password)
 Future<void> logoutClient(BuildContext context) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? usuario = prefs.getString('usuario_cliente');
+    String? usuario = prefs.getString('numero_cliente');
     await prefs.remove('isLoggedIn');
-    await prefs.remove('usuario_cliente');
+    await prefs.remove('numero_cliente');
     print('Sesión cerrada exitosamente para: $usuario');
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
   } catch (e) {
