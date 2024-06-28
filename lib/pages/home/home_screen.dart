@@ -72,17 +72,20 @@ class HomePage extends StatelessWidget {
 
   Widget buttonTurno(BuildContext context){
     return SizedBox(
-      width: 200,
+      width: 330,
       height: 100,
       child: ElevatedButton.icon(
         onPressed: () {
-          Navigator.pushNamed(context, '/turno');
+          Navigator.pushReplacementNamed(context, '/turno');
         },
-        icon: Icon(Icons.phone_android),
-        label: Text("Pedir Turno", style: TextStyle(fontSize: 22)),
+        icon: Icon(Icons.phone_android, color: Colors.white,),
+        label: Text("Pedir Turno", style: TextStyle(fontSize: 22, color: Colors.white)),
         style: ElevatedButton.styleFrom(
+          backgroundColor:  Color.fromARGB(255, 35, 38, 204),
+          elevation: 0,
+          minimumSize: Size(MediaQuery.of(context).size.width - 46, 55),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
       ),
@@ -91,17 +94,20 @@ class HomePage extends StatelessWidget {
 
   Widget buttonCita(BuildContext context){
     return SizedBox(
-      width: 200,
+      width: 330,
       height: 100,
       child: ElevatedButton.icon(
         onPressed: () {
           Navigator.pushNamed(context, '/calendario');
         },
-        icon: Icon(Icons.calendar_today),
-        label: Text("Pedir Cita" , style: TextStyle(fontSize: 22)),
+        icon: Icon(Icons.calendar_today, color: Colors.white,),
+        label: Text("Pedir Cita" , style: TextStyle(fontSize: 22, color: Colors.white)),
         style: ElevatedButton.styleFrom(
+          backgroundColor:  Color.fromARGB(255, 35, 38, 204),
+          elevation: 0,
+          minimumSize: Size(MediaQuery.of(context).size.width - 46, 55),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(20),
+            borderRadius: BorderRadius.circular(10),
           ),
         ),
       ),

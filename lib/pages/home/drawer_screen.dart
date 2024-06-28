@@ -1,9 +1,18 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:turnos_amerisa/services/login_service.dart';
+import 'package:turnos_amerisa/model/sharedPreferences.dart';
 
-class CustomDrawer extends StatelessWidget {
+
+class CustomDrawer extends StatefulWidget {
   const CustomDrawer({super.key});
+
+  @override
+  State<CustomDrawer> createState() => _CustomDrawerState();
+}
+
+class _CustomDrawerState extends State<CustomDrawer> {
+
+  SharedPrefsService sharedPrefs = SharedPrefsService();
 
   @override
   Widget build(BuildContext context) {
@@ -76,8 +85,11 @@ class CustomDrawer extends StatelessWidget {
             title: '¿Estas seguro que deseas salir de la sesion?',
             descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
             btnOkText: 'Si',
-            btnOkOnPress: (){
-              logoutClient(context);
+            btnOkOnPress: () async {
+              // bool isRemoved = await sharedPrefs.removeCache(key: "numero");
+              // if (isRemoved) {
+                Navigator.of(context).pushReplacementNamed('/');
+              // }else{}
             },
             btnCancelText: 'No',
             btnCancelOnPress: () {

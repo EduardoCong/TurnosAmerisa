@@ -18,30 +18,9 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
   String nextNumber = 'A1';
   String branch = '44';
 
-
-  int turnos = 0;
-  String nombreTurno = '';
-  String name = '';
-  String secondName = '';
-  String lastName = '';
-  String secondLastName = '';
-
-
   @override
   void initState() {
     super.initState();
-    cargarDatosTurno();
-  }
-
-  Future<void> cargarDatosTurno() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    setState(() {
-      turnos = int.parse(prefs.getString('id_turno') ?? '0');
-      nombreTurno = prefs.getString('turno') ?? '';
-      print(turnos);
-      print(nombreTurno);
-    });
   }
   
   @override
@@ -91,7 +70,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
 
   Widget textsimple(){
     return Text(
-      'Su turno: $turnos',
+      'Su turno:',
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
@@ -113,7 +92,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
 
   Widget textsimple2(){
     return Text(
-      'Tiempo estimado de espera: $nombreTurno',
+      'Tiempo estimado de espera:',
       style: TextStyle(
         fontSize: 16,
         color: Colors.white,
@@ -174,7 +153,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
           title: 'Turno Cancelado',
           descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
           btnOkOnPress: () {
-            Navigator.pop(context);
+            Navigator.of(context).pushReplacementNamed('/home');
           },
         ).show();
       }
@@ -187,7 +166,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
       width: 200,
       color: Colors.greenAccent.shade400,
       pressEvent: (){
-        Navigator.pushNamed(context, '/home');
+        Navigator.of(context).pushReplacementNamed('/home');
       }
     );
   }

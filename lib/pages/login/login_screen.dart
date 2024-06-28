@@ -1,11 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:turnos_amerisa/model/sharedPreferences.dart';
 import 'package:turnos_amerisa/services/login_service.dart';
 
-class SignInScreen extends StatelessWidget {
+class SignInScreen extends StatefulWidget {
+  SignInScreen({super.key});
+
+  @override
+  State<SignInScreen> createState() => _SignInScreenState();
+}
+
+class _SignInScreenState extends State<SignInScreen> {
+
   final TextEditingController _userController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
-
-  SignInScreen({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -107,9 +114,13 @@ class SignInScreen extends StatelessWidget {
       padding:  EdgeInsets.only(top: 20),
       child: ElevatedButton(
         onPressed: () async{
+          SharedPrefsService prefshared = SharedPrefsService();
           String usuarios = _userController.text;
           String password = _passwordController.text;
           loginClients(context, usuarios, password);
+          await prefshared.writeCache(key: 'numero', value: _userController.text);
+          await prefshared.readCache(key: 'numero');
+          Navigator.pushReplacementNamed(context, '/home');
         },
         style: ElevatedButton.styleFrom(
           backgroundColor:  Color.fromARGB(255, 35, 38, 204),

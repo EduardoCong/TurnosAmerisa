@@ -1,5 +1,8 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
+import 'package:turnos_amerisa/model/sharedPreferences.dart';
 import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
 import 'package:turnos_amerisa/pages/login/login_screen.dart';
@@ -20,11 +23,13 @@ void main(){
     ],
     debug: true,
   );
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+   MyApp({super.key});
+
+  SharedPrefsService prefs = SharedPrefsService();
 
   @override
   Widget build(BuildContext context) {

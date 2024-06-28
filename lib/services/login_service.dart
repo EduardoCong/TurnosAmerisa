@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 const String url = 'http://turnos.soft-box.com.mx/models/login.php';
 
@@ -21,12 +20,8 @@ Future<void> loginClients(BuildContext context, String usuario, String password)
       final int codigo = responseData['codigo'];
       final String mensaje = responseData['mensaje'];
       if (codigo == 0) {
-        print('Inicio de sesión exitoso: $mensaje');
-        SharedPreferences prefs = await SharedPreferences.getInstance();
-        await prefs.setBool('isLoggedIn', true);
-        await prefs.setString('numero_cliente', usuario);     
+        print('Inicio de sesión exitoso: $mensaje');    
 
-        Navigator.pushNamed(context, '/home');
       } else {
         print('Error en el inicio de sesión: $mensaje');
         
@@ -36,22 +31,5 @@ Future<void> loginClients(BuildContext context, String usuario, String password)
     }
   } catch (e) {
     print('Error: $e');
-  }
-}
-
-Future<void> logoutClient(BuildContext context) async {
-  try {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-
-    String? usuario = prefs.getString('numero_cliente');
-
-    await prefs.remove('isLoggedIn');
-    await prefs.remove('numero_cliente');
-    print('Sesión cerrada exitosamente para: $usuario');
-
-    Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
-    
-  } catch (e) {
-    print('Error al cerrar sesión: $e');
   }
 }

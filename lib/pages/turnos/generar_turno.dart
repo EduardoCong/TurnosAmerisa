@@ -88,7 +88,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
             Center(
               child: Padding(
                 padding: const EdgeInsets.only(top: 5),
-                child: ElevatedButton.icon(
+                child: ElevatedButton(
                   onPressed: (){
                     AwesomeDialog(
                       context: context,
@@ -112,16 +112,56 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                       descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
                       btnOkOnPress: () {
                         generarTurno(context);
-                        Navigator.pushNamed(context, '/verturno');
+                        Navigator.of(context).pushReplacementNamed('/verturno');
                       },
+                      btnCancelOnPress: (){},
                     ).show();
                   },
-                  icon: Icon(Icons.schedule, color: Colors.white),
-                  label: Text('Generar', style: TextStyle(color: Colors.white)),
+                  child: Text('Generar', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     textStyle: TextStyle(fontSize: 16.0),
                     minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
                     backgroundColor: Color.fromARGB(255, 35, 38, 204),
+                  ),
+                ),
+              ),
+            ),
+            Center(
+              child: Padding(
+                padding: const EdgeInsets.only(top: 5),
+                child: ElevatedButton(
+                  onPressed: (){
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.warning,
+                      borderSide: BorderSide(
+                        color: Colors.red,
+                        width: 2,
+                      ),
+                      width: 280,
+                      buttonsBorderRadius: BorderRadius.all(
+                        Radius.circular(2)
+                      ),
+                      dismissOnTouchOutside: true,
+                      dismissOnBackKeyPress: false,
+                      onDismissCallback: (type) {
+                        debugPrint('Dialog Dissmiss from callback $type');
+                      },
+                      headerAnimationLoop: false,
+                      animType: AnimType.bottomSlide,
+                      title: 'Cancelado',
+                      descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+                      btnOkOnPress: () {
+                        Navigator.of(context).pushReplacementNamed('/home');
+                      },
+                      btnCancelOnPress: (){},
+                    ).show();
+                  },
+                  child: Text('Cancelar', style: TextStyle(color: Colors.white)),
+                  style: ElevatedButton.styleFrom(
+                    textStyle: TextStyle(fontSize: 16.0),
+                    minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                    backgroundColor: Colors.red,
                   ),
                 ),
               ),
@@ -138,7 +178,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       child: Image.network(
         "https://pbs.twimg.com/profile_images/814281946180231169/E7Z0c1Hy_400x400.jpg",
         width: 600,
-        height: 300,
+        height: 200,
       ),
     );
   }
