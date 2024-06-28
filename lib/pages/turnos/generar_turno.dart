@@ -1,6 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
@@ -12,12 +11,9 @@ class GenerarTurnoView extends StatefulWidget {
 
 class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   TextEditingController numeroDocumentoController = TextEditingController();
-  TextEditingController pnombreController = TextEditingController();
-  TextEditingController snombreController = TextEditingController();
-  TextEditingController papellidoController = TextEditingController();
-  TextEditingController sapellidoController = TextEditingController();
 
   Servicio? servicioSeleccionado;
+  Cliente? cliente;
 
   @override
   void initState() {
@@ -59,11 +55,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                   minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
                 ),
               ),
-            ),
-            SizedBox(height: 16.0),
-            Visibility(
-              visible: false,
-              child: _buildClienteInfoSection(),
             ),
             SizedBox(height: 16.0),
             Card(
@@ -167,97 +158,24 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     );
   }
 
-  Widget _buildClienteInfoSection() {
-    return Card(
-      elevation: 4.0,
-      margin: EdgeInsets.symmetric(vertical: 10.0),
-      child: Padding(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              'Información del Cliente',
-              style: TextStyle(
-                fontSize: 18.0,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            SizedBox(height: 10.0),
-            _buildTextField(
-              controller: pnombreController,
-              label: 'Primer Nombre',
-            ),
-            SizedBox(height: 8.0),
-            _buildTextField(
-              controller: snombreController,
-              label: 'Segundo Nombre',
-            ),
-            SizedBox(height: 8.0),
-            _buildTextField(
-              controller: papellidoController,
-              label: 'Primer Apellido',
-            ),
-            SizedBox(height: 8.0),
-            _buildTextField(
-              controller: sapellidoController,
-              label: 'Segundo Apellido',
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-
   Future<void> buscarCliente(BuildContext context) async {
-    String? numeroDocumento = numeroDocumentoController.text;
     try {
-      if (numeroDocumento.isNotEmpty) {
-        Cliente? cliente = await ApiService.obtenerCliente(numeroDocumento);
-
-        if (cliente != null) {
-          setState(() {
-            numeroDocumentoController.text = cliente.numero;
-            pnombreController.text = cliente.pnombre;
-            snombreController.text = cliente.snombre;
-            papellidoController.text = cliente.papellido;
-            sapellidoController.text = cliente.sapellido;
-          });
-          print('Cliente encontrado');
-        } else {
-          numeroDocumentoController.text = '';
-          pnombreController.text = '';
-          snombreController.text = '';
-          papellidoController.text = '';
-          sapellidoController.text = '';
-          print('No se encontraron datos de cliente');
-        }
-      } else {
-        print('Ingrese un número de documento válido');
-      }
+      String? numeroDocumento = numeroDocumentoController.text;
+     await ApiService.obtenerCliente(numeroDocumento);
+     print('Cliente encontrado');
     } catch (e) {
-      print('Error al buscar cliente: $e');
+      Error;
     }
   }
 
   Future<void> generarTurno(BuildContext context) async {
-    // if (servicioSeleccionado == null) {
-    //   _showWarningDialog(context, 'Selecciona un servicio primero');
-    //   return;
-    // }
-
-    // String numeroTexto = numeroController.text;
-    // if (numeroTexto.isEmpty) {
-    //   _showWarningDialog(context, 'Ingresa un número');
-    //   return;
-    // }
 
     Map<String, dynamic> datos = {
       'numero': numeroDocumentoController.text,
-      'pnombre': pnombreController.text,
-      'snombre': snombreController.text,
-      'papellido': papellidoController.text,
-      'sapellido': sapellidoController.text,
+      'pnombre': cliente!.pnombre,
+      'snombre': cliente!.snombre,
+      'papellido': cliente!.papellido,
+      'sapellido': cliente!.sapellido,
       'registrarcliente': 'NO',
       'id_servicio': servicioSeleccionado!.id,
       'letra': servicioSeleccionado!.letra,

@@ -102,7 +102,6 @@ class _CalendarState extends State<Calendar> {
         child: Column(
           children: [
             if (_showCounter)
-            countCalendar(),
             calendarTable(),
             SizedBox(height: 16),
             if (_isTimeSelectorVisible)
@@ -130,54 +129,56 @@ class _CalendarState extends State<Calendar> {
   }
 
   Widget calendarTable(){
-    return TableCalendar(
-      focusedDay: _today,
-      firstDay: DateTime.now(),
-      lastDay: DateTime.utc(2030, 3, 14),
-      selectedDayPredicate: ((day) => isSameDay(_selectedDay, day)),
-      calendarFormat: _calendarFormat,
-      startingDayOfWeek: StartingDayOfWeek.monday,
-      onDaySelected: _onDaySelected,
-      eventLoader: _getEventForDay,
-      calendarStyle: CalendarStyle(
-        outsideDaysVisible: false,
-      ),
-      onFormatChanged: (format) {
-        if (_calendarFormat != format) {
-          setState(() {
-            _calendarFormat = format;
-          });
-        }
-      },
-      onPageChanged: (focusedDay) {
-        setState(() {
-          _today = focusedDay;
-        });
-      },
-    );
-  }
-
-  Widget countCalendar(){
-    return Positioned(
-      top: -40,
-      right: 16,
-      child: Container(
-        padding: EdgeInsets.all(8),
-        decoration: BoxDecoration(
-          color: Colors.blue,
-          borderRadius: BorderRadius.circular(8),
+  return Stack(
+    children: [
+      TableCalendar(
+        focusedDay: _today,
+        firstDay: DateTime.now(),
+        lastDay: DateTime.utc(2030, 3, 14),
+        selectedDayPredicate: ((day) => isSameDay(_selectedDay, day)),
+        calendarFormat: _calendarFormat,
+        startingDayOfWeek: StartingDayOfWeek.monday,
+        onDaySelected: _onDaySelected,
+        eventLoader: _getEventForDay,
+        calendarStyle: CalendarStyle(
+          outsideDaysVisible: false,
         ),
-        child: Text(
-          'Tiempo restante: ${_counter ~/ 60}:${(_counter % 60).toString().padLeft(2, '0')}',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-            color: Colors.white,
+        onFormatChanged: (format) {
+          if (_calendarFormat != format) {
+            setState(() {
+              _calendarFormat = format;
+            });
+          }
+        },
+        onPageChanged: (focusedDay) {
+          setState(() {
+            _today = focusedDay;
+          });
+        },
+      ),
+      if (_showCounter)
+        Positioned(
+          top: 16,
+          right: 16,
+          child: Container(
+            padding: EdgeInsets.all(8),
+            decoration: BoxDecoration(
+              color: Colors.blue,
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              'Tiempo restante: ${_counter ~/ 60}:${(_counter % 60).toString().padLeft(2, '0')}',
+              style: TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w500,
+                color: Colors.white,
+              ),
+            ),
           ),
         ),
-      ),
-    );
-  }
+    ],
+  );
+}
 
   Widget servicesCalendar(){
   return Padding(

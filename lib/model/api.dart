@@ -1,5 +1,4 @@
 class Cliente {
-  // final String documento;
   final String numero;
   final String pnombre;
   final String snombre;
@@ -7,7 +6,6 @@ class Cliente {
   final String sapellido;
 
   Cliente({
-    // required this.documento,
     required this.numero,
     required this.pnombre,
     required this.snombre,
@@ -17,7 +15,6 @@ class Cliente {
 
   factory Cliente.fromJson(Map<String, dynamic> json) {
     return Cliente(
-      // documento: json['documento'],
       numero: json['numero'],
       pnombre: json['pnombre'],
       snombre: json['snombre'],
@@ -49,29 +46,6 @@ class Servicio {
       color: json['color_servicio'],
       icono: json['icono_servicio'],
       letra: json['letra_servicio'],
-    );
-  }
-}
-
-class Turno {
-  final int id;
-  final String turno;
-  final String estado;
-  final String modulo;
-
-  Turno({
-    required this.id,
-    required this.turno,
-    required this.estado,
-    required this.modulo
-  });
-
-  factory Turno.fromJson(Map<String, dynamic> json) {
-    return Turno(
-      id: int.parse(json['id']),
-      turno: json['turno'],
-      estado: json['estado_turno'],
-      modulo: json['modulo'],
     );
   }
 }

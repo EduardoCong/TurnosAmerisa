@@ -77,7 +77,6 @@ class CustomDrawer extends StatelessWidget {
             descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
             btnOkText: 'Si',
             btnOkOnPress: (){
-              // logoutClient(context);
               logoutClient(context);
             },
             btnCancelText: 'No',
