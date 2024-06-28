@@ -26,7 +26,7 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
   Future<void> cargarServicios() async {
     try {
       final response = await http.post(
-        Uri.parse('http://amigos.local/models/model_generar_turno.php'),
+        Uri.parse('http://turnos.soft-box.com.mx/models/model_generar_turno.php'),
         body: {'accion': 'VerServicios'},
       );
 

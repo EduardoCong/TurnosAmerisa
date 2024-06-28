@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
@@ -15,7 +16,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   TextEditingController snombreController = TextEditingController();
   TextEditingController papellidoController = TextEditingController();
   TextEditingController sapellidoController = TextEditingController();
-  TextEditingController documentoController = TextEditingController();
 
   Servicio? servicioSeleccionado;
 
@@ -99,13 +99,35 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                 padding: const EdgeInsets.only(top: 5),
                 child: ElevatedButton.icon(
                   onPressed: (){
-                    generarTurno(context);
-                    Navigator.pushNamed(context, '/verturno');
+                    AwesomeDialog(
+                      context: context,
+                      dialogType: DialogType.success,
+                      borderSide: BorderSide(
+                        color: Colors.blue,
+                        width: 2,
+                      ),
+                      width: 280,
+                      buttonsBorderRadius: BorderRadius.all(
+                        Radius.circular(2)
+                      ),
+                      dismissOnTouchOutside: true,
+                      dismissOnBackKeyPress: false,
+                      onDismissCallback: (type) {
+                        debugPrint('Dialog Dissmiss from callback $type');
+                      },
+                      headerAnimationLoop: false,
+                      animType: AnimType.bottomSlide,
+                      title: 'Turno Generado Con Exito',
+                      descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+                      btnOkOnPress: () {
+                        generarTurno(context);
+                        Navigator.pushNamed(context, '/verturno');
+                      },
+                    ).show();
                   },
                   icon: Icon(Icons.schedule, color: Colors.white),
                   label: Text('Generar', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
-                    // padding: EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
                     textStyle: TextStyle(fontSize: 16.0),
                     minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
                     backgroundColor: Color.fromARGB(255, 35, 38, 204),
@@ -181,11 +203,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
               controller: sapellidoController,
               label: 'Segundo Apellido',
             ),
-            SizedBox(height: 8.0),
-            _buildTextField(
-              controller: documentoController,
-              label: 'Documento',
-            ),
           ],
         ),
       ),
@@ -205,7 +222,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
             snombreController.text = cliente.snombre;
             papellidoController.text = cliente.papellido;
             sapellidoController.text = cliente.sapellido;
-            documentoController.text = cliente.documento;
           });
           print('Cliente encontrado');
         } else {
@@ -214,7 +230,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
           snombreController.text = '';
           papellidoController.text = '';
           sapellidoController.text = '';
-          documentoController.text = '';
           print('No se encontraron datos de cliente');
         }
       } else {
@@ -239,7 +254,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
 
     Map<String, dynamic> datos = {
       'numero': numeroDocumentoController.text,
-      'documento': documentoController.text,
       'pnombre': pnombreController.text,
       'snombre': snombreController.text,
       'papellido': papellidoController.text,
@@ -249,6 +263,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       'letra': servicioSeleccionado!.letra,
       'fechaInicio': null,
     };
+
     try {
       await ApiService.generarTurno(datos, context);
     } catch (e) {

@@ -1,10 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/model/api.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://amigos.local/models/model_generar_turno.php';
+  static const String baseUrl = 'http://turnos.soft-box.com.mx/models/model_generar_turno.php';
 
   static Future<Cliente?> obtenerCliente(String numeroDocumento) async {
     try {
@@ -47,7 +48,6 @@ class ApiService {
         print('pasa esto ${jsonData['codigo']}');
         if (jsonData['codigo'] == 0) {
           print('Turno generado');
-         
           print(jsonData);
           return false;
 

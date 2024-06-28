@@ -2,6 +2,7 @@
 
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class VirtualQueueScreen extends StatefulWidget {
   VirtualQueueScreen({super.key});
@@ -17,6 +18,32 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
   String nextNumber = 'A1';
   String branch = '44';
 
+
+  int turnos = 0;
+  String nombreTurno = '';
+  String name = '';
+  String secondName = '';
+  String lastName = '';
+  String secondLastName = '';
+
+
+  @override
+  void initState() {
+    super.initState();
+    cargarDatosTurno();
+  }
+
+  Future<void> cargarDatosTurno() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+
+    setState(() {
+      turnos = int.parse(prefs.getString('id_turno') ?? '0');
+      nombreTurno = prefs.getString('turno') ?? '';
+      print(turnos);
+      print(nombreTurno);
+    });
+  }
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -64,7 +91,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
 
   Widget textsimple(){
     return Text(
-      'Su turno:',
+      'Su turno: $turnos',
       style: TextStyle(
         fontSize: 20,
         fontWeight: FontWeight.bold,
@@ -86,7 +113,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
 
   Widget textsimple2(){
     return Text(
-      'Tiempo estimado de espera:',
+      'Tiempo estimado de espera: $nombreTurno',
       style: TextStyle(
         fontSize: 16,
         color: Colors.white,

@@ -91,11 +91,15 @@ Future<void> loginClients(BuildContext context, String usuario, String password)
 Future<void> logoutClient(BuildContext context) async {
   try {
     SharedPreferences prefs = await SharedPreferences.getInstance();
+
     String? usuario = prefs.getString('numero_cliente');
+
     await prefs.remove('isLoggedIn');
     await prefs.remove('numero_cliente');
     print('Sesión cerrada exitosamente para: $usuario');
+
     Navigator.pushNamedAndRemoveUntil(context, '/', (route) => false);
+    
   } catch (e) {
     print('Error al cerrar sesión: $e');
   }
