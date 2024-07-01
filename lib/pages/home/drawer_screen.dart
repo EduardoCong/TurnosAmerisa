@@ -1,6 +1,5 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
-import 'package:turnos_amerisa/model/sharedPreferences.dart';
 
 
 class CustomDrawer extends StatefulWidget {
@@ -12,7 +11,6 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
 
-  SharedPrefsService sharedPrefs = SharedPrefsService();
 
   @override
   Widget build(BuildContext context) {
@@ -86,10 +84,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
             btnOkText: 'Si',
             btnOkOnPress: () async {
-              // bool isRemoved = await sharedPrefs.removeCache(key: "numero");
-              // if (isRemoved) {
                 Navigator.of(context).pushReplacementNamed('/');
-              // }else{}
             },
             btnCancelText: 'No',
             btnCancelOnPress: () {

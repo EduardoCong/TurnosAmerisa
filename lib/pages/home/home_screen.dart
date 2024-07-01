@@ -76,7 +76,7 @@ class HomePage extends StatelessWidget {
       height: 100,
       child: ElevatedButton.icon(
         onPressed: () {
-          Navigator.pushReplacementNamed(context, '/turno');
+          Navigator.of(context).pushReplacementNamed('/turno');
         },
         icon: Icon(Icons.phone_android, color: Colors.white,),
         label: Text("Pedir Turno", style: TextStyle(fontSize: 22, color: Colors.white)),
@@ -98,7 +98,7 @@ class HomePage extends StatelessWidget {
       height: 100,
       child: ElevatedButton.icon(
         onPressed: () {
-          Navigator.pushNamed(context, '/calendario');
+          Navigator.of(context).pushReplacementNamed('/calendario');
         },
         icon: Icon(Icons.calendar_today, color: Colors.white,),
         label: Text("Pedir Cita" , style: TextStyle(fontSize: 22, color: Colors.white)),

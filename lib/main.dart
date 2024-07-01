@@ -2,10 +2,10 @@
 
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:turnos_amerisa/model/sharedPreferences.dart';
 import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
 import 'package:turnos_amerisa/pages/login/login_screen.dart';
+import 'package:turnos_amerisa/pages/splashscreen/splash_screen.dart';
 // import 'package:turnos_amerisa/pages/rating/rating_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/cita_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
@@ -26,11 +26,14 @@ void main(){
   runApp(MyApp());
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
    MyApp({super.key});
 
-  SharedPrefsService prefs = SharedPrefsService();
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
 
+class _MyAppState extends State<MyApp>{
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -42,7 +45,8 @@ class MyApp extends StatelessWidget {
       ),
       initialRoute: '/',
       routes: {
-        '/': (context) =>  SignInScreen(),
+        '/': (context) => SplashScreen(),
+        '/login': (context) =>  SignInScreen(),
         '/home': (context) => HomePage(),
         '/verturno': (context) => VirtualQueueScreen(),
         '/calendario': (context) => Calendar(),

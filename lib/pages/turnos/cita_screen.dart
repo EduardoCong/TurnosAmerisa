@@ -1,165 +1,189 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class CitaQueueScreen extends StatefulWidget {
-  CitaQueueScreen({super.key});
+  CitaQueueScreen({Key? key}) : super(key: key);
 
   @override
   _CitaQueueScreenState createState() => _CitaQueueScreenState();
 }
 
 class _CitaQueueScreenState extends State<CitaQueueScreen> {
-  String ticketNumber = 'A2';
-  String waitTime = '2 min';
-  String queueCode = '4P96B7AL';
-  String nextNumber = 'A1';
-  String branch = '44';
+  
+  String name = '';
+  String sname = '';
+  String apellido = '';
+  String sapellido = '';
+  String num = '';
+  String turno = '';
+  String? nombreServicio;
+  String? letraServicio;
+  String month = '';
+  String time = '';
+  int year = 0;
+  int day = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    loadTicketData();
+  }
+
+  Future<void> loadTicketData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('nombre') ?? '';
+      sname = prefs.getString('segundoNombre') ?? '';
+      apellido = prefs.getString('apellido') ?? '';
+      sapellido = prefs.getString('segundoApellido') ?? '';
+      num = prefs.getString('numeroCliente') ?? '';
+      turno = prefs.getString('turno') ?? '';
+      nombreServicio = prefs.getString('nombreServicio');
+      letraServicio = prefs.getString('letraServicio');
+      year = prefs.getInt('selected_year') ?? 0;
+      month = prefs.getString('selected_month') ?? '';
+      day = prefs.getInt('selected_day') ?? 0;
+      time = prefs.getString('selected_time') ?? '';
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Fila Virtual'),
-        automaticallyImplyLeading: false,
-        centerTitle: true,
-      ),
-      body: ListView(
-        padding: EdgeInsets.all(16),
-        children: [
-          Card(
-            elevation: 4,
-            color: Colors.blue,
+      backgroundColor: Colors.grey[200],
+      body: SingleChildScrollView(
+        child: Container(
+          height: 700,
+          margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 70),
+          child: Card(
+            elevation: 4.0,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(10),
+              borderRadius: BorderRadius.circular(12.0),
             ),
             child: Padding(
-              padding: EdgeInsets.all(16.0),
+              padding: EdgeInsets.all(24.0),
               child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  textsimple(),
-                  SizedBox(height: 10),
-                  textticketnum(),
-                  SizedBox(height: 20),
-                  textsimple2(),
-                  SizedBox(height: 5),
-                  textwaittime(),
+                  Text(
+                    'Ticket Cita',
+                    style: TextStyle(
+                      fontSize: 24.0,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.blue,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(height: 24.0),
+                  Divider(thickness: 1.0, color: Colors.grey[300]),
+                  SizedBox(height: 16.0),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Cliente:',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        '$name $sname $apellido $sapellido',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      Text(
+                        'N° Cliente: $num',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                      SizedBox(height: 8.0),
+                      Text(
+                        'Su Turno:',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.blue,
+                        ),
+                      ),
+                      Text(
+                        '$turno',
+                        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 24.0),
+                  Divider(thickness: 1.0, color: Colors.grey[300]),
+                  SizedBox(height: 16.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Servicio:',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        '$nombreServicio',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 8.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Letra del Servicio:',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                          color: Colors.grey[600],
+                        ),
+                      ),
+                      Text(
+                        '$letraServicio',
+                        style: TextStyle(fontSize: 16.0),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 24.0),
+                  Divider(thickness: 1.0, color: Colors.grey[300]),
+                  SizedBox(height: 16.0),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text('Fecha:'),
+                      Text(
+                        '$month $day del $year a las $time',
+                        style: TextStyle(
+                          fontSize: 16.0,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(height: 150.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed('/home');
+                    },
+                    child: Text(
+                      'Regresar al inicio',
+                      style: TextStyle(color: Colors.white),
+                    ),
+                    style: ElevatedButton.styleFrom(
+                      textStyle: TextStyle(fontSize: 16.0),
+                      minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
                 ],
               ),
             ),
           ),
-          SizedBox(height: 20),
-          _buildListTile('Código de su turno:', queueCode),
-          _buildListTile('Próximo turno a ser llamado:', nextNumber),
-          _buildListTile('Anden:', branch),
-          SizedBox(height: 20),
-          buttonAnimated(context),
-          SizedBox(height: 10),
-          buttonAniBack(context)
-        ],
-      ),
-    );
-  }
-
-  Widget textsimple(){
-    return Text(
-      'Su turno:',
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget textticketnum(){
-    return Text(
-      ticketNumber,
-      style: TextStyle(
-        fontSize: 30,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget textsimple2(){
-    return Text(
-      'Tiempo estimado de espera:',
-      style: TextStyle(
-        fontSize: 16,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget textwaittime(){
-    return Text(
-      waitTime,
-      style: TextStyle(
-        fontSize: 20,
-        fontWeight: FontWeight.bold,
-        color: Colors.white,
-      ),
-    );
-  }
-
-  Widget _buildListTile(String title, String subtitle) {
-    return Card(
-      elevation: 2,
-      child: ListTile(
-        title: Text(
-          title,
-          style: TextStyle(
-            fontWeight: FontWeight.bold,
-          ),
         ),
-        subtitle: Text(subtitle),
       ),
-    );
-  }
-
-  Widget buttonAnimated(BuildContext context){
-    return AnimatedButton(
-      text: 'Cancelar',
-      width: 200,
-      color: Colors.red,
-      pressEvent: (){
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.success,
-          borderSide: BorderSide(
-            color: Colors.blue,
-            width: 2,
-          ),
-          width: 280,
-          buttonsBorderRadius: BorderRadius.all(
-            Radius.circular(2)
-          ),
-          dismissOnTouchOutside: true,
-          dismissOnBackKeyPress: false,
-          onDismissCallback: (type) {
-            debugPrint('Dialog Dissmiss from callback $type');
-          },
-          headerAnimationLoop: false,
-          animType: AnimType.bottomSlide,
-          title: 'Turno Cancelado',
-          descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-          btnOkOnPress: () {
-            Navigator.pushNamed(context, '/home');
-          },
-        ).show();
-      }
-    );
-  }
-
-  Widget buttonAniBack(BuildContext context){
-    return AnimatedButton(
-      text: 'Volver',
-      width: 200,
-      color: Colors.greenAccent.shade400,
-      pressEvent: (){
-        Navigator.pushNamed(context, '/home');
-      }
     );
   }
 }

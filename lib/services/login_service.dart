@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 const String url = 'http://turnos.soft-box.com.mx/models/login.php';
 
@@ -19,8 +20,20 @@ Future<void> loginClients(BuildContext context, String usuario, String password)
       final responseData = jsonDecode(response.body);
       final int codigo = responseData['codigo'];
       final String mensaje = responseData['mensaje'];
+      final String nombre = responseData['nombre'];
+      final String segundoNombre = responseData['segundo nombre'];
+      final String apellido = responseData['apellido'];
+      final String segundoApellido = responseData['segundo apellido'];
       if (codigo == 0) {
-        print('Inicio de sesión exitoso: $mensaje');    
+        print('Inicio de sesión exitoso: $mensaje');
+
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('nombre', nombre);
+        await prefs.setString('segundoNombre', segundoNombre);
+        await prefs.setString('apellido', apellido);
+        await prefs.setString('segundoApellido', segundoApellido);
+        await prefs.setString('numeroCliente', usuario);
+        await prefs.setString('password', password);
 
       } else {
         print('Error en el inicio de sesión: $mensaje');

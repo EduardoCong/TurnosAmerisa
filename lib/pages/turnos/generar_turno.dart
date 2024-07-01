@@ -1,5 +1,6 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
@@ -10,14 +11,39 @@ class GenerarTurnoView extends StatefulWidget {
 }
 
 class _GenerarTurnoViewState extends State<GenerarTurnoView> {
-  TextEditingController numeroDocumentoController = TextEditingController();
 
   Servicio? servicioSeleccionado;
-  Cliente? cliente;
+
+  String nombre = '';
+  String segundoNombre = '';
+  String apellido = '';
+  String segundoApellido = '';
+  String numeroCliente = '';
 
   @override
   void initState() {
     super.initState();
+    loadUserData();
+  }
+
+  Future <void> mostrarDetallesServicio(Servicio servicio) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('id_servicio', servicio.id);
+    await prefs.setString('nombre_servicio', servicio.nombre);
+    await prefs.setString('color_servicio', servicio.color);
+    await prefs.setString('icono_servicio', servicio.icono);
+    await prefs.setString('letra_servicio', servicio.letra);
+  }
+
+  Future<void> loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      nombre = prefs.getString('nombre') ?? '';
+      segundoNombre = prefs.getString('segundoNombre') ?? '';
+      apellido = prefs.getString('apellido') ?? '';
+      segundoApellido = prefs.getString('segundoApellido') ?? '';
+      numeroCliente = prefs.getString('numeroCliente') ?? '';
+    });
   }
 
   @override
@@ -37,26 +63,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
           children: [
             imageLogo(),
             SizedBox(height: 20),
-            _buildTextField(
-              controller: numeroDocumentoController,
-              label: 'Número Documento',
-              icon: Icons.document_scanner,
-            ),
-            SizedBox(height: 16.0),
-            Center(
-              child: ElevatedButton.icon(
-                onPressed: () => buscarCliente(context),
-                icon: Icon(Icons.search, color: Colors.white),
-                label: Text('Buscar Cliente', style: TextStyle(color: Colors.white)),
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: Color.fromARGB(255, 35, 38, 204),
-                  padding: EdgeInsets.symmetric(horizontal: 1.0, vertical: 12.0),
-                  textStyle: TextStyle(fontSize: 16.0),
-                  minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
-                ),
-              ),
-            ),
-            SizedBox(height: 16.0),
             Card(
               elevation: 4.0,
               margin: EdgeInsets.symmetric(vertical: 10.0),
@@ -78,6 +84,10 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                         setState(() {
                           servicioSeleccionado = servicio;
                         });
+                        if (servicio != null) {
+                          mostrarDetallesServicio(servicio);
+                        }
+
                       },
                     ),
                   ],
@@ -183,39 +193,13 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     );
   }
 
-  Widget _buildTextField({
-    required TextEditingController controller,
-    required String label,
-    IconData? icon,
-  }) {
-    return TextField(
-      controller: controller,
-      decoration: InputDecoration(
-        border: OutlineInputBorder(),
-        labelText: label,
-        prefixIcon: icon != null ? Icon(icon) : null,
-      ),
-    );
-  }
-
-  Future<void> buscarCliente(BuildContext context) async {
-    try {
-      String? numeroDocumento = numeroDocumentoController.text;
-     await ApiService.obtenerCliente(numeroDocumento);
-     print('Cliente encontrado');
-    } catch (e) {
-      Error;
-    }
-  }
-
   Future<void> generarTurno(BuildContext context) async {
-
     Map<String, dynamic> datos = {
-      'numero': numeroDocumentoController.text,
-      'pnombre': cliente!.pnombre,
-      'snombre': cliente!.snombre,
-      'papellido': cliente!.papellido,
-      'sapellido': cliente!.sapellido,
+      'numero': numeroCliente,
+      'pnombre': nombre,
+      'snombre': segundoNombre,
+      'papellido': apellido,
+      'sapellido': segundoApellido,
       'registrarcliente': 'NO',
       'id_servicio': servicioSeleccionado!.id,
       'letra': servicioSeleccionado!.letra,
