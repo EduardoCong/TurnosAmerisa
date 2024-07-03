@@ -14,7 +14,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
   String apellido = '';
   String sapellido = '';
   String num = '';
-  String turno = '';
+  String turnos = '';
   String? nombreServicio;
   String? letraServicio;
 
@@ -32,7 +32,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
       apellido = prefs.getString('apellido') ?? '';
       sapellido = prefs.getString('segundoApellido') ?? '';
       num = prefs.getString('numeroCliente') ?? '';
-      turno = prefs.getString('turno') ?? '';
+      turnos = prefs.getString('turno') ?? '';
       nombreServicio = prefs.getString('nombre_servicio');
       letraServicio = prefs.getString('letra_servicio');
     });
@@ -101,7 +101,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
                             ),
                           ),
                           Text(
-                            '$turno',
+                            '$turnos',
                             style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
                         ],

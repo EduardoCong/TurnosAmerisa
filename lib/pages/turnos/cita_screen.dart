@@ -15,7 +15,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
   String apellido = '';
   String sapellido = '';
   String num = '';
-  String turno = '';
+  String turnoCita = '';
   String? nombreServicio;
   String? letraServicio;
   String month = '';
@@ -37,7 +37,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
       apellido = prefs.getString('apellido') ?? '';
       sapellido = prefs.getString('segundoApellido') ?? '';
       num = prefs.getString('numeroCliente') ?? '';
-      turno = prefs.getString('turno') ?? '';
+      turnoCita = prefs.getString('turno') ?? '';
       nombreServicio = prefs.getString('nombreServicio');
       letraServicio = prefs.getString('letraServicio');
       year = prefs.getInt('selected_year') ?? 0;
@@ -106,7 +106,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                         ),
                       ),
                       Text(
-                        '$turno',
+                        '$turnoCita',
                         style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
                       ),
                     ],

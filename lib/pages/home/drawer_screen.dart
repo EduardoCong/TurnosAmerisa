@@ -1,5 +1,7 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turnos_amerisa/model/sharedPreferences.dart';
 
 
 class CustomDrawer extends StatefulWidget {
@@ -11,6 +13,24 @@ class CustomDrawer extends StatefulWidget {
 
 class _CustomDrawerState extends State<CustomDrawer> {
 
+  SharedPrefsService sharedprefs = SharedPrefsService();
+
+  String name = '';
+  String apellido = '';
+
+  Future<void> loadClientData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      name = prefs.getString('nombre') ?? '';
+      apellido = prefs.getString('apellido') ?? '';
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    loadClientData();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +67,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           ),
           SizedBox(height: 10),
           Text(
-            'Amerisa Logistics',
+            '$name $apellido',
             style: TextStyle(
               color: Colors.white,
               fontSize: 20,
@@ -84,7 +104,15 @@ class _CustomDrawerState extends State<CustomDrawer> {
             descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
             btnOkText: 'Si',
             btnOkOnPress: () async {
-                Navigator.of(context).pushReplacementNamed('/');
+              Navigator.of(context).pushReplacementNamed('/');
+              bool isRemoved = await sharedprefs.removeCache(key: 'numero');
+              if (isRemoved == true) {
+                Navigator.of(context).pushReplacementNamed('/login');
+              }else{
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('No se pudo salir de la sesion, intente de nuevo'))
+                );
+              }
             },
             btnCancelText: 'No',
             btnCancelOnPress: () {

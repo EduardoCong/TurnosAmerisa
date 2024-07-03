@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart'; // Importa el paquete intl
@@ -39,11 +40,11 @@ class _CalendarState extends State<Calendar> {
 
   @override
   void initState() {
-    AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-      if (!isAllowed) {
-        AwesomeNotifications().requestPermissionToSendNotifications();
-      }
-    });
+    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
+    //   if (!isAllowed) {
+    //     AwesomeNotifications().requestPermissionToSendNotifications();
+    //   }
+    // });
     super.initState();
     _startTimer();
     _selectedDay = _today;
@@ -93,7 +94,7 @@ class _CalendarState extends State<Calendar> {
         } else {
           timer.cancel();
           _showCounter = false;
-          Navigator.pushNamed(context, '/home');
+          Navigator.of(context).pushReplacementNamed('/home');
         }
       });
     });
@@ -313,15 +314,47 @@ class _CalendarState extends State<Calendar> {
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
-              generarTurno(context);
-              _timer.cancel();
-              setState(() {
-                _showCounter = false;
-              });
-              scheduleNotification();
-              Navigator.of(context).pushReplacementNamed('/vercita');
+              AwesomeDialog(context: context,
+                dialogType: DialogType.success,
+                borderSide: const BorderSide(
+                  color: Colors.blue,
+                  width: 2,
+                ),
+                width: 280,
+                buttonsBorderRadius: const BorderRadius.all(
+                  Radius.circular(2),
+                ),
+                dismissOnTouchOutside: false,
+                dismissOnBackKeyPress: false,
+                onDismissCallback: (type) {
+                  debugPrint('Dialog Dismiss from callback $type');
+                },
+                headerAnimationLoop: false,
+                animType: AnimType.topSlide,
+                title: 'Cita Generada',
+                descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
+                btnOkOnPress: () async {
+                  generarTurno(context);
+                  _timer.cancel();
+                  setState(() {
+                    _showCounter = false;
+                  });
+                  scheduleNotification();
+                  Navigator.of(context).pushReplacementNamed('/vercita');
+                },
+              ).show();
             },
-            child: Text('Generar Turno'),
+            child: Text(
+              'Generar Turno',
+              style: TextStyle(
+                color: Colors.white
+              )
+            ),
+            style: ElevatedButton.styleFrom(
+              textStyle: TextStyle(fontSize: 16.0),
+              minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+              backgroundColor: Color.fromARGB(255, 35, 38, 204),
+            ),
           ),
         ],
       ),
