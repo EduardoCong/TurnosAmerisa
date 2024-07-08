@@ -4,6 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
+import 'dart:async';
 
 class GenerarTurnoView extends StatefulWidget {
   @override
@@ -13,6 +14,7 @@ class GenerarTurnoView extends StatefulWidget {
 class _GenerarTurnoViewState extends State<GenerarTurnoView> {
 
   Servicio? servicioSeleccionado;
+  List<int> serviciosDeshabilitados = [];
 
   String nombre = '';
   String segundoNombre = '';
@@ -44,6 +46,68 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       segundoApellido = prefs.getString('segundoApellido') ?? '';
       numeroCliente = prefs.getString('numeroCliente') ?? '';
     });
+  }
+
+  void verificarHora(BuildContext context) {
+    final now = DateTime.now();
+    if (now.hour >= 18) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        borderSide: BorderSide(
+          color: Colors.red,
+          width: 2,
+        ),
+        width: 280,
+        buttonsBorderRadius: BorderRadius.all(
+          Radius.circular(2)
+        ),
+        dismissOnTouchOutside: true,
+        dismissOnBackKeyPress: false,
+        onDismissCallback: (type) {
+          debugPrint('Dialog Dissmiss from callback $type');
+        },
+        headerAnimationLoop: false,
+        animType: AnimType.bottomSlide,
+        title: 'Se han acabado los turnos por hoy',
+        desc: 'Desea hacer una cita para otro día?',
+        btnOkOnPress: () {
+          Navigator.of(context).pushReplacementNamed('/citas');
+        },
+        btnCancelOnPress: (){},
+      ).show();
+    } else {
+      generarTurnoDialog(context);
+    }
+  }
+
+  void generarTurnoDialog(BuildContext context) {
+    AwesomeDialog(
+      context: context,
+      dialogType: DialogType.success,
+      borderSide: BorderSide(
+        color: Colors.blue,
+        width: 2,
+      ),
+      width: 280,
+      buttonsBorderRadius: BorderRadius.all(
+        Radius.circular(2)
+      ),
+      dismissOnTouchOutside: true,
+      dismissOnBackKeyPress: false,
+      onDismissCallback: (type) {
+        debugPrint('Dialog Dissmiss from callback $type');
+      },
+      headerAnimationLoop: false,
+      animType: AnimType.bottomSlide,
+      title: 'Turno Generado Con Exito',
+      descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+      btnOkOnPress: () {
+        generarTurno(context);
+        Navigator.of(context).pushReplacementNamed('/verturno');
+      },
+      btnCancelOnPress: (){},
+    ).show();
   }
 
   @override
@@ -88,7 +152,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                           mostrarDetallesServicio(servicio);
                         }
 
-                      },
+                      }, serviciosDeshabilitados: serviciosDeshabilitados,
                     ),
                   ],
                 ),
@@ -99,33 +163,8 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: ElevatedButton(
-                  onPressed: (){
-                    AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.success,
-                      borderSide: BorderSide(
-                        color: Colors.blue,
-                        width: 2,
-                      ),
-                      width: 280,
-                      buttonsBorderRadius: BorderRadius.all(
-                        Radius.circular(2)
-                      ),
-                      dismissOnTouchOutside: true,
-                      dismissOnBackKeyPress: false,
-                      onDismissCallback: (type) {
-                        debugPrint('Dialog Dissmiss from callback $type');
-                      },
-                      headerAnimationLoop: false,
-                      animType: AnimType.bottomSlide,
-                      title: 'Turno Generado Con Exito',
-                      descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-                      btnOkOnPress: () {
-                        generarTurno(context);
-                        Navigator.of(context).pushReplacementNamed('/verturno');
-                      },
-                      btnCancelOnPress: (){},
-                    ).show();
+                  onPressed: () {
+                    verificarHora(context);
                   },
                   child: Text('Generar', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(

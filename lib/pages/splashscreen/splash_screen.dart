@@ -18,9 +18,8 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   void _startSplash() async {
+    await Future.delayed(Duration(seconds: 5));  // Aseguramos que la pantalla de splash se muestra 5 segundos
     await _checkSharedPreferences();
-    await Future.delayed(Duration(seconds: 2));
-    navigateToNextScreen();
   }
 
   Future<void> _checkSharedPreferences() async {
@@ -29,12 +28,6 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
     if (numero != null) {
       Navigator.of(context).pushReplacementNamed('/home');
     } else {
-      Navigator.of(context).pushReplacementNamed('/login');
-    }
-  }
-
-  void navigateToNextScreen() {
-    if (mounted) {
       Navigator.of(context).pushReplacementNamed('/login');
     }
   }

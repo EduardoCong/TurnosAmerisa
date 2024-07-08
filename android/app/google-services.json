@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "510465002957",
+    "project_id": "turnosamerisa",
+    "storage_bucket": "turnosamerisa.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:510465002957:android:268f3b3e5eb1272bdcc884",
+        "android_client_info": {
+          "package_name": "com.example.turnos_amerisa"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDPsBsd9Io_6vi9poZ2yLLQ8iluahCr0hk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

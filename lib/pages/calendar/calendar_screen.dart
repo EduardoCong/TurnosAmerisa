@@ -2,13 +2,13 @@ import 'dart:async';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart'; // Importa el paquete intl
+import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/model/event.dart';
-import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
+import 'package:turnos_amerisa/services/generar_turno_service.dart';
 
 class Calendar extends StatefulWidget {
   Calendar({super.key});
@@ -19,7 +19,7 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   Servicio? servicioSeleccionado;
-
+  List<int> serviciosDeshabilitados = [];
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _today = DateTime.now();
   DateTime? _selectedDay;
@@ -27,8 +27,11 @@ class _CalendarState extends State<Calendar> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   bool _isTimeSelectorVisible = false;
   String? _selectedTime;
-  List<String> availableTimes = ['9:00 AM','9:20 AM','9:40 AM','10:00 AM','10:20 AM','10:40 AM','11:00 AM','11:20 AM','11:40 AM','12:00 PM','12:20 PM','12:40 PM','1:00 PM','1:20 AM','1:40 AM',
-  '2:00 PM','2:20 PM','2:40 PM','3:00 PM','3:20 PM','3:40 PM','4:00 PM','4:20 PM','4:40 PM','5:00 PM','5:20 PM','5:40 AM','6:00 PM'];
+  List<String> availableTimes = [
+    '9:00 AM', '9:20 AM', '9:40 AM', '10:00 AM', '10:20 AM', '10:40 AM', '11:00 AM', '11:20 AM', '11:40 AM', '12:00 PM',
+    '12:20 PM', '12:40 PM', '1:00 PM', '1:20 PM', '1:40 PM', '2:00 PM', '2:20 PM', '2:40 PM', '3:00 PM', '3:20 PM', '3:40 PM',
+    '4:00 PM', '4:20 PM', '4:40 PM', '5:00 PM', '5:20 PM', '5:40 PM', '6:00 PM'
+  ];
   late Timer _timer;
   int _counter = 300;
   bool _showCounter = true;
@@ -40,23 +43,26 @@ class _CalendarState extends State<Calendar> {
 
   @override
   void initState() {
-    // AwesomeNotifications().isNotificationAllowed().then((isAllowed) {
-    //   if (!isAllowed) {
-    //     AwesomeNotifications().requestPermissionToSendNotifications();
-    //   }
-    // });
     super.initState();
     _startTimer();
     _selectedDay = _today;
     _selectedEvents = ValueNotifier(_getEventForDay(_selectedDay!));
     loadUserData();
+    loadDisabledServices();
   }
 
-  Future<void> mostrarDetallesServicio(Servicio servicios) async {
+  Future<void> loadDisabledServices() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setInt('idServicio', servicios.id);
-    await prefs.setString('nombreServicio', servicios.nombre);
-    await prefs.setString('letraServicio', servicios.letra);
+    setState(() {
+      serviciosDeshabilitados = prefs.getStringList('serviciosDeshabilitados')?.map((id) => int.parse(id)).toList() ?? [];
+    });
+  }
+
+  Future<void> mostrarDetallesServicio(Servicio servicio) async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.setInt('idServicio', servicio.id);
+    await prefs.setString('nombreServicio', servicio.nombre);
+    await prefs.setString('letraServicio', servicio.letra);
   }
 
   Future<void> loadUserData() async {
@@ -289,10 +295,19 @@ class _CalendarState extends State<Calendar> {
       };
       try {
         await ApiService.generarTurno(datos, context);
+        await _disableSelectedService();
       } catch (e) {
         print('Error al generar turno: $e');
       }
     } else {}
+  }
+
+  Future<void> _disableSelectedService() async {
+    if (servicioSeleccionado != null) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      serviciosDeshabilitados.add(servicioSeleccionado!.id);
+      await prefs.setStringList('serviciosDeshabilitados', serviciosDeshabilitados.map((id) => id.toString()).toList());
+    }
   }
 
   Widget GetDatos() {
@@ -308,13 +323,16 @@ class _CalendarState extends State<Calendar> {
               });
               if (servicio != null) {
                 mostrarDetallesServicio(servicio);
+                _disableSelectedService();
               }
             },
+            serviciosDeshabilitados: serviciosDeshabilitados,
           ),
           SizedBox(height: 16.0),
           ElevatedButton(
             onPressed: () {
-              AwesomeDialog(context: context,
+              AwesomeDialog(
+                context: context,
                 dialogType: DialogType.success,
                 borderSide: const BorderSide(
                   color: Colors.blue,
@@ -344,12 +362,7 @@ class _CalendarState extends State<Calendar> {
                 },
               ).show();
             },
-            child: Text(
-              'Generar Turno',
-              style: TextStyle(
-                color: Colors.white
-              )
-            ),
+            child: Text('Generar Turno'),
             style: ElevatedButton.styleFrom(
               textStyle: TextStyle(fontSize: 16.0),
               minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),

@@ -1,4 +1,6 @@
 class Event {
   final String title;
-  Event(this.title);
+  final String time;
+
+  Event({required this.title, required this.time});
 }

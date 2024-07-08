@@ -1,13 +1,14 @@
-import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
 import 'package:turnos_amerisa/model/api.dart';
+import 'package:http/http.dart' as http;
 
 class ServiciosSelect extends StatefulWidget {
   final Function(Servicio?) onServicioSelected;
+  final List<int> serviciosDeshabilitados;
 
-  const ServiciosSelect({Key? key, required this.onServicioSelected}) : super(key: key);
+  const ServiciosSelect({Key? key, required this.onServicioSelected, required this.serviciosDeshabilitados}) : super(key: key);
 
   @override
   _ServiciosSelectState createState() => _ServiciosSelectState();
@@ -37,15 +38,15 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
           setState(() {
             servicios = data.map((item) => Servicio.fromJson(item)).toList();
           });
-          print( 'Servicios cargados correctamente');
+          print('Servicios cargados correctamente');
         } else {
-          print( 'Error: ${jsonData['msg']}');
+          print('Error: ${jsonData['msg']}');
         }
       } else {
-        print( 'Error en la conexión: ${response.statusCode}');
+        print('Error en la conexión: ${response.statusCode}');
       }
     } catch (e) {
-      print( 'Error: $e');
+      print('Error: $e');
     }
   }
 
@@ -63,8 +64,10 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
                 widget.onServicioSelected(value);
               },
               items: servicios.map((Servicio servicio) {
+                bool isDisabled = widget.serviciosDeshabilitados.contains(servicio.id);
+
                 return DropdownMenuItem<Servicio>(
-                  value: servicio,
+                  value: isDisabled ? null : servicio,
                   child: Text(servicio.nombre),
                 );
               }).toList(),
