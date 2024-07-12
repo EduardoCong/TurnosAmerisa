@@ -1,17 +1,16 @@
 import 'dart:async';
 import 'package:awesome_dialog/awesome_dialog.dart';
-import 'package:awesome_notifications/awesome_notifications.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
-import 'package:turnos_amerisa/model/api.dart';
 import 'package:turnos_amerisa/model/event.dart';
+import 'package:turnos_amerisa/model/servicios_model.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
 import 'package:turnos_amerisa/services/generar_turno_service.dart';
 
 class Calendar extends StatefulWidget {
-  Calendar({super.key});
+  Calendar({Key? key}) : super(key: key);
 
   @override
   State<Calendar> createState() => _CalendarState();
@@ -27,11 +26,6 @@ class _CalendarState extends State<Calendar> {
   late final ValueNotifier<List<Event>> _selectedEvents;
   bool _isTimeSelectorVisible = false;
   String? _selectedTime;
-  List<String> availableTimes = [
-    '9:00 AM', '9:20 AM', '9:40 AM', '10:00 AM', '10:20 AM', '10:40 AM', '11:00 AM', '11:20 AM', '11:40 AM', '12:00 PM',
-    '12:20 PM', '12:40 PM', '1:00 PM', '1:20 PM', '1:40 PM', '2:00 PM', '2:20 PM', '2:40 PM', '3:00 PM', '3:20 PM', '3:40 PM',
-    '4:00 PM', '4:20 PM', '4:40 PM', '5:00 PM', '5:20 PM', '5:40 PM', '6:00 PM'
-  ];
   late Timer _timer;
   int _counter = 300;
   bool _showCounter = true;
@@ -48,14 +42,6 @@ class _CalendarState extends State<Calendar> {
     _selectedDay = _today;
     _selectedEvents = ValueNotifier(_getEventForDay(_selectedDay!));
     loadUserData();
-    loadDisabledServices();
-  }
-
-  Future<void> loadDisabledServices() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      serviciosDeshabilitados = prefs.getStringList('serviciosDeshabilitados')?.map((id) => int.parse(id)).toList() ?? [];
-    });
   }
 
   Future<void> mostrarDetallesServicio(Servicio servicio) async {
@@ -83,6 +69,22 @@ class _CalendarState extends State<Calendar> {
       await prefs.setString('selected_month', DateFormat('MMMM').format(_selectedDay!));
       await prefs.setInt('selected_day', _selectedDay!.day);
       await prefs.setString('selected_time', _selectedTime!);
+
+      // Verificar si ya existe una cita programada para esta fecha y hora
+      String formattedDateTime = '${_selectedDay!.year}-${_selectedDay!.month.toString().padLeft(2, '0')}-${_selectedDay!.day.toString().padLeft(2, '0')} $_selectedTime';
+      int? storedServiceId = prefs.getInt('storedServiceId');
+      String? storedDateTime = prefs.getString('storedDateTime');
+
+      if (formattedDateTime == storedDateTime && servicioSeleccionado!.id == storedServiceId) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.info,
+          title: 'Cita ya generada',
+          desc: 'Ya has generado una cita para este servicio en esta fecha y hora.',
+          btnOkOnPress: () {},
+        ).show();
+        return;
+      }
     }
   }
 
@@ -117,6 +119,8 @@ class _CalendarState extends State<Calendar> {
         _today = focusedDay;
         _selectedEvents.value = _getEventForDay(selectedDay);
         _isTimeSelectorVisible = true;
+        _selectedTime = null; // Resetear el tiempo seleccionado al cambiar el día
+        servicioSeleccionado = null; // Resetear el servicio seleccionado al cambiar el día
       });
     }
   }
@@ -141,22 +145,6 @@ class _CalendarState extends State<Calendar> {
         ),
       ),
     );
-  }
-
-  void scheduleNotification() {
-    if (_selectedTime != null) {
-      String selectedDayFormatted = '${_selectedDay!.day}';
-      String selectedMonth = '${_selectedDay!.month}';
-      AwesomeNotifications().createNotification(
-        content: NotificationContent(
-          id: 2,
-          channelKey: 'basic_channel',
-          title: 'Horario Confirmado el día $selectedDayFormatted de $selectedMonth',
-          body: 'Horario elegida: $_selectedTime',
-          backgroundColor: Colors.blue,
-        ),
-      );
-    }
   }
 
   Widget calendarTable() {
@@ -218,104 +206,12 @@ class _CalendarState extends State<Calendar> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(height: 8),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                _selectedTime ?? '',
-                style: TextStyle(fontSize: 16),
-              ),
-              ElevatedButton(
-                child: Text('Selecciona una hora'),
-                onPressed: () => _selectTime(context),
-              ),
-            ],
-          ),
-        ],
-      ),
-    );
-  }
-
-  void _selectTime(BuildContext context) async {
-    String? selectedTime = await showDialog<String>(
-      context: context,
-      builder: (BuildContext context) {
-        return SimpleDialog(
-          title: Text('Seleccione un horario'),
-          children: availableTimes.map((time) {
-            return SimpleDialogOption(
-              onPressed: () {
-                Navigator.pop(context, time);
-              },
-              child: Text(time),
-            );
-          }).toList(),
-        );
-      },
-    );
-
-    if (selectedTime != null) {
-      setState(() {
-        _selectedTime = selectedTime;
-      });
-      _saveSelectedDateAndTime();
-      alertDialog();
-    }
-  }
-
-  Future alertDialog() {
-    return showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          content: GetDatos(),
-        );
-      },
-    );
-  }
-
-  Future<void> generarTurno(BuildContext context) async {
-    if (servicioSeleccionado == null) {
-      Text('Selecciona un servicio');
-      return;
-    }
-    if (_selectedTime != null) {
-      String formattedDateTime = '${_selectedDay!.year}-${_selectedDay!.month.toString().padLeft(2, '0')}-${_selectedDay!.day.toString().padLeft(2, '0')} $_selectedTime';
-
-      Map<String, dynamic> datos = {
-        'numero': numeroClienteCita,
-        'pnombre': nombreCita,
-        'snombre': segundoNombreCita,
-        'papellido': apellidoCita,
-        'sapellido': segundoApellidoCita,
-        'registrarcliente': 'NO',
-        'id_servicio': servicioSeleccionado!.id,
-        'letra': servicioSeleccionado!.letra,
-        'fechaInicio': '$formattedDateTime',
-      };
-      try {
-        await ApiService.generarTurno(datos, context);
-        await _disableSelectedService();
-      } catch (e) {
-        print('Error al generar turno: $e');
-      }
-    } else {}
-  }
-
-  Future<void> _disableSelectedService() async {
-    if (servicioSeleccionado != null) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      serviciosDeshabilitados.add(servicioSeleccionado!.id);
-      await prefs.setStringList('serviciosDeshabilitados', serviciosDeshabilitados.map((id) => id.toString()).toList());
-    }
-  }
-
-  Widget GetDatos() {
-    return SingleChildScrollView(
-      padding: EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
+          if (_selectedDay != null)
+            Text(
+              'Fecha seleccionada: ${DateFormat('dd/MM/yyyy').format(_selectedDay!)}',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+            ),
+          SizedBox(height: 16),
           ServiciosSelect(
             onServicioSelected: (servicio) {
               setState(() {
@@ -323,54 +219,169 @@ class _CalendarState extends State<Calendar> {
               });
               if (servicio != null) {
                 mostrarDetallesServicio(servicio);
-                _disableSelectedService();
               }
             },
-            serviciosDeshabilitados: serviciosDeshabilitados,
           ),
-          SizedBox(height: 16.0),
-          ElevatedButton(
-            onPressed: () {
-              AwesomeDialog(
-                context: context,
-                dialogType: DialogType.success,
-                borderSide: const BorderSide(
-                  color: Colors.blue,
-                  width: 2,
-                ),
-                width: 280,
-                buttonsBorderRadius: const BorderRadius.all(
-                  Radius.circular(2),
-                ),
-                dismissOnTouchOutside: false,
-                dismissOnBackKeyPress: false,
-                onDismissCallback: (type) {
-                  debugPrint('Dialog Dismiss from callback $type');
-                },
-                headerAnimationLoop: false,
-                animType: AnimType.topSlide,
-                title: 'Cita Generada',
-                descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
-                btnOkOnPress: () async {
-                  generarTurno(context);
-                  _timer.cancel();
-                  setState(() {
-                    _showCounter = false;
-                  });
-                  scheduleNotification();
-                  Navigator.of(context).pushReplacementNamed('/vercita');
-                },
-              ).show();
-            },
-            child: Text('Generar Turno'),
-            style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(fontSize: 16.0),
-              minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
-              backgroundColor: Color.fromARGB(255, 35, 38, 204),
+          SizedBox(height: 16),
+          if (servicioSeleccionado != null)
+            Text(
+              'Servicio seleccionado: ${servicioSeleccionado!.nombre}',
+              style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
             ),
+          SizedBox(height: 8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ElevatedButton(
+                child: Text('Selecciona una hora'),
+                onPressed: () => _selectTime(context),
+              ),
+            ],
           ),
+          SizedBox(height: 16),
+          if (_selectedTime != null)
+            ElevatedButton(
+              onPressed: () {
+                _saveSelectedDateAndTime(); // Guarda la fecha y hora seleccionadas primero
+
+                // Aquí se mostrará el diálogo de confirmación antes de generar el turno
+                AwesomeDialog(
+                  context: context,
+                  dialogType: DialogType.success,
+                  borderSide: const BorderSide(
+                    color: Colors.blue,
+                    width: 2,
+                  ),
+                  width: 280,
+                  buttonsBorderRadius: const BorderRadius.all(
+                    Radius.circular(2),
+                  ),
+                  dismissOnTouchOutside: false,
+                  dismissOnBackKeyPress: false,
+                  onDismissCallback: (type) {
+                    debugPrint('Dialog Dismiss from callback $type');
+                  },
+                  headerAnimationLoop: false,
+                  animType: AnimType.topSlide,
+                  title: 'Cita Generada',
+                  descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
+                  btnOkOnPress: () async {
+                    generarTurnoSchedule(context); // Llama a la función para generar el turno
+                  },
+                ).show();
+              },
+              child: Text('Generar Turno'),
+              style: ElevatedButton.styleFrom(
+                textStyle: TextStyle(fontSize: 16.0),
+                minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                backgroundColor: Color.fromARGB(255, 35, 38, 204),
+              ),
+            ),
         ],
       ),
     );
+  }
+
+  void _selectTime(BuildContext context) async {
+    if (_selectedDay == null) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        title: 'Selecciona una Fecha',
+        desc: 'Debes seleccionar una fecha antes de elegir un horario.',
+        btnCancelOnPress: () {},
+      ).show();
+      return;
+    }
+
+    if (servicioSeleccionado == null) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        title: 'Selecciona un Servicio',
+        desc: 'Debes seleccionar un servicio antes de elegir un horario.',
+        btnCancelOnPress: () {},
+      ).show();
+      return;
+    }
+
+    TimeOfDay? pickedTime = await showTimePicker(
+      context: context,
+      initialTime: TimeOfDay.now(),
+    );
+
+    if (pickedTime != null) {
+      setState(() {
+        _selectedTime = '${pickedTime.hour}:${pickedTime.minute.toString().padLeft(2, '0')}';
+      });
+    }
+
+    // Verificar si el tiempo seleccionado está disponible
+    if (_isTimeDisabled(DateTime(_selectedDay!.year, _selectedDay!.month, _selectedDay!.day), _selectedTime!)) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.error,
+        title: 'Hora no disponible',
+        desc: 'La hora seleccionada ya está reservada. Por favor, elige otro horario.',
+        btnCancelOnPress: () {},
+      ).show();
+      setState(() {
+        _selectedTime = null;
+      });
+    }
+  }
+
+  bool _isTimeDisabled(DateTime selectedDateTime, String time) {
+    List<Event> eventsForSelectedDay = events[selectedDateTime] ?? [];
+    return eventsForSelectedDay.any((event) => event.time == time && event.servicioId == servicioSeleccionado!.id);
+  }
+
+  Future<void> generarTurnoSchedule(BuildContext context) async {
+    if (servicioSeleccionado == null || _selectedTime == null || _selectedDay == null) {
+      return;
+    }
+
+    String formattedDateTime = '${_selectedDay!.year}-${_selectedDay!.month.toString().padLeft(2, '0')}-${_selectedDay!.day.toString().padLeft(2, '0')} $_selectedTime';
+
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? storedDateTime = prefs.getString('storedDateTime');
+    int? storedServiceId = prefs.getInt('storedServiceId');
+
+    if (formattedDateTime == storedDateTime && servicioSeleccionado!.id == storedServiceId) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.info,
+        title: 'Cita ya generada',
+        desc: 'Ya has generado una cita para este servicio en esta fecha y hora.',
+        btnOkOnPress: () {},
+      ).show();
+      return;
+    }
+
+    // Guardar los nuevos datos seleccionados
+    await prefs.setString('storedDateTime', formattedDateTime);
+    await prefs.setInt('storedServiceId', servicioSeleccionado!.id);
+
+    Map<String, dynamic> datos = {
+      'numero': numeroClienteCita,
+      'pnombre': nombreCita,
+      'snombre': segundoNombreCita,
+      'papellido': apellidoCita,
+      'sapellido': segundoApellidoCita,
+      'registrarcliente': 'NO',
+      'id_servicio': servicioSeleccionado!.id,
+      'letra': servicioSeleccionado!.letra,
+      'fechaInicio': formattedDateTime,
+    };
+    try {
+      await ApiService.generarTurno(datos, context);
+      _timer.cancel();
+      setState(() {
+        _showCounter = false;
+      });
+      Navigator.of(context).pushReplacementNamed('/vercita');
+    } catch (e) {
+      print('Error al generar turno: $e');
+    }
   }
 }

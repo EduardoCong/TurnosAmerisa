@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
+import 'package:turnos_amerisa/pages/home/home_screen.dart';
 
 class VirtualQueueScreen extends StatefulWidget {
   VirtualQueueScreen({Key? key}) : super(key: key);
@@ -14,9 +16,11 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
   String apellido = '';
   String sapellido = '';
   String num = '';
-  String turnos = '';
+  String turno = '';
   String? nombreServicio;
   String? letraServicio;
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -32,15 +36,35 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
       apellido = prefs.getString('apellido') ?? '';
       sapellido = prefs.getString('segundoApellido') ?? '';
       num = prefs.getString('numeroCliente') ?? '';
-      turnos = prefs.getString('turno') ?? '';
+      turno = prefs.getString('turno') ?? '';
       nombreServicio = prefs.getString('nombre_servicio');
       letraServicio = prefs.getString('letra_servicio');
+      print(name);
+      print(sname);
+      print(apellido);
+      print(sapellido);
+      print(num);
+      print(turno);
+      print(nombreServicio);
+      print(letraServicio);
     });
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            scaffoldKey.currentState!.openDrawer();
+          },
+        ),
+      ),
+      drawer: CustomDrawer(),
       backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Container(
@@ -101,8 +125,9 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
                             ),
                           ),
                           Text(
-                            '$turnos',
-                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                            '$turno',
+                            style: TextStyle(
+                                fontSize: 20.0, fontWeight: FontWeight.bold),
                           ),
                         ],
                       ),
@@ -134,12 +159,18 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
                       SizedBox(height: 200.0),
                       ElevatedButton(
                         onPressed: () {
-                          Navigator.of(context).pushReplacementNamed('/home');
+                          Navigator.pushAndRemoveUntil(
+                            context,
+                            MaterialPageRoute(builder: (context) => HomePage()),
+                            (Route<dynamic> route) => false,
+                          );
                         },
-                        child: Text('Volver', style: TextStyle(color: Colors.white)),
+                        child:
+                            Text('Volver', style: TextStyle(color: Colors.white)),
                         style: ElevatedButton.styleFrom(
                           textStyle: TextStyle(fontSize: 16.0),
-                          minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                          minimumSize:
+                              Size(MediaQuery.of(context).size.width - 46, 50),
                           backgroundColor: Colors.red,
                         ),
                       ),

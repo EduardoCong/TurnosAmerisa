@@ -19,13 +19,15 @@ class ApiService {
       if (response.statusCode == 200) {
         var jsonData = json.decode(response.body);
         print('pasa esto ${jsonData['codigo']}');
-        final String nombreTurno = jsonData['turno'];
+        String turno = jsonData['turno'];
         if (jsonData['codigo'] == 0) {
           print('Turno generado');
           print(jsonData);
           SharedPreferences prefs = await SharedPreferences.getInstance();
-          await prefs.setString('turno', nombreTurno);
-          print(prefs.getString('turno'));
+          await prefs.setString('turno', turno);
+          final String turnos = await prefs.getString('turno') ?? '';
+          print(turnos);
+          Navigator.of(context).pushReplacementNamed('/verturno');
           return false;
 
         } else {

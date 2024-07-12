@@ -41,46 +41,48 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyDG4mMWgiS1_-hrCj67DrVpmR2w9lbheV8',
-    appId: '1:510465002957:web:a0015fa767f9e754dcc884',
-    messagingSenderId: '510465002957',
-    projectId: 'turnosamerisa',
-    authDomain: 'turnosamerisa.firebaseapp.com',
-    storageBucket: 'turnosamerisa.appspot.com',
+    apiKey: 'AIzaSyDMX4MXZgwxNpMHMQbIu2fI6aKYKw2fJcc',
+    appId: '1:660133709842:web:0dc5703edec07b2c52f0cb',
+    messagingSenderId: '660133709842',
+    projectId: 'pushnotis-50040',
+    authDomain: 'pushnotis-50040.firebaseapp.com',
+    storageBucket: 'pushnotis-50040.appspot.com',
+    measurementId: 'G-GXKVVEV1G7',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
-    apiKey: 'AIzaSyDPsBsd9Io_6vi9poZ2yLLQ8iluahCr0hk',
-    appId: '1:510465002957:android:268f3b3e5eb1272bdcc884',
-    messagingSenderId: '510465002957',
-    projectId: 'turnosamerisa',
-    storageBucket: 'turnosamerisa.appspot.com',
+    apiKey: 'AIzaSyCSCMLWfdp4_L-CssGTJMvI15n7I1nAhMo',
+    appId: '1:660133709842:android:a62efdf0a42a34fb52f0cb',
+    messagingSenderId: '660133709842',
+    projectId: 'pushnotis-50040',
+    storageBucket: 'pushnotis-50040.appspot.com',
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyB36EYQJB9qUigD6SYWdFuVHzhGZpqKVSo',
-    appId: '1:510465002957:ios:04dade45abb74a51dcc884',
-    messagingSenderId: '510465002957',
-    projectId: 'turnosamerisa',
-    storageBucket: 'turnosamerisa.appspot.com',
+    apiKey: 'AIzaSyD587ymT5EePNluNDtgyQ78qtr4143ioUc',
+    appId: '1:660133709842:ios:ee4e434adab4bfce52f0cb',
+    messagingSenderId: '660133709842',
+    projectId: 'pushnotis-50040',
+    storageBucket: 'pushnotis-50040.appspot.com',
     iosBundleId: 'com.example.turnosAmerisa',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyB36EYQJB9qUigD6SYWdFuVHzhGZpqKVSo',
-    appId: '1:510465002957:ios:04dade45abb74a51dcc884',
-    messagingSenderId: '510465002957',
-    projectId: 'turnosamerisa',
-    storageBucket: 'turnosamerisa.appspot.com',
+    apiKey: 'AIzaSyD587ymT5EePNluNDtgyQ78qtr4143ioUc',
+    appId: '1:660133709842:ios:ee4e434adab4bfce52f0cb',
+    messagingSenderId: '660133709842',
+    projectId: 'pushnotis-50040',
+    storageBucket: 'pushnotis-50040.appspot.com',
     iosBundleId: 'com.example.turnosAmerisa',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyDG4mMWgiS1_-hrCj67DrVpmR2w9lbheV8',
-    appId: '1:510465002957:web:66feb0d1ab5d0676dcc884',
-    messagingSenderId: '510465002957',
-    projectId: 'turnosamerisa',
-    authDomain: 'turnosamerisa.firebaseapp.com',
-    storageBucket: 'turnosamerisa.appspot.com',
+    apiKey: 'AIzaSyDMX4MXZgwxNpMHMQbIu2fI6aKYKw2fJcc',
+    appId: '1:660133709842:web:4f8fc8e67b18368a52f0cb',
+    messagingSenderId: '660133709842',
+    projectId: 'pushnotis-50040',
+    authDomain: 'pushnotis-50040.firebaseapp.com',
+    storageBucket: 'pushnotis-50040.appspot.com',
+    measurementId: 'G-8F2WXWTBVZ',
   );
 }

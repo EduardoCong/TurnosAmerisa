@@ -1,5 +1,7 @@
-import 'package:awesome_notifications/awesome_notifications.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:turnos_amerisa/api/firebase_api.dart';
+import 'package:turnos_amerisa/firebase_options.dart';
 import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
 import 'package:turnos_amerisa/pages/login/login_screen.dart';
@@ -10,17 +12,10 @@ import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/generar_turno.dart';
 
 
-void main(){
-  AwesomeNotifications().initialize(
-    null,
-    [
-      NotificationChannel(
-        channelKey: 'basic_channel', 
-        channelName: 'Basic notification', 
-        channelDescription: 'Eduardo')
-    ],
-    debug: true,
-  );
+void main() async {
+  await WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
   runApp(MyApp());
 }
 

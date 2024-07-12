@@ -40,11 +40,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
         children: [
           drawer(),
           hometitle(context),
-          configtitle(context),
           const Divider(),
           profiletitle(context),
-          notificationstitle(context),
-          helptitle(context),
+          pedirTurno(context),
+          goCitaTurno(context),
           const Divider(),
           logouttitle(context)
         ],
@@ -122,22 +121,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  Widget helptitle(BuildContext context){
+  Widget goCitaTurno(BuildContext context){
     return ListTile(
-      title: const Text('Ayuda'),
-      leading: const Icon(Icons.help),
+      title: const Text('Agendar Cita'),
+      leading: const Icon(Icons.calendar_month_sharp),
       onTap: () {
-        Navigator.pop(context);
+        Navigator.of(context).pushReplacementNamed('/calendario');
       },
     );
   }
 
-  Widget notificationstitle(BuildContext context){
+  Widget pedirTurno(BuildContext context){
     return ListTile(
-      title: const Text('Notificaciones'),
-      leading: const Icon(Icons.notifications),
+      title: const Text('Pedir Turno'),
+      leading: const Icon(Icons.arrow_forward),
       onTap: () {
-        Navigator.pop(context);
+        Navigator.of(context).pushReplacementNamed('/turno');
       },
     );
   }
@@ -152,22 +151,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  Widget configtitle(BuildContext context){
-    return ListTile(
-      title: const Text('Configuracion'),
-      leading: const Icon(Icons.settings),
-      onTap: () {
-        Navigator.pop(context);
-      },
-    );
-  }
-
   Widget hometitle(BuildContext context){
     return ListTile(
       title: const Text('Inicio'),
       leading: const Icon(Icons.home),
       onTap: () {
-        Navigator.pop(context);
+        if (ModalRoute.of(context)?.settings.name != '/home') {
+          Navigator.of(context).pushReplacementNamed('/home');
+        }else{
+          Navigator.pop(context);
+        }
       },
     );
   }

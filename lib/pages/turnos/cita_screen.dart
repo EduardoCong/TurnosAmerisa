@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
+import 'package:turnos_amerisa/pages/home/home_screen.dart';
 
 class CitaQueueScreen extends StatefulWidget {
   CitaQueueScreen({Key? key}) : super(key: key);
@@ -9,37 +11,38 @@ class CitaQueueScreen extends StatefulWidget {
 }
 
 class _CitaQueueScreenState extends State<CitaQueueScreen> {
-  
-  String name = '';
-  String sname = '';
-  String apellido = '';
-  String sapellido = '';
-  String num = '';
+  String names = '';
+  String snames = '';
+  String apellidos = '';
+  String sapellidos = '';
+  String nums = '';
   String turnoCita = '';
-  String? nombreServicio;
-  String? letraServicio;
+  String? nombreServicios;
+  String? letraServicios;
   String month = '';
   String time = '';
   int year = 0;
   int day = 0;
 
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
-    loadTicketData();
+    loadDataClienteCita();
   }
 
-  Future<void> loadTicketData() async {
+  Future<void> loadDataClienteCita() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     setState(() {
-      name = prefs.getString('nombre') ?? '';
-      sname = prefs.getString('segundoNombre') ?? '';
-      apellido = prefs.getString('apellido') ?? '';
-      sapellido = prefs.getString('segundoApellido') ?? '';
-      num = prefs.getString('numeroCliente') ?? '';
+      names = prefs.getString('nombre') ?? '';
+      snames = prefs.getString('segundoNombre') ?? '';
+      apellidos = prefs.getString('apellido') ?? '';
+      sapellidos = prefs.getString('segundoApellido') ?? '';
+      nums = prefs.getString('numeroCliente') ?? '';
       turnoCita = prefs.getString('turno') ?? '';
-      nombreServicio = prefs.getString('nombreServicio');
-      letraServicio = prefs.getString('letraServicio');
+      nombreServicios = prefs.getString('nombreServicio');
+      letraServicios = prefs.getString('letraServicio');
       year = prefs.getInt('selected_year') ?? 0;
       month = prefs.getString('selected_month') ?? '';
       day = prefs.getInt('selected_day') ?? 0;
@@ -47,9 +50,32 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
     });
   }
 
+  Future<void> clearTurnoCitaData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    await prefs.remove('turno');
+    await prefs.remove('nombreServicio');
+    await prefs.remove('letraServicio');
+    await prefs.remove('selected_year');
+    await prefs.remove('selected_month');
+    await prefs.remove('selected_day');
+    await prefs.remove('selected_time');
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            scaffoldKey.currentState!.openDrawer();
+          },
+        ),
+      ),
+      drawer: CustomDrawer(),
       backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Container(
@@ -89,11 +115,11 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                         ),
                       ),
                       Text(
-                        '$name $sname $apellido $sapellido',
+                        '$names $snames $apellidos $sapellidos',
                         style: TextStyle(fontSize: 16.0),
                       ),
                       Text(
-                        'N° Cliente: $num',
+                        'N° Cliente: $nums',
                         style: TextStyle(fontSize: 16.0),
                       ),
                       SizedBox(height: 8.0),
@@ -107,7 +133,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                       ),
                       Text(
                         '$turnoCita',
-                        style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 20.0, fontWeight: FontWeight.bold),
                       ),
                     ],
                   ),
@@ -126,7 +153,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                         ),
                       ),
                       Text(
-                        '$nombreServicio',
+                        '$nombreServicios',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ],
@@ -143,7 +170,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                         ),
                       ),
                       Text(
-                        '$letraServicio',
+                        '$letraServicios',
                         style: TextStyle(fontSize: 16.0),
                       ),
                     ],
@@ -165,8 +192,13 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                   ),
                   SizedBox(height: 150.0),
                   ElevatedButton(
-                    onPressed: () {
-                      Navigator.of(context).pushReplacementNamed('/home');
+                    onPressed: () async {
+                      await clearTurnoCitaData();  // Limpiar los datos específicos antes de navegar
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(builder: (context) => HomePage()),
+                        (Route<dynamic> route) => false,
+                      );
                     },
                     child: Text(
                       'Regresar al inicio',
@@ -174,7 +206,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                     ),
                     style: ElevatedButton.styleFrom(
                       textStyle: TextStyle(fontSize: 16.0),
-                      minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                      minimumSize:
+                          Size(MediaQuery.of(context).size.width - 46, 50),
                       backgroundColor: Colors.red,
                     ),
                   ),

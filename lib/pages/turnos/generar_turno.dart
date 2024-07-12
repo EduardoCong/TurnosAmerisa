@@ -1,7 +1,8 @@
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:turnos_amerisa/model/api.dart';
+import 'package:turnos_amerisa/model/servicios_model.dart';
+import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
 import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
 import 'dart:async';
@@ -12,7 +13,7 @@ class GenerarTurnoView extends StatefulWidget {
 }
 
 class _GenerarTurnoViewState extends State<GenerarTurnoView> {
-
+  final scaffoldKey = GlobalKey<ScaffoldState>();
   Servicio? servicioSeleccionado;
   List<int> serviciosDeshabilitados = [];
 
@@ -28,7 +29,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     loadUserData();
   }
 
-  Future <void> mostrarDetallesServicio(Servicio servicio) async {
+  Future<void> mostrarDetallesServicio(Servicio servicio) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id_servicio', servicio.id);
     await prefs.setString('nombre_servicio', servicio.nombre);
@@ -48,38 +49,36 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     });
   }
 
-  void verificarHora(BuildContext context) {
-    final now = DateTime.now();
-    if (now.hour >= 18) {
-      AwesomeDialog(
-        context: context,
-        dialogType: DialogType.warning,
-        borderSide: BorderSide(
-          color: Colors.red,
-          width: 2,
-        ),
-        width: 280,
-        buttonsBorderRadius: BorderRadius.all(
-          Radius.circular(2)
-        ),
-        dismissOnTouchOutside: true,
-        dismissOnBackKeyPress: false,
-        onDismissCallback: (type) {
-          debugPrint('Dialog Dissmiss from callback $type');
-        },
-        headerAnimationLoop: false,
-        animType: AnimType.bottomSlide,
-        title: 'Se han acabado los turnos por hoy',
-        desc: 'Desea hacer una cita para otro día?',
-        btnOkOnPress: () {
-          Navigator.of(context).pushReplacementNamed('/citas');
-        },
-        btnCancelOnPress: (){},
-      ).show();
-    } else {
-      generarTurnoDialog(context);
-    }
-  }
+  // void verificarHora(BuildContext context) {
+  //   final now = DateTime.now();
+  //   if (now.hour >= 18) {
+  //     AwesomeDialog(
+  //       context: context,
+  //       dialogType: DialogType.warning,
+  //       borderSide: BorderSide(
+  //         color: Colors.red,
+  //         width: 2,
+  //       ),
+  //       width: 280,
+  //       buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+  //       dismissOnTouchOutside: true,
+  //       dismissOnBackKeyPress: false,
+  //       onDismissCallback: (type) {
+  //         debugPrint('Dialog dismiss from callback $type');
+  //       },
+  //       headerAnimationLoop: false,
+  //       animType: AnimType.bottomSlide,
+  //       title: 'Se han acabado los turnos por hoy',
+  //       desc: 'Desea hacer una cita para otro día?',
+  //       btnOkOnPress: () async {
+  //         Navigator.of(context).pushReplacementNamed('/citas');
+  //       },
+  //       btnCancelOnPress: () {},
+  //     ).show();
+  //   } else {
+  //     generarTurnoDialog(context);
+  //   }
+  // }
 
   void generarTurnoDialog(BuildContext context) {
     AwesomeDialog(
@@ -90,36 +89,44 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
         width: 2,
       ),
       width: 280,
-      buttonsBorderRadius: BorderRadius.all(
-        Radius.circular(2)
-      ),
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
       dismissOnTouchOutside: true,
       dismissOnBackKeyPress: false,
       onDismissCallback: (type) {
-        debugPrint('Dialog Dissmiss from callback $type');
+        debugPrint('Dialog dismiss from callback $type');
       },
       headerAnimationLoop: false,
       animType: AnimType.bottomSlide,
-      title: 'Turno Generado Con Exito',
+      title: 'Turno Generado Con Éxito',
       descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-      btnOkOnPress: () {
+      btnOkOnPress: () async {
         generarTurno(context);
-        Navigator.of(context).pushReplacementNamed('/verturno');
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        final String? turnos = await prefs.getString('turno');
+        print(turnos);
       },
-      btnCancelOnPress: (){},
+      btnCancelOnPress: () {},
     ).show();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: scaffoldKey,
       backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Generar Turno'),
         centerTitle: true,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            scaffoldKey.currentState!.openDrawer();
+          },
+        ),
       ),
+      drawer: CustomDrawer(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -151,8 +158,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                         if (servicio != null) {
                           mostrarDetallesServicio(servicio);
                         }
-
-                      }, serviciosDeshabilitados: serviciosDeshabilitados,
+                      },
                     ),
                   ],
                 ),
@@ -164,7 +170,8 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                 padding: const EdgeInsets.only(top: 5),
                 child: ElevatedButton(
                   onPressed: () {
-                    verificarHora(context);
+                    // verificarHora(context);
+                    generarTurnoDialog(context);
                   },
                   child: Text('Generar', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
@@ -179,7 +186,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: ElevatedButton(
-                  onPressed: (){
+                  onPressed: () {
                     AwesomeDialog(
                       context: context,
                       dialogType: DialogType.warning,
@@ -188,13 +195,11 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                         width: 2,
                       ),
                       width: 280,
-                      buttonsBorderRadius: BorderRadius.all(
-                        Radius.circular(2)
-                      ),
+                      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
                       dismissOnTouchOutside: true,
                       dismissOnBackKeyPress: false,
                       onDismissCallback: (type) {
-                        debugPrint('Dialog Dissmiss from callback $type');
+                        debugPrint('Dialog dismiss from callback $type');
                       },
                       headerAnimationLoop: false,
                       animType: AnimType.bottomSlide,
@@ -203,7 +208,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                       btnOkOnPress: () {
                         Navigator.of(context).pushReplacementNamed('/home');
                       },
-                      btnCancelOnPress: (){},
+                      btnCancelOnPress: () {},
                     ).show();
                   },
                   child: Text('Cancelar', style: TextStyle(color: Colors.white)),
@@ -221,7 +226,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     );
   }
 
-  Widget imageLogo(){
+  Widget imageLogo() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14),
       child: Image.network(
@@ -244,11 +249,10 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       'letra': servicioSeleccionado!.letra,
       'fechaInicio': null,
     };
-
     try {
       await ApiService.generarTurno(datos, context);
     } catch (e) {
-      print('Error al generar turno_: $e');
+      print('Error al generar turno: $e');
     }
   }
 }
