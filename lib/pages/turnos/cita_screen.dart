@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
 
 class CitaQueueScreen extends StatefulWidget {
   CitaQueueScreen({Key? key}) : super(key: key);
@@ -23,6 +24,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
   int year = 0;
   int day = 0;
 
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -37,7 +40,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
       apellido = prefs.getString('apellido') ?? '';
       sapellido = prefs.getString('segundoApellido') ?? '';
       num = prefs.getString('numeroCliente') ?? '';
-      turnoCita = prefs.getString('turno') ?? '';
+      turnoCita = prefs.getString('ultimoTurno') ?? '';
       nombreServicio = prefs.getString('nombreServicio');
       letraServicio = prefs.getString('letraServicio');
       year = prefs.getInt('selected_year') ?? 0;
@@ -50,7 +53,19 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      key: scaffoldKey,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        // backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            scaffoldKey.currentState!.openDrawer();
+          },
+        ),
+      ),
+      drawer: CustomDrawer(),
+      // backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Container(
           height: 700,

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
 
 class VirtualQueueScreen extends StatefulWidget {
   VirtualQueueScreen({Key? key}) : super(key: key);
@@ -18,6 +19,8 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
   String? nombreServicio;
   String? letraServicio;
 
+  final scaffoldKey = GlobalKey<ScaffoldState>();
+
   @override
   void initState() {
     super.initState();
@@ -32,7 +35,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
       apellido = prefs.getString('apellido') ?? '';
       sapellido = prefs.getString('segundoApellido') ?? '';
       num = prefs.getString('numeroCliente') ?? '';
-      turnos = prefs.getString('turno') ?? '';
+      turnos = prefs.getString('ultimoTurno') ?? '';
       nombreServicio = prefs.getString('nombre_servicio');
       letraServicio = prefs.getString('letra_servicio');
     });
@@ -41,7 +44,19 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[200],
+      key: scaffoldKey,
+      appBar: AppBar(
+        automaticallyImplyLeading: false,
+        // backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            scaffoldKey.currentState!.openDrawer();
+          },
+        ),
+      ),
+      drawer: CustomDrawer(),
+      // backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Container(
           height: 700,

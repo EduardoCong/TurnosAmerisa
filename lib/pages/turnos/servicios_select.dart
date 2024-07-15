@@ -1,14 +1,13 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:turnos_amerisa/model/api.dart';
 import 'package:http/http.dart' as http;
+import 'package:turnos_amerisa/model/servicios_model.dart';
 
 class ServiciosSelect extends StatefulWidget {
   final Function(Servicio?) onServicioSelected;
-  final List<int> serviciosDeshabilitados;
 
-  const ServiciosSelect({Key? key, required this.onServicioSelected, required this.serviciosDeshabilitados}) : super(key: key);
+  const ServiciosSelect({Key? key, required this.onServicioSelected}) : super(key: key);
 
   @override
   _ServiciosSelectState createState() => _ServiciosSelectState();
@@ -64,10 +63,8 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
                 widget.onServicioSelected(value);
               },
               items: servicios.map((Servicio servicio) {
-                bool isDisabled = widget.serviciosDeshabilitados.contains(servicio.id);
-
                 return DropdownMenuItem<Servicio>(
-                  value: isDisabled ? null : servicio,
+                  value: servicio,
                   child: Text(servicio.nombre),
                 );
               }).toList(),

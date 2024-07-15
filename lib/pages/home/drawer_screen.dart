@@ -40,11 +40,11 @@ class _CustomDrawerState extends State<CustomDrawer> {
         children: [
           drawer(),
           hometitle(context),
-          configtitle(context),
           const Divider(),
           profiletitle(context),
-          notificationstitle(context),
-          helptitle(context),
+          configMode(context),
+          pedirTurno(context),
+          pedirCita(context),
           const Divider(),
           logouttitle(context)
         ],
@@ -122,22 +122,44 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  Widget helptitle(BuildContext context){
+  Widget pedirCita(BuildContext context){
     return ListTile(
-      title: const Text('Ayuda'),
-      leading: const Icon(Icons.help),
+      title: const Text('Pedir Cita'),
+      leading: const Icon(Icons.calendar_month_sharp),
       onTap: () {
-        Navigator.pop(context);
+        if (ModalRoute.of(context)?.settings.name != '/calendario') {
+          Navigator.of(context).pushReplacementNamed('/calendario');
+        }else{
+          Navigator.pop(context);
+        }
       },
     );
   }
 
-  Widget notificationstitle(BuildContext context){
+  Widget pedirTurno(BuildContext context){
     return ListTile(
-      title: const Text('Notificaciones'),
-      leading: const Icon(Icons.notifications),
+      title: const Text('Pedir Turno'),
+      leading: const Icon(Icons.arrow_forward),
       onTap: () {
-        Navigator.pop(context);
+         if (ModalRoute.of(context)?.settings.name != '/turno') {
+          Navigator.of(context).pushReplacementNamed('/turno');
+        }else{
+          Navigator.pop(context);
+        }
+      },
+    );
+  }
+
+  Widget configMode(BuildContext context){
+    return ListTile(
+      title: const Text('Configuracion'),
+      leading: const Icon(Icons.settings),
+      onTap: () {
+        if (ModalRoute.of(context)?.settings.name != '/config') {
+          Navigator.of(context).pushReplacementNamed('/config');
+        }else{
+          Navigator.pop(context);
+        }
       },
     );
   }
@@ -152,22 +174,16 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
-  Widget configtitle(BuildContext context){
-    return ListTile(
-      title: const Text('Configuracion'),
-      leading: const Icon(Icons.settings),
-      onTap: () {
-        Navigator.pop(context);
-      },
-    );
-  }
-
   Widget hometitle(BuildContext context){
     return ListTile(
       title: const Text('Inicio'),
       leading: const Icon(Icons.home),
       onTap: () {
-        Navigator.pop(context);
+        if (ModalRoute.of(context)?.settings.name != '/home') {
+          Navigator.of(context).pushReplacementNamed('/home');
+        }else{
+          Navigator.pop(context);
+        }
       },
     );
   }

@@ -1,7 +1,9 @@
-import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:flutter/material.dart';
+import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:turnos_amerisa/model/api.dart';
+import 'package:turnos_amerisa/model/servicios_model.dart';
+import 'package:turnos_amerisa/model/turno_data.dart';
+import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
 import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
 import 'dart:async';
@@ -12,9 +14,9 @@ class GenerarTurnoView extends StatefulWidget {
 }
 
 class _GenerarTurnoViewState extends State<GenerarTurnoView> {
-
   Servicio? servicioSeleccionado;
-  List<int> serviciosDeshabilitados = [];
+
+  final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String nombre = '';
   String segundoNombre = '';
@@ -22,13 +24,16 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   String segundoApellido = '';
   String numeroCliente = '';
 
+  bool isSunday = false;
+
   @override
   void initState() {
     super.initState();
     loadUserData();
+    checkDayOfWeek();
   }
 
-  Future <void> mostrarDetallesServicio(Servicio servicio) async {
+  Future<void> mostrarDetallesServicio(Servicio servicio) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     await prefs.setInt('id_servicio', servicio.id);
     await prefs.setString('nombre_servicio', servicio.nombre);
@@ -48,9 +53,8 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     });
   }
 
-  void verificarHora(BuildContext context) {
-    final now = DateTime.now();
-    if (now.hour >= 18) {
+  void generarTurnoDialog(BuildContext context) {
+    if (isSunday) {
       AwesomeDialog(
         context: context,
         dialogType: DialogType.warning,
@@ -59,29 +63,50 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
           width: 2,
         ),
         width: 280,
-        buttonsBorderRadius: BorderRadius.all(
-          Radius.circular(2)
-        ),
+        buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
         dismissOnTouchOutside: true,
         dismissOnBackKeyPress: false,
-        onDismissCallback: (type) {
-          debugPrint('Dialog Dissmiss from callback $type');
-        },
         headerAnimationLoop: false,
         animType: AnimType.bottomSlide,
-        title: 'Se han acabado los turnos por hoy',
-        desc: 'Desea hacer una cita para otro día?',
+        title: 'No es posible generar turno',
+        desc: '¿Desea agendar un cita?',
+        descTextStyle: TextStyle(color: Colors.red, fontSize: 18),
+        btnCancelText: 'No',
+        btnCancelOnPress: () {},
+        btnOkText: 'Si',
         btnOkOnPress: () {
-          Navigator.of(context).pushReplacementNamed('/citas');
+          Navigator.of(context).pushReplacementNamed('/calendario');
         },
-        btnCancelOnPress: (){},
       ).show();
-    } else {
-      generarTurnoDialog(context);
+      return;
     }
-  }
 
-  void generarTurnoDialog(BuildContext context) {
+    if (DateTime.now().weekday == DateTime.saturday && DateTime.now().hour >= 13) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.info,
+        borderSide: BorderSide(
+          color: Colors.blue,
+          width: 2,
+        ),
+        width: 280,
+        buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+        dismissOnTouchOutside: true,
+        dismissOnBackKeyPress: false,
+        headerAnimationLoop: false,
+        animType: AnimType.bottomSlide,
+        title: '¿Desea agendar una cita?',
+        descTextStyle: TextStyle(color: Colors.blue, fontSize: 18),
+        btnCancelText: 'No',
+        btnCancelOnPress: () {},
+        btnOkText: 'Sí',
+        btnOkOnPress: () {
+          Navigator.of(context).pushReplacementNamed('/calendario');
+        },
+      ).show();
+      return;
+    }
+
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
@@ -90,36 +115,49 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
         width: 2,
       ),
       width: 280,
-      buttonsBorderRadius: BorderRadius.all(
-        Radius.circular(2)
-      ),
+      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
       dismissOnTouchOutside: true,
       dismissOnBackKeyPress: false,
-      onDismissCallback: (type) {
-        debugPrint('Dialog Dissmiss from callback $type');
-      },
       headerAnimationLoop: false,
       animType: AnimType.bottomSlide,
-      title: 'Turno Generado Con Exito',
+      title: 'Turno Generado Con Éxito',
       descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
       btnOkOnPress: () {
         generarTurno(context);
         Navigator.of(context).pushReplacementNamed('/verturno');
       },
-      btnCancelOnPress: (){},
+      btnCancelOnPress: () {},
     ).show();
+  }
+
+  void checkDayOfWeek() {
+    DateTime now = DateTime.now();
+    int dayOfWeek = now.weekday;
+    if (dayOfWeek == DateTime.sunday) {
+      setState(() {
+        isSunday = true;
+      });
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      key: scaffoldKey,
+      // backgroundColor: Colors.white,
       appBar: AppBar(
         title: Text('Generar Turno'),
         centerTitle: true,
         automaticallyImplyLeading: false,
-        backgroundColor: Colors.white,
+        // backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            scaffoldKey.currentState!.openDrawer();
+          },
+        ),
       ),
+      drawer: CustomDrawer(),
       body: SingleChildScrollView(
         padding: EdgeInsets.all(16.0),
         child: Column(
@@ -151,8 +189,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                         if (servicio != null) {
                           mostrarDetallesServicio(servicio);
                         }
-
-                      }, serviciosDeshabilitados: serviciosDeshabilitados,
+                      },
                     ),
                   ],
                 ),
@@ -164,7 +201,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                 padding: const EdgeInsets.only(top: 5),
                 child: ElevatedButton(
                   onPressed: () {
-                    verificarHora(context);
+                    generarTurnoDialog(context);
                   },
                   child: Text('Generar', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
@@ -179,7 +216,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
               child: Padding(
                 padding: const EdgeInsets.only(top: 5),
                 child: ElevatedButton(
-                  onPressed: (){
+                  onPressed: () {
                     AwesomeDialog(
                       context: context,
                       dialogType: DialogType.warning,
@@ -188,14 +225,9 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                         width: 2,
                       ),
                       width: 280,
-                      buttonsBorderRadius: BorderRadius.all(
-                        Radius.circular(2)
-                      ),
+                      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
                       dismissOnTouchOutside: true,
                       dismissOnBackKeyPress: false,
-                      onDismissCallback: (type) {
-                        debugPrint('Dialog Dissmiss from callback $type');
-                      },
                       headerAnimationLoop: false,
                       animType: AnimType.bottomSlide,
                       title: 'Cancelado',
@@ -203,7 +235,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                       btnOkOnPress: () {
                         Navigator.of(context).pushReplacementNamed('/home');
                       },
-                      btnCancelOnPress: (){},
+                      btnCancelOnPress: () {},
                     ).show();
                   },
                   child: Text('Cancelar', style: TextStyle(color: Colors.white)),
@@ -221,7 +253,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     );
   }
 
-  Widget imageLogo(){
+  Widget imageLogo() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14),
       child: Image.network(
@@ -246,7 +278,10 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     };
 
     try {
-      await ApiService.generarTurno(datos, context);
+      TurnoData? turnoGenerado = await ApiService.generarTurno(datos, context, 'generar');
+      if (turnoGenerado != null) {
+        print(turnoGenerado.turno);
+      }
     } catch (e) {
       print('Error al generar turno_: $e');
     }

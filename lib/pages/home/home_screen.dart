@@ -12,7 +12,7 @@ class HomePage extends StatelessWidget {
       key: scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        // backgroundColor: Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
@@ -30,7 +30,7 @@ class HomePage extends StatelessWidget {
           ],
         ),
       ),
-      backgroundColor: Colors.white,
+      // backgroundColor: Colors.white,
     );
   }
 
