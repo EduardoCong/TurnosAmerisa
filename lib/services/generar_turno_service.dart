@@ -1,13 +1,11 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:turnos_amerisa/model/turno_data.dart';
 
 class ApiService {
   static const String baseUrl = 'http://turnos.soft-box.com.mx/models/model_generar_turno.php';
 
-  static Future generarTurno(Map<String, dynamic> datos, BuildContext context, String origen) async {
+  static Future generarTurno(Map<String, dynamic> datos, BuildContext context) async {
     try {
       var response = await http.post(
         Uri.parse('$baseUrl'),
@@ -22,9 +20,7 @@ class ApiService {
         if (jsonData['codigo'] == 0) {
           print('Turno generado');
           print(jsonData);
-          final turnoData = TurnoData(turno: jsonData['turno'], origen: origen);
-          await guardarTurnoCache(turnoData);
-          return turnoData;
+          return jsonData;
 
         } else {
           throw Exception('Error al generar turno: ${jsonData['respuesta']}');
@@ -35,9 +31,5 @@ class ApiService {
     } catch (e) {
       throw Exception('Error de red: $e');
     }
-  }
-  static Future<void> guardarTurnoCache(TurnoData turnoData) async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    await prefs.setString('ultimoTurno', turnoData.turno);
   }
 }

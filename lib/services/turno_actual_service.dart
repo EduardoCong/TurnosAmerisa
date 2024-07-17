@@ -1,92 +1,120 @@
 import 'package:http/http.dart' as http;
 
-class ApiTurnos {
-  String url = 'http://localhost:3000/models/model_gestionar_turno.php';
+class TurnoScreen {
+  final String apiUrl =
+      'http://localhost:3000/models/model_gestionar_turno.php';
 
-  Future<String> obtenerTurnoActualCarga() async {
+  Future<String> obtenerTurnoCarga() async {
     try {
-      final response =
-          await http.post(Uri.parse(url), body: {'accion': 'TurnoActualCarga'});
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'accion': 'TurnoActualCarga',
+        },
+      );
+
       if (response.statusCode == 200) {
-        print(response.body);
         return response.body;
       } else {
-        throw Exception('Error en la solicitud: ${response.statusCode}');
+        return 'Error al obtener turno de Carga. Código de estado: ${response.statusCode}';
       }
     } catch (e) {
-      throw Exception('Error en la solicitud: $e');
-    }
-  }
-
-  Future<String> obtenerTurnoActualServicio() async {
-    try {
-      final response =
-          await http.post(Uri.parse(url), body: {'accion': 'TurnoActualServicio'});
-      if (response.statusCode == 200) {
-        print(response.body);
-        return response.body;
-      } else {
-        throw Exception('Error en la solicitud: ${response.statusCode}');
-      }
-    } catch (e) {
-      throw Exception('Error en la solicitud: $e');
+      return 'Error en la solicitud: $e';
     }
   }
 
-  Future<String> obtenerTurnoActualCita() async {
+  Future<String> obtenerTurnoServicio() async {
     try {
-      final response =
-          await http.post(Uri.parse(url), body: {'accion': 'TurnoActualCita'});
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'accion': 'TurnoActualServicio',
+        },
+      );
+
       if (response.statusCode == 200) {
-        print(response.body);
         return response.body;
       } else {
-        throw Exception('Error en la solicitud: ${response.statusCode}');
+        return 'Error al obtener turno de Servicio. Código de estado: ${response.statusCode}';
       }
     } catch (e) {
-      throw Exception('Error en la solicitud: $e');
+      return 'Error en la solicitud: $e';
     }
   }
-  Future<String> obtenerTurnoActualVisita() async {
+
+  Future<String> obtenerTurnoCita() async {
     try {
-      final response =
-          await http.post(Uri.parse(url), body: {'accion': 'TurnoActualVisita'});
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'accion': 'TurnoActualCita',
+        },
+      );
+
       if (response.statusCode == 200) {
-        print(response.body);
         return response.body;
       } else {
-        throw Exception('Error en la solicitud: ${response.statusCode}');
+        return 'Error al obtener turno de Cita. Código de estado: ${response.statusCode}';
       }
     } catch (e) {
-      throw Exception('Error en la solicitud: $e');
+      return 'Error en la solicitud: $e';
     }
   }
-  Future<String> obtenerTurnoActualDescarga() async {
+
+  Future<String> obtenerTurnoVisita() async {
     try {
-      final response =
-          await http.post(Uri.parse(url), body: {'accion': 'TurnoActualDescarga'});
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'accion': 'TurnoActualVisita',
+        },
+      );
+
       if (response.statusCode == 200) {
-        print(response.body);
         return response.body;
       } else {
-        throw Exception('Error en la solicitud: ${response.statusCode}');
+        return 'Error al obtener turno de Visita. Código de estado: ${response.statusCode}';
       }
     } catch (e) {
-      throw Exception('Error en la solicitud: $e');
+      return 'Error en la solicitud: $e';
     }
   }
-  Future<String> obtenerTurnoActualRevision() async {
+
+  Future<String> obtenerTurnoDescarga() async {
     try {
-      final response =
-          await http.post(Uri.parse(url), body: {'accion': 'TurnoActualRevision'});
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'accion': 'TurnoActualDescarga',
+        },
+      );
+
       if (response.statusCode == 200) {
-        print(response.body);
         return response.body;
       } else {
-        throw Exception('Error en la solicitud: ${response.statusCode}');
+        return 'Error al obtener turno de Descarga. Código de estado: ${response.statusCode}';
       }
     } catch (e) {
-      throw Exception('Error en la solicitud: $e');
+      return 'Error en la solicitud: $e';
+    }
+  }
+
+  Future<String> obtenerTurnoRevision() async {
+    try {
+      var response = await http.post(
+        Uri.parse(apiUrl),
+        body: {
+          'accion': 'TurnoActualRevision',
+        },
+      );
+
+      if (response.statusCode == 200) {
+        return response.body;
+      } else {
+        return 'Error al obtener turno de Revisión. Código de estado: ${response.statusCode}';
+      }
+    } catch (e) {
+      return 'Error en la solicitud: $e';
     }
   }
 }

@@ -8,10 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:table_calendar/table_calendar.dart';
 import 'package:turnos_amerisa/model/event.dart';
 import 'package:turnos_amerisa/model/servicios_model.dart';
-import 'package:turnos_amerisa/model/turno_data.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
 import 'package:turnos_amerisa/services/generar_turno_service.dart';
+import 'package:turnos_amerisa/services/turno_actual_service.dart';
 
 class Calendar extends StatefulWidget {
   Calendar({super.key});
@@ -22,7 +22,6 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   Servicio? servicioSeleccionado;
-  List<int> serviciosDeshabilitados = [];
   CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _today = DateTime.now();
   DateTime? _selectedDay;
@@ -39,6 +38,7 @@ class _CalendarState extends State<Calendar> {
   String apellidoCita = '';
   String segundoApellidoCita = '';
   String numeroClienteCita = '';
+  String _turnoCita = '';
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -73,21 +73,26 @@ class _CalendarState extends State<Calendar> {
     if (_selectedDay != null && _selectedTime != null) {
       SharedPreferences prefs = await SharedPreferences.getInstance();
       await prefs.setInt('selected_year', _selectedDay!.year);
-      await prefs.setString('selected_month', DateFormat('MMMM').format(_selectedDay!));
+      await prefs.setString(
+          'selected_month', DateFormat('MMMM').format(_selectedDay!));
       await prefs.setInt('selected_day', _selectedDay!.day);
       await prefs.setString('selected_time', _selectedTime!);
     }
   }
 
-  Future<void> _saveTurnoInCache(DateTime date, String time, int servicioId) async {
+  Future<void> _saveTurnoInCache(
+      DateTime date, String time, int servicioId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String turnoKey = '${date.year}-${date.month}-${date.day}-$time-$servicioId';
+    String turnoKey =
+        '${date.year}-${date.month}-${date.day}-$time-$servicioId';
     await prefs.setBool(turnoKey, true);
   }
 
-  Future<bool> _isTurnoOcupado(DateTime date, String time, int servicioId) async {
+  Future<bool> _isTurnoOcupado(
+      DateTime date, String time, int servicioId) async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
-    String turnoKey = '${date.year}-${date.month}-${date.day}-$time-$servicioId';
+    String turnoKey =
+        '${date.year}-${date.month}-${date.day}-$time-$servicioId';
     return prefs.getBool(turnoKey) ?? false;
   }
 
@@ -130,9 +135,6 @@ class _CalendarState extends State<Calendar> {
         ),
         dismissOnTouchOutside: true,
         dismissOnBackKeyPress: false,
-        onDismissCallback: (type) {
-          debugPrint('Dialog Dissmiss from callback $type');
-        },
         headerAnimationLoop: false,
         animType: AnimType.bottomSlide,
         title: 'No es posible agendar cita',
@@ -305,15 +307,14 @@ class _CalendarState extends State<Calendar> {
             width: 2,
           ),
           width: 280,
-          buttonsBorderRadius: BorderRadius.all(
-            Radius.circular(2)
-          ),
+          buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
           dismissOnTouchOutside: true,
           dismissOnBackKeyPress: false,
           headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Horario no disponible',
-          desc: 'Por favor, elige una hora entre las 9:00 AM y las 5:40 PM de lunes a viernes.',
+          desc:
+              'Por favor, elige una hora entre las 9:00 AM y las 5:40 PM de lunes a viernes.',
           descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
           btnOkOnPress: () {},
         ).show();
@@ -329,15 +330,14 @@ class _CalendarState extends State<Calendar> {
             width: 2,
           ),
           width: 280,
-          buttonsBorderRadius: BorderRadius.all(
-            Radius.circular(2)
-          ),
+          buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
           dismissOnTouchOutside: true,
           dismissOnBackKeyPress: false,
           headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Horario no disponible',
-          desc: 'Los sábados solo se pueden agendar citas de 9:00 AM a 1:00 PM.',
+          desc:
+              'Los sábados solo se pueden agendar citas de 9:00 AM a 1:00 PM.',
           descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
           btnOkOnPress: () {},
         ).show();
@@ -345,32 +345,6 @@ class _CalendarState extends State<Calendar> {
       }
 
       if (selectedTime.minute % 20 != 0) {
-      AwesomeDialog(
-        context: context,
-        dialogType: DialogType.warning,
-        borderSide: BorderSide(
-          color: Colors.blue,
-          width: 2,
-        ),
-        width: 280,
-        buttonsBorderRadius: BorderRadius.all(
-          Radius.circular(2)
-        ),
-        dismissOnTouchOutside: true,
-        dismissOnBackKeyPress: false,
-        headerAnimationLoop: false,
-        animType: AnimType.bottomSlide,
-        title: 'Hora no válida',
-        desc: 'Por favor, elige una hora en intervalos de 20 minutos.',
-        descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-        btnOkOnPress: () {},
-      ).show();
-      return;
-    }
-
-      String formattedTime = selectedTime.format(context);
-
-      if (await _isTurnoOcupado(_selectedDay!, formattedTime, servicioSeleccionado!.id)) {
         AwesomeDialog(
           context: context,
           dialogType: DialogType.warning,
@@ -379,9 +353,32 @@ class _CalendarState extends State<Calendar> {
             width: 2,
           ),
           width: 280,
-          buttonsBorderRadius: BorderRadius.all(
-            Radius.circular(2)
+          buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+          dismissOnTouchOutside: true,
+          dismissOnBackKeyPress: false,
+          headerAnimationLoop: false,
+          animType: AnimType.bottomSlide,
+          title: 'Hora no válida',
+          desc: 'Por favor, elige una hora en intervalos de 20 minutos.',
+          descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+          btnOkOnPress: () {},
+        ).show();
+        return;
+      }
+
+      String formattedTime = selectedTime.format(context);
+
+      if (await _isTurnoOcupado(
+          _selectedDay!, formattedTime, servicioSeleccionado!.id)) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.warning,
+          borderSide: BorderSide(
+            color: Colors.blue,
+            width: 2,
           ),
+          width: 280,
+          buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
           dismissOnTouchOutside: true,
           dismissOnBackKeyPress: false,
           headerAnimationLoop: false,
@@ -406,8 +403,8 @@ class _CalendarState extends State<Calendar> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Cancelar Agendar"),
-          content: Text("¿Estás seguro que deseas cancelar la agenda?"),
+          title: Text("Cancela Cita"),
+          content: Text("¿Estás seguro que deseas cancelar la cita?"),
           actions: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
@@ -461,9 +458,7 @@ class _CalendarState extends State<Calendar> {
           width: 2,
         ),
         width: 280,
-        buttonsBorderRadius: BorderRadius.all(
-          Radius.circular(2)
-        ),
+        buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
         dismissOnTouchOutside: true,
         dismissOnBackKeyPress: false,
         headerAnimationLoop: false,
@@ -490,11 +485,44 @@ class _CalendarState extends State<Calendar> {
         'fechaInicio': '$formattedDateTime',
       };
       try {
-        TurnoData? turnoData = await ApiService.generarTurno(datos, context, 'cita');
-        if (turnoData != null) {
-          print(turnoData.turno);
+        final result = await ApiService.generarTurno(datos, context);
+        _turnoCita = result['turno'];
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setString('turnoCita', _turnoCita);
+
+        String turnoActual = '';
+        if (servicioSeleccionado != null) {
+          String nombreServicio = servicioSeleccionado!.nombre.toLowerCase();
+          TurnoScreen turnoScreen = TurnoScreen();
+          switch (nombreServicio) {
+            case 'carga':
+              turnoActual = await turnoScreen.obtenerTurnoCarga();
+              break;
+            case 'servicio':
+              turnoActual = await turnoScreen.obtenerTurnoServicio();
+              break;
+            case 'cita':
+              turnoActual = await turnoScreen.obtenerTurnoCita();
+              break;
+            case 'visita':
+              turnoActual = await turnoScreen.obtenerTurnoVisita();
+              break;
+            case 'descarga':
+              turnoActual = await turnoScreen.obtenerTurnoDescarga();
+              break;
+            case 'revision':
+              turnoActual = await turnoScreen.obtenerTurnoRevision();
+              break;
+            default:
+              print('Servicio no reconocido: $nombreServicio');
+              break;
+          }
         }
-        await _saveTurnoInCache(_selectedDay!, _selectedTime!, servicioSeleccionado!.id);
+
+        await prefs.setString('turnoActualCita', turnoActual);
+
+        await _saveTurnoInCache(
+            _selectedDay!, _selectedTime!, servicioSeleccionado!.id);
         AwesomeDialog(
           context: context,
           dialogType: DialogType.success,
@@ -503,9 +531,7 @@ class _CalendarState extends State<Calendar> {
             width: 2,
           ),
           width: 280,
-          buttonsBorderRadius: BorderRadius.all(
-            Radius.circular(2)
-          ),
+          buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
           dismissOnTouchOutside: true,
           dismissOnBackKeyPress: false,
           headerAnimationLoop: false,
@@ -515,7 +541,7 @@ class _CalendarState extends State<Calendar> {
           btnOkOnPress: () {
             Navigator.of(context).pushReplacementNamed('/vercita');
           },
-          btnCancelOnPress: (){},
+          btnCancelOnPress: () {},
         ).show();
       } catch (e) {
         AwesomeDialog(
@@ -526,9 +552,7 @@ class _CalendarState extends State<Calendar> {
             width: 2,
           ),
           width: 280,
-          buttonsBorderRadius: BorderRadius.all(
-            Radius.circular(2)
-          ),
+          buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
           dismissOnTouchOutside: true,
           dismissOnBackKeyPress: false,
           headerAnimationLoop: false,

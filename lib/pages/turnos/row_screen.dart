@@ -18,6 +18,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
   String turnos = '';
   String? nombreServicio;
   String? letraServicio;
+  String currentTurn = '';
 
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -35,9 +36,10 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
       apellido = prefs.getString('apellido') ?? '';
       sapellido = prefs.getString('segundoApellido') ?? '';
       num = prefs.getString('numeroCliente') ?? '';
-      turnos = prefs.getString('ultimoTurno') ?? '';
+      turnos = prefs.getString('turnoGenerado') ?? '';
       nombreServicio = prefs.getString('nombre_servicio');
       letraServicio = prefs.getString('letra_servicio');
+      currentTurn = prefs.getString('turnoActual') ?? '';
     });
   }
 
@@ -47,7 +49,6 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
       key: scaffoldKey,
       appBar: AppBar(
         automaticallyImplyLeading: false,
-        // backgroundColor: Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
@@ -56,109 +57,56 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
         ),
       ),
       drawer: CustomDrawer(),
-      // backgroundColor: Colors.grey[200],
       body: SingleChildScrollView(
         child: Container(
-          height: 700,
-          margin: EdgeInsets.symmetric(horizontal: 16.0, vertical: 70),
-          child: Card(
-            elevation: 4.0,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(12.0),
+          margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80),
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(15.0),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.grey.withOpacity(0.5),
+                  spreadRadius: 2,
+                  blurRadius: 5,
+                  offset: Offset(0, 3),
+                ),
+              ],
             ),
             child: Padding(
-              padding: EdgeInsets.all(24.0),
+              padding: EdgeInsets.all(25.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   Text(
                     'Ticket Virtual',
                     style: TextStyle(
-                      fontSize: 24.0,
+                      fontSize: 28.0,
                       fontWeight: FontWeight.bold,
-                      color: Colors.blue,
+                      color: Colors.blue[700],
                     ),
                   ),
-                  SizedBox(height: 16.0),
-                  Divider(thickness: 1.0, color: Colors.grey[300]),
-                  SizedBox(height: 8.0),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Cliente:',
-                        style: TextStyle(
-                          fontSize: 16.0,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.grey[600],
-                        ),
-                      ),
-                      Text(
-                        '$name $sname $apellido $sapellido',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      Text(
-                        'Numero del Cliente: $num',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      SizedBox(height: 8.0),
-                      Divider(thickness: 1.0, color: Colors.grey[300]),
-                      SizedBox(height: 8.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Su Turno:',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.blue,
-                            ),
-                          ),
-                          Text(
-                            '$turnos',
-                            style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 16.0),
-                      Divider(thickness: 1.0, color: Colors.grey[300]),
-                      SizedBox(height: 8.0),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            'Servicio Elegido:',
-                            style: TextStyle(
-                              fontSize: 18.0,
-                              fontWeight: FontWeight.bold,
-                              color: Colors.grey[600],
-                            ),
-                          ),
-                          Text(
-                            '$nombreServicio',
-                            style: TextStyle(fontSize: 16.0),
-                          ),
-                        ],
-                      ),
-                      SizedBox(height: 8.0),
-                      Text(
-                        'Letra: $letraServicio',
-                        style: TextStyle(fontSize: 16.0),
-                      ),
-                      SizedBox(height: 200.0),
-                      ElevatedButton(
-                        onPressed: () {
-                          Navigator.of(context).pushReplacementNamed('/home');
-                        },
-                        child: Text('Volver', style: TextStyle(color: Colors.white)),
-                        style: ElevatedButton.styleFrom(
-                          textStyle: TextStyle(fontSize: 16.0),
-                          minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
-                          backgroundColor: Colors.red,
-                        ),
-                      ),
-                    ],
+                  SizedBox(height: 20.0),
+                  _buildTicketSectionName(
+                      'Cliente:', '$name $sname $apellido $sapellido',),
+                  _buildTicketSectionNumber('Número de Cliente:', num),
+                  _buildTicketSectionTurno(
+                      'Su Turno:', turnos, isBold: true, color: Colors.red),
+                  _buildTicketSectionTurnoActual('Turno Actual', currentTurn),
+                  _buildTicketSectionServicio('Servicio Elegido:', nombreServicio!),
+                  _buildTicketSectionAnden('Aden:', 'Por Seleccionar'),
+
+                  SizedBox(height: 40.0),
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed('/home');
+                    },
+                    child: Text('Volver', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      textStyle: TextStyle(fontSize: 18.0),
+                      padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
+                      backgroundColor: Colors.red,
+                    ),
                   ),
                 ],
               ),
@@ -168,4 +116,191 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
       ),
     );
   }
+
+  Widget _buildTicketSectionName(String title, String value,
+      {bool isBold = false, Color color = Colors.grey}) {
+    return Column(
+      children: [
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: color,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Divider(
+          thickness: 1.0,
+          color: Colors.grey[300],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTicketSectionNumber(String title, String value,
+      {bool isBold = false, Color color = Colors.grey}) {
+    return Column(
+      children: [
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: color,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Divider(
+          thickness: 1.0,
+          color: Colors.grey[300],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTicketSectionTurno(String title, String value,
+      {bool isBold = false, Color color = Colors.grey}) {
+    return Column(
+      children: [
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: color,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Divider(
+          thickness: 1.0,
+          color: Colors.grey[300],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTicketSectionServicio(String title, String value,
+      {bool isBold = false, Color color = Colors.grey}) {
+    return Column(
+      children: [
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: color,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Divider(
+          thickness: 1.0,
+          color: Colors.grey[300],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTicketSectionAnden(String title, String value,
+      {bool isBold = false, Color color = Colors.grey}) {
+    return Column(
+      children: [
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: color,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Divider(
+          thickness: 1.0,
+          color: Colors.grey[300],
+        ),
+      ],
+    );
+  }
+
+  Widget _buildTicketSectionTurnoActual(String title, String value,
+      {bool isBold = false, Color color = Colors.grey}) {
+    return Column(
+      children: [
+        SizedBox(height: 10.0),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              title,
+              style: TextStyle(
+                fontSize: 16.0,
+                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
+                color: color,
+              ),
+            ),
+            Text(
+              value,
+              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+            ),
+          ],
+        ),
+        SizedBox(height: 10.0),
+        Divider(
+          thickness: 1.0,
+          color: Colors.grey[300],
+        ),
+      ],
+    );
+  }
 }
+

@@ -2,11 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/model/servicios_model.dart';
-import 'package:turnos_amerisa/model/turno_data.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
 import 'package:turnos_amerisa/services/generar_turno_service.dart';
 import 'package:turnos_amerisa/pages/turnos/servicios_select.dart';
 import 'dart:async';
+
+import 'package:turnos_amerisa/services/turno_actual_service.dart';
 
 class GenerarTurnoView extends StatefulWidget {
   @override
@@ -15,7 +16,6 @@ class GenerarTurnoView extends StatefulWidget {
 
 class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   Servicio? servicioSeleccionado;
-
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   String nombre = '';
@@ -23,6 +23,8 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   String apellido = '';
   String segundoApellido = '';
   String numeroCliente = '';
+
+  String _turnoGenerado = '';
 
   bool isSunday = false;
 
@@ -53,7 +55,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     });
   }
 
-  void generarTurnoDialog(BuildContext context) {
+  Future<void> generarTurnoDialog(BuildContext context) async {
     if (isSunday) {
       AwesomeDialog(
         context: context,
@@ -81,7 +83,8 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       return;
     }
 
-    if (DateTime.now().weekday == DateTime.saturday && DateTime.now().hour >= 13) {
+    if (DateTime.now().weekday == DateTime.saturday &&
+        DateTime.now().hour >= 13) {
       AwesomeDialog(
         context: context,
         dialogType: DialogType.info,
@@ -124,7 +127,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
       btnOkOnPress: () {
         generarTurno(context);
-        Navigator.of(context).pushReplacementNamed('/verturno');
       },
       btnCancelOnPress: () {},
     ).show();
@@ -139,6 +141,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       });
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +209,8 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                   child: Text('Generar', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     textStyle: TextStyle(fontSize: 16.0),
-                    minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                    minimumSize:
+                        Size(MediaQuery.of(context).size.width - 46, 50),
                     backgroundColor: Color.fromARGB(255, 35, 38, 204),
                   ),
                 ),
@@ -231,17 +235,20 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                       headerAnimationLoop: false,
                       animType: AnimType.bottomSlide,
                       title: 'Cancelado',
-                      descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+                      descTextStyle:
+                          TextStyle(color: Colors.green, fontSize: 18),
                       btnOkOnPress: () {
                         Navigator.of(context).pushReplacementNamed('/home');
                       },
                       btnCancelOnPress: () {},
                     ).show();
                   },
-                  child: Text('Cancelar', style: TextStyle(color: Colors.white)),
+                  child:
+                      Text('Cancelar', style: TextStyle(color: Colors.white)),
                   style: ElevatedButton.styleFrom(
                     textStyle: TextStyle(fontSize: 16.0),
-                    minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                    minimumSize:
+                        Size(MediaQuery.of(context).size.width - 46, 50),
                     backgroundColor: Colors.red,
                   ),
                 ),
@@ -278,12 +285,46 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     };
 
     try {
-      TurnoData? turnoGenerado = await ApiService.generarTurno(datos, context, 'generar');
-      if (turnoGenerado != null) {
-        print(turnoGenerado.turno);
+      final result = await ApiService.generarTurno(datos, context);
+      _turnoGenerado = result['turno'];
+
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      await prefs.setString('turnoGenerado', _turnoGenerado);
+
+      String turnoActual = '';
+      if (servicioSeleccionado != null) {
+        String nombreServicio = servicioSeleccionado!.nombre.toLowerCase();
+        TurnoScreen turnoScreen = TurnoScreen();
+        switch (nombreServicio) {
+          case 'carga':
+            turnoActual = await turnoScreen.obtenerTurnoCarga();
+            break;
+          case 'servicio':
+            turnoActual = await turnoScreen.obtenerTurnoServicio();
+            break;
+          case 'cita':
+            turnoActual = await turnoScreen.obtenerTurnoCita();
+            break;
+          case 'visita':
+            turnoActual = await turnoScreen.obtenerTurnoVisita();
+            break;
+          case 'descarga':
+            turnoActual = await turnoScreen.obtenerTurnoDescarga();
+            break;
+          case 'revision':
+            turnoActual = await turnoScreen.obtenerTurnoRevision();
+            break;
+          default:
+            print('Servicio no reconocido: $nombreServicio');
+            break;
+        }
       }
+
+      await prefs.setString('turnoActual', turnoActual);
+
+      Navigator.of(context).pushReplacementNamed('/verturno');
     } catch (e) {
-      print('Error al generar turno_: $e');
+      print('Error al generar turno: $e');
     }
   }
 }

@@ -15,7 +15,7 @@ class ConfiguracionView extends StatelessWidget {
       appBar: AppBar(
         automaticallyImplyLeading: false,
         title: Text('Configuraciones'),
-        backgroundColor: Color.fromARGB(255, 255, 255, 255),
+        // backgroundColor: Color.fromARGB(255, 255, 255, 255),
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
