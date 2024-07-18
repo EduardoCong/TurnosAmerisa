@@ -18,7 +18,7 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
   }
 
   void _startSplash() async {
-    await Future.delayed(Duration(seconds: 5));  // Aseguramos que la pantalla de splash se muestra 5 segundos
+    await Future.delayed(Duration(seconds: 5));
     await _checkSharedPreferences();
   }
 

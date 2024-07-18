@@ -404,7 +404,7 @@ class _CalendarState extends State<Calendar> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Text("Cancela Cita"),
-          content: Text("¿Estás seguro que deseas cancelar la cita?"),
+          content: Text("¿Estás seguro que deseas cancelar el agendado de cita?"),
           actions: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,

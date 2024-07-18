@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 
 class TurnoScreen {
   final String apiUrl =
-      'http://localhost:3000/models/model_gestionar_turno.php';
+      'http://192.168.1.83:80/models/model_gestionar_turno.php';
 
   Future<String> obtenerTurnoCarga() async {
     try {

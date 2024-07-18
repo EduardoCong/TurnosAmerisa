@@ -1,3 +1,5 @@
+// ignore_for_file: deprecated_member_use
+
 import 'package:flutter/material.dart';
 import 'package:awesome_dialog/awesome_dialog.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -142,119 +144,155 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     }
   }
 
+  Future<bool> _showCancelDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Cancela Turno"),
+          content: Text("¿Estás seguro que deseas cancelar el turno?"),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                TextButton(
+                  child: Text("No"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  },
+                ),
+                TextButton(
+                  child: Text("Sí"),
+                  onPressed: () {
+                    Navigator.of(context).pushReplacementNamed('/home');
+                  },
+                ),
+              ],
+            ),
+          ],
+        );
+      },
+    );
+  }
+
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKey,
-      // backgroundColor: Colors.white,
-      appBar: AppBar(
-        title: Text('Generar Turno'),
-        centerTitle: true,
-        automaticallyImplyLeading: false,
-        // backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            scaffoldKey.currentState!.openDrawer();
-          },
+    return WillPopScope(
+      onWillPop: () async {
+        return await _showCancelDialog(context);
+      },
+      child: Scaffold(
+        key: scaffoldKey,
+        // backgroundColor: Colors.white,
+        appBar: AppBar(
+          title: Text('Generar Turno'),
+          centerTitle: true,
+          automaticallyImplyLeading: false,
+          // backgroundColor: Color.fromARGB(255, 255, 255, 255),
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              scaffoldKey.currentState!.openDrawer();
+            },
+          ),
         ),
-      ),
-      drawer: CustomDrawer(),
-      body: SingleChildScrollView(
-        padding: EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            imageLogo(),
-            SizedBox(height: 20),
-            Card(
-              elevation: 4.0,
-              margin: EdgeInsets.symmetric(vertical: 10.0),
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      'Seleccione el Servicio',
-                      style: TextStyle(
-                        fontSize: 18.0,
-                        fontWeight: FontWeight.bold,
+        drawer: CustomDrawer(),
+        body: SingleChildScrollView(
+          padding: EdgeInsets.all(16.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              imageLogo(),
+              SizedBox(height: 20),
+              Card(
+                elevation: 4.0,
+                margin: EdgeInsets.symmetric(vertical: 10.0),
+                child: Padding(
+                  padding: EdgeInsets.all(16.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'Seleccione el Servicio',
+                        style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                        ),
                       ),
-                    ),
-                    SizedBox(height: 10.0),
-                    ServiciosSelect(
-                      onServicioSelected: (servicio) {
-                        setState(() {
-                          servicioSeleccionado = servicio;
-                        });
-                        if (servicio != null) {
-                          mostrarDetallesServicio(servicio);
-                        }
-                      },
-                    ),
-                  ],
-                ),
-              ),
-            ),
-            SizedBox(height: 16.0),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: ElevatedButton(
-                  onPressed: () {
-                    generarTurnoDialog(context);
-                  },
-                  child: Text('Generar', style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(fontSize: 16.0),
-                    minimumSize:
-                        Size(MediaQuery.of(context).size.width - 46, 50),
-                    backgroundColor: Color.fromARGB(255, 35, 38, 204),
+                      SizedBox(height: 10.0),
+                      ServiciosSelect(
+                        onServicioSelected: (servicio) {
+                          setState(() {
+                            servicioSeleccionado = servicio;
+                          });
+                          if (servicio != null) {
+                            mostrarDetallesServicio(servicio);
+                          }
+                        },
+                      ),
+                    ],
                   ),
                 ),
               ),
-            ),
-            Center(
-              child: Padding(
-                padding: const EdgeInsets.only(top: 5),
-                child: ElevatedButton(
-                  onPressed: () {
-                    AwesomeDialog(
-                      context: context,
-                      dialogType: DialogType.warning,
-                      borderSide: BorderSide(
-                        color: Colors.red,
-                        width: 2,
-                      ),
-                      width: 280,
-                      buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-                      dismissOnTouchOutside: true,
-                      dismissOnBackKeyPress: false,
-                      headerAnimationLoop: false,
-                      animType: AnimType.bottomSlide,
-                      title: 'Cancelado',
-                      descTextStyle:
-                          TextStyle(color: Colors.green, fontSize: 18),
-                      btnOkOnPress: () {
-                        Navigator.of(context).pushReplacementNamed('/home');
-                      },
-                      btnCancelOnPress: () {},
-                    ).show();
-                  },
-                  child:
-                      Text('Cancelar', style: TextStyle(color: Colors.white)),
-                  style: ElevatedButton.styleFrom(
-                    textStyle: TextStyle(fontSize: 16.0),
-                    minimumSize:
-                        Size(MediaQuery.of(context).size.width - 46, 50),
-                    backgroundColor: Colors.red,
+              SizedBox(height: 16.0),
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      generarTurnoDialog(context);
+                    },
+                    child: Text('Generar', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      textStyle: TextStyle(fontSize: 16.0),
+                      minimumSize:
+                          Size(MediaQuery.of(context).size.width - 46, 50),
+                      backgroundColor: Color.fromARGB(255, 35, 38, 204),
+                    ),
                   ),
                 ),
               ),
-            ),
-          ],
+              Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(top: 5),
+                  child: ElevatedButton(
+                    onPressed: () {
+                      AwesomeDialog(
+                        context: context,
+                        dialogType: DialogType.warning,
+                        borderSide: BorderSide(
+                          color: Colors.red,
+                          width: 2,
+                        ),
+                        width: 280,
+                        buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+                        dismissOnTouchOutside: true,
+                        dismissOnBackKeyPress: false,
+                        headerAnimationLoop: false,
+                        animType: AnimType.bottomSlide,
+                        title: 'Cancelado',
+                        descTextStyle:
+                            TextStyle(color: Colors.green, fontSize: 18),
+                        btnOkOnPress: () {
+                          Navigator.of(context).pushReplacementNamed('/home');
+                        },
+                        btnCancelOnPress: () {},
+                      ).show();
+                    },
+                    child:
+                        Text('Cancelar', style: TextStyle(color: Colors.white)),
+                    style: ElevatedButton.styleFrom(
+                      textStyle: TextStyle(fontSize: 16.0),
+                      minimumSize:
+                          Size(MediaQuery.of(context).size.width - 46, 50),
+                      backgroundColor: Colors.red,
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );

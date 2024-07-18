@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/api/firebase_api.dart';
 import 'package:turnos_amerisa/firebase_options.dart';
 import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
@@ -13,11 +14,12 @@ import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/generar_turno.dart';
 import 'package:turnos_amerisa/provider/provider_change.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:turnos_amerisa/services/ver_turnos_service.dart';
 
   void main() async {
     WidgetsFlutterBinding.ensureInitialized();
-    await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-    await FirebaseApi().initNotifications();
+    // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+    // await FirebaseApi().initNotifications();
     runApp(MyApp());
   }
 

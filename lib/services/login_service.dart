@@ -3,7 +3,7 @@
   import 'package:http/http.dart' as http;
   import 'package:shared_preferences/shared_preferences.dart';
 
-  const String url = 'http://turnos.soft-box.com.mx/models/login.php';
+  const String url = 'http://192.168.1.83:80/models/login.php';
 
 
   Future<bool> loginClients(BuildContext context, String usuario, String password) async {
@@ -24,6 +24,7 @@
         final String segundoNombre = responseData['segundo nombre'];
         final String apellido = responseData['apellido'];
         final String segundoApellido = responseData['segundo apellido'];
+        final int idCliente = responseData['id'];
         if (codigo == 0) {
           print('Inicio de sesión exitoso: $mensaje');
 
@@ -34,6 +35,7 @@
           await prefs.setString('segundoApellido', segundoApellido);
           await prefs.setString('numeroCliente', usuario);
           await prefs.setString('password', password);
+          await prefs.setInt('idCliente', idCliente);
 
           return true;
 

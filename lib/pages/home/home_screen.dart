@@ -1,9 +1,16 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+import 'package:turnos_amerisa/api/firebase_api.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
  HomePage({super.key});
 
+  @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
