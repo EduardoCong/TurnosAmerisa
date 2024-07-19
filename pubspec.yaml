@@ -27,6 +27,7 @@ dependencies:
   firebase_core: 
   firebase_messaging: 
   provider: ^6.1.2
+  device_info_plus: ^10.1.0
 
 dev_dependencies:
   flutter_test:

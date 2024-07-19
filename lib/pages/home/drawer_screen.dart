@@ -5,7 +5,7 @@ import 'package:turnos_amerisa/model/sharedPreferences.dart';
 
 
 class CustomDrawer extends StatefulWidget {
-  const CustomDrawer({super.key});
+ CustomDrawer({super.key});
 
   @override
   State<CustomDrawer> createState() => _CustomDrawerState();
@@ -39,13 +39,14 @@ class _CustomDrawerState extends State<CustomDrawer> {
         padding: EdgeInsets.zero,
         children: [
           drawer(),
-          hometitle(context),
-          const Divider(),
           profiletitle(context),
+          hometitle(context),
+         Divider(),
+          listTurnos(context),
           configMode(context),
           pedirTurno(context),
           pedirCita(context),
-          const Divider(),
+         Divider(),
           logouttitle(context)
         ],
       ),
@@ -80,17 +81,17 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget logouttitle(BuildContext context){
     return ListTile(
-      title: const Text('Logout'),
-      leading: const Icon(Icons.exit_to_app),
+      title: Text('Logout'),
+      leading: Icon(Icons.exit_to_app),
       onTap: () async {
         AwesomeDialog(context: context,
             dialogType: DialogType.warning,
-            borderSide: const BorderSide(
+            borderSide: BorderSide(
               color: Colors.blue,
               width: 2,
             ),
             width: 280,
-            buttonsBorderRadius: const BorderRadius.all(
+            buttonsBorderRadius: BorderRadius.all(
               Radius.circular(2),
             ),
             dismissOnTouchOutside: true,
@@ -101,7 +102,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
             headerAnimationLoop: false,
             animType: AnimType.topSlide,
             title: '¿Estas seguro que deseas salir de la sesion?',
-            descTextStyle: const TextStyle(color: Colors.green, fontSize: 18),
+            descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
             btnOkText: 'Si',
             btnOkOnPress: () async {
               Navigator.of(context).pushReplacementNamed('/');
@@ -124,8 +125,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget pedirCita(BuildContext context){
     return ListTile(
-      title: const Text('Pedir Cita'),
-      leading: const Icon(Icons.calendar_month_sharp),
+      title: Text('Pedir Cita'),
+      leading: Icon(Icons.calendar_month_sharp),
       onTap: () {
         if (ModalRoute.of(context)?.settings.name != '/calendario') {
           Navigator.of(context).pushReplacementNamed('/calendario');
@@ -138,8 +139,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget pedirTurno(BuildContext context){
     return ListTile(
-      title: const Text('Pedir Turno'),
-      leading: const Icon(Icons.arrow_forward),
+      title: Text('Pedir Turno'),
+      leading: Icon(Icons.arrow_forward),
       onTap: () {
          if (ModalRoute.of(context)?.settings.name != '/turno') {
           Navigator.of(context).pushReplacementNamed('/turno');
@@ -150,10 +151,24 @@ class _CustomDrawerState extends State<CustomDrawer> {
     );
   }
 
+  Widget listTurnos(BuildContext context){
+    return ListTile(
+      title: Text('Listado de turnos'),
+      leading: Icon(Icons.list),
+      onTap: () {
+        if (ModalRoute.of(context)?.settings.name != '/listurno') {
+          Navigator.of(context).pushReplacementNamed('/listurno');
+        }else{
+          Navigator.pop(context);
+        }
+      },
+    );
+  }
+
   Widget configMode(BuildContext context){
     return ListTile(
-      title: const Text('Configuracion'),
-      leading: const Icon(Icons.settings),
+      title: Text('Configuracion'),
+      leading: Icon(Icons.settings),
       onTap: () {
         if (ModalRoute.of(context)?.settings.name != '/config') {
           Navigator.of(context).pushReplacementNamed('/config');
@@ -166,8 +181,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget profiletitle(BuildContext context){
     return ListTile(
-      title: const Text('Perfil'),
-      leading: const Icon(Icons.person),
+      title: Text('Perfil'),
+      leading: Icon(Icons.person),
       onTap: () {
         Navigator.pop(context);
       },
@@ -176,8 +191,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget hometitle(BuildContext context){
     return ListTile(
-      title: const Text('Inicio'),
-      leading: const Icon(Icons.home),
+      title: Text('Inicio'),
+      leading: Icon(Icons.home),
       onTap: () {
         if (ModalRoute.of(context)?.settings.name != '/home') {
           Navigator.of(context).pushReplacementNamed('/home');

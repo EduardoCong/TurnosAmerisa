@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/api/firebase_api.dart';
 import 'package:turnos_amerisa/firebase_options.dart';
+import 'package:turnos_amerisa/model/turnos.dart';
 import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
 import 'package:turnos_amerisa/pages/home/config_drawer.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
@@ -18,6 +19,7 @@ import 'package:turnos_amerisa/services/ver_turnos_service.dart';
 
   void main() async {
     WidgetsFlutterBinding.ensureInitialized();
+    await FirebaseApi().getDeviceId();
     // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
     // await FirebaseApi().initNotifications();
     runApp(MyApp());
@@ -43,7 +45,7 @@ import 'package:turnos_amerisa/services/ver_turnos_service.dart';
               darkTheme: notifier.isDark? notifier.darkTheme : notifier.lightTheme,
               theme: notifier.lightTheme,
               title: 'Flutter Demo',
-              initialRoute: '/',
+              // initialRoute: '/',
               routes: {
                 '/': (context) => SplashScreen(),
                 '/login': (context) => SignInScreen(),
@@ -54,6 +56,7 @@ import 'package:turnos_amerisa/services/ver_turnos_service.dart';
                 '/turno': (context) => GenerarTurnoView(),
                 '/vercita': (context) => CitaQueueScreen(),
                 '/config': (context) => ConfiguracionView(),
+                '/listurno': (context) => TurnosVer()
               },
             );
           },

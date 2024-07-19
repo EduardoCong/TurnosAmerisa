@@ -24,7 +24,8 @@
         final String segundoNombre = responseData['segundo nombre'];
         final String apellido = responseData['apellido'];
         final String segundoApellido = responseData['segundo apellido'];
-        final int idCliente = responseData['id'];
+        print(responseData);
+        // final String idCliente = responseData['id'];
         if (codigo == 0) {
           print('Inicio de sesión exitoso: $mensaje');
 
@@ -35,7 +36,7 @@
           await prefs.setString('segundoApellido', segundoApellido);
           await prefs.setString('numeroCliente', usuario);
           await prefs.setString('password', password);
-          await prefs.setInt('idCliente', idCliente);
+          // await prefs.setString('idCliente', idCliente);
 
           return true;
 

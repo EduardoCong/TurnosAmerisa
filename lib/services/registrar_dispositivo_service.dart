@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void registrarDispositivo(int clienteId, String tokenDispositivo, String plataforma) async {
-  String url = 'http://192.168.1.83:80/models/model_gestionar_dispositivo.php';
+  String url = 'http://192.168.1.83/models/registrar_dispositivo.php';
 
   Map<String, String> body = {
     'accion': 'RegistrarDispositivo',
@@ -10,6 +10,7 @@ void registrarDispositivo(int clienteId, String tokenDispositivo, String platafo
     'token_dispositivo': tokenDispositivo,
     'plataforma': plataforma,
   };
+
 
   try {
     var response = await http.post(Uri.parse(url), body: body);

@@ -231,7 +231,7 @@ class _CalendarState extends State<Calendar> {
             child: Container(
               padding: EdgeInsets.all(8),
               decoration: BoxDecoration(
-                color: Colors.blue,
+                color: Color.fromARGB(255, 35, 38, 204),
                 borderRadius: BorderRadius.circular(8),
               ),
               child: Text(
@@ -282,8 +282,14 @@ class _CalendarState extends State<Calendar> {
               style: TextStyle(fontSize: 16),
             ),
           ElevatedButton(
-            child: Text('Seleccionar hora'),
+            child: Text('Seleccionar hora', style: TextStyle(color: Colors.white)),
             onPressed: () => _selectTime(context),
+            style: ElevatedButton.styleFrom(
+              textStyle: TextStyle(fontSize: 16.0),
+              minimumSize:
+              Size(MediaQuery.of(context).size.width - 46, 50),
+              backgroundColor: Color.fromARGB(255, 35, 38, 204),
+            ),
           ),
         ],
       ),
@@ -298,28 +304,7 @@ class _CalendarState extends State<Calendar> {
     );
 
     if (selectedTime != null) {
-      if (!isTimeWithinAllowedHours(selectedTime)) {
-        AwesomeDialog(
-          context: context,
-          dialogType: DialogType.warning,
-          borderSide: BorderSide(
-            color: Colors.blue,
-            width: 2,
-          ),
-          width: 280,
-          buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-          dismissOnTouchOutside: true,
-          dismissOnBackKeyPress: false,
-          headerAnimationLoop: false,
-          animType: AnimType.bottomSlide,
-          title: 'Horario no disponible',
-          desc:
-              'Por favor, elige una hora entre las 9:00 AM y las 5:40 PM de lunes a viernes.',
-          descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-          btnOkOnPress: () {},
-        ).show();
-        return;
-      }
+
       if (_selectedDay!.weekday == DateTime.saturday &&
           !isTimeWithinSaturdayHours(selectedTime)) {
         AwesomeDialog(
@@ -344,6 +329,29 @@ class _CalendarState extends State<Calendar> {
         return;
       }
 
+      if (!isTimeWithinAllowedHours(selectedTime)) {
+        AwesomeDialog(
+          context: context,
+          dialogType: DialogType.warning,
+          borderSide: BorderSide(
+            color: Colors.blue,
+            width: 2,
+          ),
+          width: 280,
+          buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+          dismissOnTouchOutside: true,
+          dismissOnBackKeyPress: false,
+          headerAnimationLoop: false,
+          animType: AnimType.bottomSlide,
+          title: 'Horario no disponible',
+          desc:
+              'Por favor, elige una hora entre las 9:00 AM y las 5:40 PM de lunes a viernes.',
+          descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
+          btnOkOnPress: () {},
+        ).show();
+        return;
+      }
+
       if (selectedTime.minute % 20 != 0) {
         AwesomeDialog(
           context: context,
@@ -359,7 +367,7 @@ class _CalendarState extends State<Calendar> {
           headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Hora no válida',
-          desc: 'Por favor, elige una hora en intervalos de 20 minutos.',
+          desc: 'Por favor, elige una hora correcta.',
           descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
           btnOkOnPress: () {},
         ).show();
@@ -441,10 +449,16 @@ class _CalendarState extends State<Calendar> {
 
   Widget buttonSubmit() {
     return ElevatedButton(
-      child: Text('Generar Turno'),
+      child: Text('Generar Turno', style: TextStyle(color: Colors.white)),
       onPressed: () async {
         await generarTurno(context);
       },
+      style: ElevatedButton.styleFrom(
+        textStyle: TextStyle(fontSize: 16.0),
+        minimumSize:
+        Size(MediaQuery.of(context).size.width - 46, 50),
+        backgroundColor: Color.fromARGB(255, 35, 38, 204),
+      ),
     );
   }
 
