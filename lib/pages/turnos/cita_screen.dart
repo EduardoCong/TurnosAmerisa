@@ -24,7 +24,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
   int day = 0;
   String turnoCurrent = '';
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final scaffoldKeyz = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -53,20 +53,20 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
+      key: scaffoldKeyz,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
-            scaffoldKey.currentState!.openDrawer();
+            scaffoldKeyz.currentState!.openDrawer();
           },
         ),
       ),
       drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80),
+          margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -97,11 +97,11 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                   _buildTicketSectionNames('Cliente', '$name $sname $apellido $sapellido'),
                   _buildTicketSectionNumero('Número de Cliente', num),
                   _buildTicketSectionTurnoCita('Su Turno', turnoCita, isBold: true, color: Colors.red),
-                  _buildTicketSectionCurrentTurno('Turno Actual del Servicio: $nombreServicio', turnoCurrent, isBold: true, color: Colors.green),
-                  _buildTicketSectionServicio('Servicio Elegido', nombreServicio!),
+                  _buildTicketSectionCurrentTurno('Turno Actual \nde ${nombreServicio??''.toLowerCase()}', turnoCurrent, isBold: true, color: Colors.green),
+                  _buildTicketSectionServicio('Servicio Elegido', nombreServicio ?? ''),
                   _buildTicketSectionDate('Fecha', 'Para el $day $month $year a las $time'),
                   _buildTicketSectionAnden('Anden', 'Por seleccionar'),
-                  SizedBox(height: 40.0),
+                  SizedBox(height: 20.0),
                   ElevatedButton(
                     onPressed: () {
                       Navigator.of(context).pushReplacementNamed('/home');
@@ -114,6 +114,10 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                       textStyle: TextStyle(fontSize: 18.0),
                       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                       backgroundColor: Colors.red,
+                      fixedSize: Size(400, 70),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
                     ),
                   ),
                 ],
@@ -126,7 +130,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
   }
 
   Widget _buildTicketSectionNames(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+      {bool isBold = false, Color color = Colors.black}) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -136,14 +140,14 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
             Text(
               title,
               style: TextStyle(
-                fontSize: 16.0,
+                fontSize: 18.0,
                 fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
                 color: color,
               ),
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
             ),
           ],
         ),

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 class ApiService {
-  static const String baseUrl = 'http://192.168.1.83:80/models/model_generar_turno.php';
+  static const String baseUrl = 'http://192.168.0.17/models/model_generar_turno.php';
 
   static Future generarTurno(Map<String, dynamic> datos, BuildContext context) async {
     try {

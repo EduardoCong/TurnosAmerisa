@@ -3,7 +3,7 @@
   import 'package:http/http.dart' as http;
   import 'package:shared_preferences/shared_preferences.dart';
 
-  const String url = 'http://192.168.1.83:80/models/login.php';
+  const String url = 'http://192.168.0.17/models/login.php';
 
 
   Future<bool> loginClients(BuildContext context, String usuario, String password) async {
@@ -18,14 +18,14 @@
       
       if (response.statusCode == 200) {
         final responseData = jsonDecode(response.body);
+        print(responseData);
         final int codigo = responseData['codigo'];
         final String mensaje = responseData['mensaje'];
         final String nombre = responseData['nombre'];
         final String segundoNombre = responseData['segundo nombre'];
         final String apellido = responseData['apellido'];
         final String segundoApellido = responseData['segundo apellido'];
-        print(responseData);
-        // final String idCliente = responseData['id'];
+        final int idCliente = responseData['idCliente'];
         if (codigo == 0) {
           print('Inicio de sesión exitoso: $mensaje');
 
@@ -36,7 +36,7 @@
           await prefs.setString('segundoApellido', segundoApellido);
           await prefs.setString('numeroCliente', usuario);
           await prefs.setString('password', password);
-          // await prefs.setString('idCliente', idCliente);
+          await prefs.setInt('ClienteId', idCliente);
 
           return true;
 

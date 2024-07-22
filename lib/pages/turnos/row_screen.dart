@@ -20,7 +20,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
   String? letraServicio;
   String currentTurn = '';
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final scaffoldKeysz = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -46,13 +46,13 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      key: scaffoldKey,
+      key: scaffoldKeysz,
       appBar: AppBar(
         automaticallyImplyLeading: false,
         leading: IconButton(
           icon: Icon(Icons.menu),
           onPressed: () {
-            scaffoldKey.currentState!.openDrawer();
+            scaffoldKeysz.currentState!.openDrawer();
           },
         ),
       ),
@@ -93,8 +93,8 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
                   _buildTicketSectionTurno(
                       'Su Turno:', turnos, isBold: true, color: Colors.red),
                   _buildTicketSectionTurnoActual('Turno Actual', currentTurn),
-                  _buildTicketSectionServicio('Servicio Elegido:', nombreServicio!),
-                  _buildTicketSectionAnden('Aden:', 'Por Seleccionar'),
+                  _buildTicketSectionServicio('Servicio Elegido:', nombreServicio ?? ''),
+                  _buildTicketSectionAnden('Anden:', 'Por Seleccionar'),
 
                   SizedBox(height: 40.0),
                   ElevatedButton(

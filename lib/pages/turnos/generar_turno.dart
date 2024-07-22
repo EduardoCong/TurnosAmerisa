@@ -18,7 +18,7 @@ class GenerarTurnoView extends StatefulWidget {
 
 class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   Servicio? servicioSeleccionado;
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final scaffoldKeyis = GlobalKey<ScaffoldState>();
 
   String nombre = '';
   String segundoNombre = '';
@@ -61,26 +61,51 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     if (isSunday) {
       AwesomeDialog(
         context: context,
-        dialogType: DialogType.warning,
-        borderSide: BorderSide(
-          color: Colors.red,
-          width: 2,
-        ),
-        width: 280,
+        dialogType: DialogType.info,
+        width: 400,
         buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-        dismissOnTouchOutside: true,
+        dismissOnTouchOutside: false,
         dismissOnBackKeyPress: false,
-        headerAnimationLoop: false,
+        headerAnimationLoop: true,
         animType: AnimType.bottomSlide,
-        title: 'No es posible generar turno',
+        title: 'Los domingos no son laborales.',
+        titleTextStyle: TextStyle(fontSize: 16),
         desc: '¿Desea agendar un cita?',
-        descTextStyle: TextStyle(color: Colors.red, fontSize: 18),
-        btnCancelText: 'No',
-        btnCancelOnPress: () {},
-        btnOkText: 'Si',
-        btnOkOnPress: () {
-          Navigator.of(context).pushReplacementNamed('/calendario');
-        },
+        descTextStyle: TextStyle(color: Colors.red, fontSize: 15),
+        btnCancel: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            elevation: 0,
+            minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            'No',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        btnOk: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            elevation: 0,
+            minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed('/calendario');
+          },
+          child: Text(
+            'Ir a citas',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       ).show();
       return;
     }
@@ -90,24 +115,50 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       AwesomeDialog(
         context: context,
         dialogType: DialogType.info,
-        borderSide: BorderSide(
-          color: Colors.blue,
-          width: 2,
-        ),
-        width: 280,
+        width: 400,
         buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-        dismissOnTouchOutside: true,
+        dismissOnTouchOutside: false,
         dismissOnBackKeyPress: false,
-        headerAnimationLoop: false,
+        headerAnimationLoop: true,
         animType: AnimType.bottomSlide,
-        title: '¿Desea agendar una cita?',
-        descTextStyle: TextStyle(color: Colors.blue, fontSize: 18),
-        btnCancelText: 'No',
-        btnCancelOnPress: () {},
-        btnOkText: 'Sí',
-        btnOkOnPress: () {
-          Navigator.of(context).pushReplacementNamed('/calendario');
-        },
+        title: 'Los sabados el servicio esta disponible de 9 am a 1 pm.',
+        titleTextStyle: TextStyle(fontSize: 16),
+        desc: '¿Desea agendar una cita?',
+        descTextStyle: TextStyle(color: Colors.black, fontSize: 15),
+        btnCancel: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.red,
+            elevation: 0,
+            minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            'No',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
+        btnOk: ElevatedButton(
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            elevation: 0,
+            minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+          onPressed: () {
+            Navigator.of(context).pushReplacementNamed('/calendario');
+          },
+          child: Text(
+            'Ir a citas',
+            style: TextStyle(color: Colors.white),
+          ),
+        ),
       ).show();
       return;
     }
@@ -115,22 +166,31 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
-      borderSide: BorderSide(
-        color: Colors.blue,
-        width: 2,
-      ),
-      width: 280,
+      width: 400,
       buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-      dismissOnTouchOutside: true,
+      dismissOnTouchOutside: false,
       dismissOnBackKeyPress: false,
-      headerAnimationLoop: false,
+      headerAnimationLoop: true,
       animType: AnimType.bottomSlide,
       title: 'Turno Generado Con Éxito',
       descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-      btnOkOnPress: () {
-        generarTurno(context);
-      },
-      btnCancelOnPress: () {},
+      btnCancel: ElevatedButton(
+        style: ElevatedButton.styleFrom(
+          backgroundColor: Colors.green,
+          elevation: 0,
+          minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+        ),
+        onPressed: () {
+          generarTurno(context);
+        },
+        child: Text(
+          'Turno generado con exito.',
+          style: TextStyle(color: Colors.white),
+        ),
+      ),
     ).show();
   }
 
@@ -149,23 +209,46 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Cancela Turno"),
+          title: Center(child: Text("Cancela Turno")),
           content: Text("¿Estás seguro que deseas cancelar el turno?"),
+          contentTextStyle: TextStyle(fontSize: 16, color: Colors.black),
           actions: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(
-                  child: Text("No"),
+                ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context);
                   },
+                  child: Text(
+                    'No',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    elevation: 0,
+                    fixedSize: Size(120, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
-                TextButton(
-                  child: Text("Sí"),
+                ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacementNamed('/home');
                   },
+                  child: Text(
+                    'Ir al inicio',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    elevation: 0,
+                    fixedSize: Size(120, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -175,7 +258,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     );
   }
 
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -183,17 +265,15 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
         return await _showCancelDialog(context);
       },
       child: Scaffold(
-        key: scaffoldKey,
-        // backgroundColor: Colors.white,
+        key: scaffoldKeyis,
         appBar: AppBar(
           title: Text('Generar Turno'),
           centerTitle: true,
           automaticallyImplyLeading: false,
-          // backgroundColor: Color.fromARGB(255, 255, 255, 255),
           leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
-              scaffoldKey.currentState!.openDrawer();
+              scaffoldKeyis.currentState!.openDrawer();
             },
           ),
         ),
@@ -238,46 +318,77 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
               SizedBox(height: 16.0),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 5),
+                  padding: EdgeInsets.only(top: 5),
                   child: ElevatedButton(
                     onPressed: () {
                       generarTurnoDialog(context);
                     },
-                    child: Text('Generar', style: TextStyle(color: Colors.white)),
+                    child:
+                        Text('Generar', style: TextStyle(color: Colors.white)),
                     style: ElevatedButton.styleFrom(
-                      textStyle: TextStyle(fontSize: 16.0),
-                      minimumSize:
-                          Size(MediaQuery.of(context).size.width - 46, 50),
-                      backgroundColor: Color.fromARGB(255, 35, 38, 204),
-                    ),
+                        textStyle: TextStyle(fontSize: 16.0),
+                        minimumSize:
+                            Size(MediaQuery.of(context).size.width - 46, 50),
+                        backgroundColor: Color.fromARGB(255, 35, 38, 204),
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10),
+                        )),
                   ),
                 ),
               ),
               Center(
                 child: Padding(
-                  padding: const EdgeInsets.only(top: 5),
+                  padding: EdgeInsets.only(top: 5),
                   child: ElevatedButton(
                     onPressed: () {
                       AwesomeDialog(
                         context: context,
                         dialogType: DialogType.warning,
-                        borderSide: BorderSide(
-                          color: Colors.red,
-                          width: 2,
-                        ),
-                        width: 280,
-                        buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-                        dismissOnTouchOutside: true,
+                        width: 400,
+                        buttonsBorderRadius:
+                            BorderRadius.all(Radius.circular(2)),
+                        dismissOnTouchOutside: false,
                         dismissOnBackKeyPress: false,
                         headerAnimationLoop: false,
-                        animType: AnimType.bottomSlide,
-                        title: 'Cancelado',
-                        descTextStyle:
-                            TextStyle(color: Colors.green, fontSize: 18),
-                        btnOkOnPress: () {
-                          Navigator.of(context).pushReplacementNamed('/home');
-                        },
-                        btnCancelOnPress: () {},
+                        animType: AnimType.topSlide,
+                        title: 'Cancelar turno?',
+                        btnCancel: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.red,
+                            elevation: 0,
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width - 46, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                          child: Text(
+                            'No',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
+                        btnOk: ElevatedButton(
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            elevation: 0,
+                            minimumSize: Size(
+                                MediaQuery.of(context).size.width - 46, 50),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                          ),
+                          onPressed: () {
+                            Navigator.of(context)
+                                .pushReplacementNamed('/home');
+                          },
+                          child: Text(
+                            'Ir al inicio',
+                            style: TextStyle(color: Colors.white),
+                          ),
+                        ),
                       ).show();
                     },
                     child:
@@ -287,6 +398,9 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                       minimumSize:
                           Size(MediaQuery.of(context).size.width - 46, 50),
                       backgroundColor: Colors.red,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
                     ),
                   ),
                 ),

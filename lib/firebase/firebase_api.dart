@@ -12,7 +12,7 @@ class FirebaseApi {
 
   Future<String?> getToken() async {
     final fCMToken = await _firebaseMessaging.getToken();
-    print('Token: $fCMToken');
+    print('Token normal: $fCMToken');
     return fCMToken;
   }
 
@@ -27,25 +27,23 @@ class FirebaseApi {
     } else {
       device = 'unknown';
     }
-    print(device);
+    print('plataforma : $device');
     return device;
   }
 
   Future<String?> getDeviceId() async {
     DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-    try {
-      if (Platform.isAndroid) {
-        AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-        print(deviceInfo.androidInfo);
-        return androidInfo.id;
-      } else if (Platform.isIOS) {
-        IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-        print(iosInfo.identifierForVendor);
-        return iosInfo.identifierForVendor;
-      }
-    } catch (e) {
-      print("Error al obtener el ID del dispositivo: $e");
+
+    String? deviceId;
+
+    if (Platform.isAndroid) {
+      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
+      deviceId = androidInfo.id;
+    } else if (Platform.isIOS) {
+      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
+      deviceId = iosInfo.identifierForVendor;
     }
-    return null;
+    print(deviceId);
+    return deviceId;
   }
 }

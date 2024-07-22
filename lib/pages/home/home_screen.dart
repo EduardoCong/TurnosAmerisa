@@ -1,16 +1,41 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
-import 'package:turnos_amerisa/api/firebase_api.dart';
+import 'package:turnos_amerisa/firebase/firebase_api.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
+import 'package:turnos_amerisa/services/registrar_dispositivo_service.dart';
 
 class HomePage extends StatefulWidget {
- HomePage({super.key});
+  HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
 class _HomePageState extends State<HomePage> {
+  Future<void> registerDeviceReady() async {
+    FirebaseApi firebase = FirebaseApi();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? tokenFirebase = await firebase.getToken();
+    String? plataformUse = await firebase.getPlatform();
+    String? idDevice = await firebase.getDeviceId();
+    int? idClientes = await prefs.getInt('ClienteId');
+    if (idClientes != null &&
+        tokenFirebase != null &&
+        plataformUse != '' &&
+        idDevice != null) {
+      await registrarDispositivo
+      (idClientes, tokenFirebase, plataformUse, idDevice);
+    } else {
+      print('Error: No se pudo obtener todos los datos necesarios.');
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    registerDeviceReady();
+  }
+
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
@@ -31,9 +56,9 @@ class _HomePageState extends State<HomePage> {
       body: SingleChildScrollView(
         child: Column(
           children: [
-          imageLogo(),
-          SizedBox(height: 20),
-          buttonsTurnoCita(context)
+            imageLogo(),
+            SizedBox(height: 20),
+            buttonsTurnoCita(context)
           ],
         ),
       ),
@@ -41,7 +66,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget imageLogo(){
+  Widget imageLogo() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14),
       child: Image.network(
@@ -52,7 +77,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buttonsTurnoCita(BuildContext context){
+  Widget buttonsTurnoCita(BuildContext context) {
     return Center(
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -67,7 +92,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget textService(){
+  Widget textService() {
     return Text(
       "¿Qué tipo de atención deseas?",
       style: TextStyle(
@@ -77,7 +102,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buttonTurno(BuildContext context){
+  Widget buttonTurno(BuildContext context) {
     return SizedBox(
       width: 330,
       height: 100,
@@ -85,10 +110,14 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.of(context).pushReplacementNamed('/turno');
         },
-        icon: Icon(Icons.phone_android, color: Colors.white,),
-        label: Text("Pedir Turno", style: TextStyle(fontSize: 22, color: Colors.white)),
+        icon: Icon(
+          Icons.phone_android,
+          color: Colors.white,
+        ),
+        label: Text("Pedir Turno",
+            style: TextStyle(fontSize: 22, color: Colors.white)),
         style: ElevatedButton.styleFrom(
-          backgroundColor:  Color.fromARGB(255, 35, 38, 204),
+          backgroundColor: Color.fromARGB(255, 35, 38, 204),
           elevation: 0,
           minimumSize: Size(MediaQuery.of(context).size.width - 46, 55),
           shape: RoundedRectangleBorder(
@@ -99,7 +128,7 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  Widget buttonCita(BuildContext context){
+  Widget buttonCita(BuildContext context) {
     return SizedBox(
       width: 330,
       height: 100,
@@ -107,10 +136,14 @@ class _HomePageState extends State<HomePage> {
         onPressed: () {
           Navigator.of(context).pushReplacementNamed('/calendario');
         },
-        icon: Icon(Icons.calendar_today, color: Colors.white,),
-        label: Text("Pedir Cita" , style: TextStyle(fontSize: 22, color: Colors.white)),
+        icon: Icon(
+          Icons.calendar_today,
+          color: Colors.white,
+        ),
+        label: Text("Pedir Cita",
+            style: TextStyle(fontSize: 22, color: Colors.white)),
         style: ElevatedButton.styleFrom(
-          backgroundColor:  Color.fromARGB(255, 35, 38, 204),
+          backgroundColor: Color.fromARGB(255, 35, 38, 204),
           elevation: 0,
           minimumSize: Size(MediaQuery.of(context).size.width - 46, 55),
           shape: RoundedRectangleBorder(

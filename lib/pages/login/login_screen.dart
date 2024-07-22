@@ -1,8 +1,4 @@
-import 'dart:async';
-
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
-import 'package:turnos_amerisa/api/firebase_api.dart';
 import 'package:turnos_amerisa/model/sharedPreferences.dart';
 import 'package:turnos_amerisa/services/login_service.dart';
 
@@ -27,7 +23,6 @@ class _SignInScreenState extends State<SignInScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      // backgroundColor: Colors.white,
       body: formLogin(context),
     );
   }

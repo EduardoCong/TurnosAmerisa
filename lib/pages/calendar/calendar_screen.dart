@@ -22,7 +22,6 @@ class Calendar extends StatefulWidget {
 
 class _CalendarState extends State<Calendar> {
   Servicio? servicioSeleccionado;
-  CalendarFormat _calendarFormat = CalendarFormat.month;
   DateTime _today = DateTime.now();
   DateTime? _selectedDay;
   Map<DateTime, List<Event>> events = {};
@@ -30,6 +29,7 @@ class _CalendarState extends State<Calendar> {
   bool _isServiceSelectorVisible = false;
   bool _isTimeSelectorVisible = false;
   String? _selectedTime;
+  int hours = 0;
   late Timer _timer;
   int _counter = 300;
   bool _showCounter = true;
@@ -40,7 +40,7 @@ class _CalendarState extends State<Calendar> {
   String numeroClienteCita = '';
   String _turnoCita = '';
 
-  final scaffoldKey = GlobalKey<ScaffoldState>();
+  final scaffoldKeys = GlobalKey<ScaffoldState>();
 
   @override
   void initState() {
@@ -125,22 +125,33 @@ class _CalendarState extends State<Calendar> {
       AwesomeDialog(
         context: context,
         dialogType: DialogType.warning,
-        borderSide: BorderSide(
-          color: Colors.blue,
-          width: 2,
-        ),
-        width: 280,
+        width: 400,
         buttonsBorderRadius: BorderRadius.all(
           Radius.circular(2),
         ),
-        dismissOnTouchOutside: true,
+        dismissOnTouchOutside: false,
         dismissOnBackKeyPress: false,
-        headerAnimationLoop: false,
         animType: AnimType.bottomSlide,
         title: 'No es posible agendar cita',
         desc: 'Los domingos no son días laborales.',
-        descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-        btnOkOnPress: () {},
+        descTextStyle: TextStyle(color: Colors.black, fontSize: 15),
+        btnOk: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            'Cerrar',
+            style: TextStyle(color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            elevation: 0,
+            fixedSize: Size(120, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
       ).show();
       return;
     }
@@ -162,16 +173,15 @@ class _CalendarState extends State<Calendar> {
         return await _showCancelDialog(context);
       },
       child: Scaffold(
-        key: scaffoldKey,
+        key: scaffoldKeys,
         appBar: AppBar(
           automaticallyImplyLeading: false,
           title: Text("Agenda tu Cita"),
           centerTitle: true,
-          // backgroundColor: Color.fromARGB(255, 255, 255, 255),
           leading: IconButton(
             icon: Icon(Icons.menu),
             onPressed: () {
-              scaffoldKey.currentState!.openDrawer();
+              scaffoldKeys.currentState!.openDrawer();
             },
           ),
         ),
@@ -204,20 +214,12 @@ class _CalendarState extends State<Calendar> {
           firstDay: DateTime.now(),
           lastDay: DateTime.utc(2030, 3, 14),
           selectedDayPredicate: ((day) => isSameDay(_selectedDay, day)),
-          calendarFormat: _calendarFormat,
           startingDayOfWeek: StartingDayOfWeek.monday,
           onDaySelected: _onDaySelected,
           eventLoader: _getEventForDay,
           calendarStyle: CalendarStyle(
             outsideDaysVisible: false,
           ),
-          onFormatChanged: (format) {
-            if (_calendarFormat != format) {
-              setState(() {
-                _calendarFormat = format;
-              });
-            }
-          },
           onPageChanged: (focusedDay) {
             setState(() {
               _today = focusedDay;
@@ -274,22 +276,30 @@ class _CalendarState extends State<Calendar> {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 16),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           if (_selectedTime != null)
-            Text(
-              'Hora seleccionada: $_selectedTime',
-              style: TextStyle(fontSize: 16),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Icon(Icons.schedule, size: 24),
+                SizedBox(width: 8),
+                Text(
+                  'Hora seleccionada: $_selectedTime',
+                  style: TextStyle(fontSize: 18),
+                ),
+              ],
             ),
+          SizedBox(height: 10),
           ElevatedButton(
-            child: Text('Seleccionar hora', style: TextStyle(color: Colors.white)),
+            child:
+                Text('Seleccionar hora', style: TextStyle(color: Colors.white)),
             onPressed: () => _selectTime(context),
             style: ElevatedButton.styleFrom(
-              textStyle: TextStyle(fontSize: 16.0),
-              minimumSize:
-              Size(MediaQuery.of(context).size.width - 46, 50),
-              backgroundColor: Color.fromARGB(255, 35, 38, 204),
-            ),
+                textStyle: TextStyle(fontSize: 16.0),
+                minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+                backgroundColor: Color.fromARGB(255, 35, 38, 204),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(10))),
           ),
         ],
       ),
@@ -300,31 +310,41 @@ class _CalendarState extends State<Calendar> {
     TimeOfDay? selectedTime = await showTimePicker(
       context: context,
       initialTime: TimeOfDay.now(),
-      barrierDismissible: true,
+      barrierDismissible: false,
     );
 
     if (selectedTime != null) {
-
       if (_selectedDay!.weekday == DateTime.saturday &&
           !isTimeWithinSaturdayHours(selectedTime)) {
         AwesomeDialog(
           context: context,
           dialogType: DialogType.warning,
-          borderSide: BorderSide(
-            color: Colors.blue,
-            width: 2,
-          ),
-          width: 280,
+          width: 400,
           buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-          dismissOnTouchOutside: true,
+          dismissOnTouchOutside: false,
           dismissOnBackKeyPress: false,
-          headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Horario no disponible',
           desc:
               'Los sábados solo se pueden agendar citas de 9:00 AM a 1:00 PM.',
-          descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-          btnOkOnPress: () {},
+          descTextStyle: TextStyle(color: Colors.black, fontSize: 18),
+          btnOk: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Cerrar',
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              elevation: 0,
+              fixedSize: Size(120, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
         ).show();
         return;
       }
@@ -333,21 +353,32 @@ class _CalendarState extends State<Calendar> {
         AwesomeDialog(
           context: context,
           dialogType: DialogType.warning,
-          borderSide: BorderSide(
-            color: Colors.blue,
-            width: 2,
-          ),
-          width: 280,
+          width: 400,
           buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-          dismissOnTouchOutside: true,
+          dismissOnTouchOutside: false,
           dismissOnBackKeyPress: false,
-          headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Horario no disponible',
           desc:
               'Por favor, elige una hora entre las 9:00 AM y las 5:40 PM de lunes a viernes.',
-          descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-          btnOkOnPress: () {},
+          descTextStyle: TextStyle(color: Colors.black, fontSize: 18),
+          btnOk: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Cerrar',
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              elevation: 0,
+              fixedSize: Size(120, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
         ).show();
         return;
       }
@@ -356,20 +387,31 @@ class _CalendarState extends State<Calendar> {
         AwesomeDialog(
           context: context,
           dialogType: DialogType.warning,
-          borderSide: BorderSide(
-            color: Colors.blue,
-            width: 2,
-          ),
-          width: 280,
+          width: 400,
           buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-          dismissOnTouchOutside: true,
+          dismissOnTouchOutside: false,
           dismissOnBackKeyPress: false,
-          headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Hora no válida',
-          desc: 'Por favor, elige una hora correcta.',
-          descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-          btnOkOnPress: () {},
+          desc: 'Solo disponibles horarios .',
+          descTextStyle: TextStyle(color: Colors.black, fontSize: 18),
+          btnOk: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Cerrar',
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              elevation: 0,
+              fixedSize: Size(120, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
         ).show();
         return;
       }
@@ -381,20 +423,31 @@ class _CalendarState extends State<Calendar> {
         AwesomeDialog(
           context: context,
           dialogType: DialogType.warning,
-          borderSide: BorderSide(
-            color: Colors.blue,
-            width: 2,
-          ),
-          width: 280,
+          width: 400,
           buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-          dismissOnTouchOutside: true,
+          dismissOnTouchOutside: false,
           dismissOnBackKeyPress: false,
-          headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Horario Ocupado.',
           desc: 'Eliga otro horario',
           descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-          btnOkOnPress: () {},
+          btnOk: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Cerrar',
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.red,
+              elevation: 0,
+              fixedSize: Size(120, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
         ).show();
         return;
       }
@@ -411,23 +464,47 @@ class _CalendarState extends State<Calendar> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Text("Cancela Cita"),
-          content: Text("¿Estás seguro que deseas cancelar el agendado de cita?"),
+          title: Center(child: Text("Cancela Turno")),
+          content:
+              Text("¿Estás seguro que deseas cancelar el agendado de citas?"),
+          contentTextStyle: TextStyle(fontSize: 16, color: Colors.black),
           actions: <Widget>[
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceAround,
               children: [
-                TextButton(
-                  child: Text("No"),
+                ElevatedButton(
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    Navigator.pop(context);
                   },
+                  child: Text(
+                    'No',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    elevation: 0,
+                    fixedSize: Size(120, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
-                TextButton(
-                  child: Text("Sí"),
+                ElevatedButton(
                   onPressed: () {
                     Navigator.of(context).pushReplacementNamed('/home');
                   },
+                  child: Text(
+                    'Ir al inicio',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    elevation: 0,
+                    fixedSize: Size(120, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
                 ),
               ],
             ),
@@ -454,11 +531,11 @@ class _CalendarState extends State<Calendar> {
         await generarTurno(context);
       },
       style: ElevatedButton.styleFrom(
-        textStyle: TextStyle(fontSize: 16.0),
-        minimumSize:
-        Size(MediaQuery.of(context).size.width - 46, 50),
-        backgroundColor: Color.fromARGB(255, 35, 38, 204),
-      ),
+          textStyle: TextStyle(fontSize: 16.0),
+          minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+          backgroundColor: Color.fromARGB(255, 35, 38, 204),
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(10))),
     );
   }
 
@@ -467,19 +544,30 @@ class _CalendarState extends State<Calendar> {
       AwesomeDialog(
         context: context,
         dialogType: DialogType.warning,
-        borderSide: BorderSide(
-          color: Colors.blue,
-          width: 2,
-        ),
-        width: 280,
+        width: 400,
         buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-        dismissOnTouchOutside: true,
+        dismissOnTouchOutside: false,
         dismissOnBackKeyPress: false,
-        headerAnimationLoop: false,
         animType: AnimType.bottomSlide,
         title: 'Seleccione un servicio',
-        descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-        btnOkOnPress: () {},
+        descTextStyle: TextStyle(color: Colors.black, fontSize: 18),
+        btnOk: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            'Cerrar',
+            style: TextStyle(color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            elevation: 0,
+            fixedSize: Size(120, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
       ).show();
       return;
     }
@@ -540,41 +628,60 @@ class _CalendarState extends State<Calendar> {
         AwesomeDialog(
           context: context,
           dialogType: DialogType.success,
-          borderSide: BorderSide(
-            color: Colors.blue,
-            width: 2,
-          ),
-          width: 280,
+          width: 400,
           buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-          dismissOnTouchOutside: true,
+          dismissOnTouchOutside: false,
           dismissOnBackKeyPress: false,
-          headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Turno Generado Con Exito',
           descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-          btnOkOnPress: () {
-            Navigator.of(context).pushReplacementNamed('/vercita');
-          },
-          btnCancelOnPress: () {},
+          btnOk: ElevatedButton(
+            onPressed: () {
+              Navigator.of(context).pushReplacementNamed('/vercita');
+            },
+            child: Text(
+              'Ok',
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              elevation: 0,
+              fixedSize: Size(120, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
         ).show();
       } catch (e) {
         AwesomeDialog(
           context: context,
           dialogType: DialogType.error,
-          borderSide: BorderSide(
-            color: Colors.blue,
-            width: 2,
-          ),
-          width: 280,
+          width: 400,
           buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
-          dismissOnTouchOutside: true,
+          dismissOnTouchOutside: false,
           dismissOnBackKeyPress: false,
-          headerAnimationLoop: false,
           animType: AnimType.bottomSlide,
           title: 'Hubo un error al generar el turo.',
           desc: 'Intente mas tarde',
-          descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
-          btnOkOnPress: () {},
+          descTextStyle: TextStyle(color: Colors.black, fontSize: 18),
+          btnOk: ElevatedButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            child: Text(
+              'Cerrar',
+              style: TextStyle(color: Colors.white),
+            ),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: Colors.green,
+              elevation: 0,
+              fixedSize: Size(120, 50),
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(10),
+              ),
+            ),
+          ),
         ).show();
       }
     }
