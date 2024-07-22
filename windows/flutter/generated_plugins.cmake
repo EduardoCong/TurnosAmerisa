@@ -6,7 +6,6 @@ list(APPEND FLUTTER_PLUGIN_LIST
   awesome_notifications
   awesome_notifications_core
   firebase_core
-  permission_handler_windows
   rive_common
 )
 

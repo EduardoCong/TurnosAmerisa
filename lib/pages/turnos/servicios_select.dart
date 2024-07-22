@@ -7,7 +7,8 @@ import 'package:turnos_amerisa/model/servicios_model.dart';
 class ServiciosSelect extends StatefulWidget {
   final Function(Servicio?) onServicioSelected;
 
-  const ServiciosSelect({Key? key, required this.onServicioSelected}) : super(key: key);
+  const ServiciosSelect({Key? key, required this.onServicioSelected})
+      : super(key: key);
 
   @override
   _ServiciosSelectState createState() => _ServiciosSelectState();
@@ -26,7 +27,7 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
   Future<void> cargarServicios() async {
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.0.17/models/model_generar_turno.php'),
+        Uri.parse('http://192.168.69.169/models/model_generar_turno.php'),
         body: {'accion': 'VerServicios'},
       );
 
@@ -65,12 +66,16 @@ class _ServiciosSelectState extends State<ServiciosSelect> {
               items: servicios.map((Servicio servicio) {
                 return DropdownMenuItem<Servicio>(
                   value: servicio,
-                  child: Text(servicio.nombre),
+                  child: Text(servicio.nombre, style: TextStyle(fontSize: 16)),
                 );
               }).toList(),
+              icon: Icon(Icons.arrow_drop_down_circle, size: 30),
               decoration: InputDecoration(
-                labelText: 'Seleccionar Servicio',
-                border: OutlineInputBorder(),
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: BorderSide(color: Colors.blue),
+                ),
+                filled: true,
               ),
             ),
     );

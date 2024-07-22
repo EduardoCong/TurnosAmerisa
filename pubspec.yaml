@@ -20,15 +20,12 @@ dependencies:
   awesome_notifications: ^0.9.3+1
   http: ^1.2.1
   fluttertoast: ^8.2.6
-  mysql1: ^0.20.0
   shared_preferences: ^2.2.3
-  flutter_bloc: ^8.1.5
   get: ^4.6.6
   firebase_core: 
   firebase_messaging: 
   provider: ^6.1.2
   device_info_plus: ^10.1.0
-  permission_handler: ^11.3.1
 
 dev_dependencies:
   flutter_test:

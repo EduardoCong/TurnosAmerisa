@@ -381,8 +381,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
                             ),
                           ),
                           onPressed: () {
-                            Navigator.of(context)
-                                .pushReplacementNamed('/home');
+                            Navigator.of(context).pushReplacementNamed('/home');
                           },
                           child: Text(
                             'Ir al inicio',
@@ -415,8 +414,8 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   Widget imageLogo() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14),
-      child: Image.network(
-        "https://pbs.twimg.com/profile_images/814281946180231169/E7Z0c1Hy_400x400.jpg",
+      child: Image.asset(
+        "assets/amerisalogo.png",
         width: 600,
         height: 200,
       ),

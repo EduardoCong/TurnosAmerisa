@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/firebase/firebase_api.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
@@ -12,65 +13,64 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  Future<void> registerDeviceReady() async {
-    FirebaseApi firebase = FirebaseApi();
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    String? tokenFirebase = await firebase.getToken();
-    String? plataformUse = await firebase.getPlatform();
-    String? idDevice = await firebase.getDeviceId();
-    int? idClientes = await prefs.getInt('ClienteId');
-    if (idClientes != null &&
-        tokenFirebase != null &&
-        plataformUse != '' &&
-        idDevice != null) {
-      await registrarDispositivo
-      (idClientes, tokenFirebase, plataformUse, idDevice);
-    } else {
-      print('Error: No se pudo obtener todos los datos necesarios.');
-    }
-  }
+  // Future<void> registerDeviceReady() async {
+  //   FirebaseApi firebase = FirebaseApi();
+  //   SharedPreferences prefs = await SharedPreferences.getInstance();
+  //   String? tokenFirebase = await firebase.getToken();
+  //   String? plataformUse = await firebase.getPlatform();
+  //   String? idDevice = await firebase.getDeviceId();
+  //   int? idClientes = await prefs.getInt('ClienteId');
+  //   if (idClientes != null &&
+  //       tokenFirebase != null &&
+  //       plataformUse != '' &&
+  //       idDevice != null) {
+  //     await registrarDispositivo
+  //     (idClientes, tokenFirebase, plataformUse, idDevice);
+  //   } else {
+  //     print('Error: No se pudo obtener todos los datos necesarios.');
+  //   }
+  // }
 
   @override
   void initState() {
     super.initState();
-    registerDeviceReady();
+    // registerDeviceReady();
   }
 
   @override
   Widget build(BuildContext context) {
     final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-
-    return Scaffold(
-      key: scaffoldKey,
-      appBar: AppBar(
-        automaticallyImplyLeading: false,
-        // backgroundColor: Color.fromARGB(255, 255, 255, 255),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            scaffoldKey.currentState!.openDrawer();
-          },
+    return GetMaterialApp(
+      debugShowCheckedModeBanner: false,
+      home: Scaffold(
+        key: scaffoldKey,
+        appBar: AppBar(
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              scaffoldKey.currentState!.openDrawer();
+            },
+          ),
+        ),
+        drawer: CustomDrawer(),
+        body: SingleChildScrollView(
+          child: Column(
+            children: [
+              imageLogo(),
+              SizedBox(height: 20),
+              buttonsTurnoCita(context)
+            ],
+          ),
         ),
       ),
-      drawer: CustomDrawer(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            imageLogo(),
-            SizedBox(height: 20),
-            buttonsTurnoCita(context)
-          ],
-        ),
-      ),
-      // backgroundColor: Colors.white,
     );
   }
 
   Widget imageLogo() {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 14),
-      child: Image.network(
-        "https://pbs.twimg.com/profile_images/814281946180231169/E7Z0c1Hy_400x400.jpg",
+      child: Image.asset(
+        "assets/amerisalogo.png",
         width: 600,
         height: 300,
       ),

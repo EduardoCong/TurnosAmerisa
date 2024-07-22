@@ -29,24 +29,24 @@ class _SignInScreenState extends State<SignInScreen> {
 
 
   Widget formLogin(BuildContext context) {
+    final mediaQuery = MediaQuery.of(context);
     return Stack(
       children: <Widget>[
-        logo(),
+        logo(mediaQuery),
         Container(
-          width: MediaQuery.of(context).size.width,
-          margin: EdgeInsets.only(top: 270),
+          width: mediaQuery.size.width,
+          margin: EdgeInsets.only(top: mediaQuery.size.height* 0.35),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
-            color: Colors.white,
           ),
           child: Padding(
-            padding: EdgeInsets.all(23),
+            padding: EdgeInsets.all(mediaQuery.size.width * 0.06),
             child: ListView(
               children: <Widget>[
-                formUser(),
-                formPassword(),
-                buttonSubmmit(context),
-                forgotPassword(),
+                formUser(mediaQuery),
+                formPassword(mediaQuery),
+                buttonSubmmit(context, mediaQuery),
+                forgotPassword(mediaQuery),
               ],
             ),
           ),
@@ -55,22 +55,22 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget logo() {
+  Widget logo(MediaQueryData mediaQuery) {
     return Container(
-      decoration: BoxDecoration(
-        color: Colors.white,
-      ),
-      child: Image.network(
-        "https://pbs.twimg.com/profile_images/814281946180231169/E7Z0c1Hy_400x400.jpg",
-        width: 1200,
-        height: 300,
+      width: mediaQuery.size.width,
+      height: mediaQuery.size.height * 0.35,
+      child: Center(
+        child: Image.asset(
+          "assets/amerisalogo.png",
+          width: mediaQuery.size.width * 0.6,
+        ),
       ),
     );
   }
 
-  Widget formUser() {
+  Widget formUser(MediaQueryData mediaQuery) {
     return Padding(
-      padding: EdgeInsets.only(top: 20, bottom: 20),
+      padding: EdgeInsets.symmetric(vertical: mediaQuery.size.height * 0.02),
       child: Container(
         color: Color(0xfff5f5f5),
         child: TextFormField(
@@ -90,9 +90,9 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget formPassword() {
+  Widget formPassword(MediaQueryData mediaQuery) {
     return Padding(
-      padding: EdgeInsets.only(top: 20, bottom: 20),
+      padding: EdgeInsets.symmetric(vertical: mediaQuery.size.height * 0.02),
       child: Container(
         color: Color(0xfff5f5f5),
         child: TextFormField(
@@ -113,9 +113,9 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget buttonSubmmit(BuildContext context) {
+  Widget buttonSubmmit(BuildContext context, MediaQueryData mediaQuery) {
     return Padding(
-      padding: EdgeInsets.only(top: 20),
+      padding: EdgeInsets.only(top: mediaQuery.size.height * 0.02),
       child: ElevatedButton(
         onPressed: () async {
           String usuarios = _userController.text;
@@ -133,7 +133,7 @@ class _SignInScreenState extends State<SignInScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Color.fromARGB(255, 35, 38, 204),
           elevation: 0,
-          minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+          minimumSize: Size(mediaQuery.size.width - 46, 50),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -151,9 +151,9 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget forgotPassword() {
+  Widget forgotPassword(MediaQueryData mediaQuery) {
     return Padding(
-      padding: EdgeInsets.only(top: 20),
+      padding: EdgeInsets.only(top: mediaQuery.size.height * 0.02),
       child: Center(
         child: Text(
           'Olvidaste tu contraseña?',

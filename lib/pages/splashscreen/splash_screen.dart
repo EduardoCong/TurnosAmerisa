@@ -40,9 +40,13 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   @override
   Widget build(BuildContext context) {
+
+    final mediaQuery = MediaQuery.of(context);
+
     return Scaffold(
       body: Container(
-        width: double.infinity,
+        width: mediaQuery.size.width,
+        height: mediaQuery.size.height,
         decoration: BoxDecoration(
           color: Color.fromARGB(255, 35, 38, 204),
         ),
@@ -50,12 +54,12 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             CircleAvatar(
-              radius: 100,
-              backgroundImage: NetworkImage(
-                'https://pbs.twimg.com/profile_images/814281946180231169/E7Z0c1Hy_400x400.jpg',
+              radius: mediaQuery.size.width * 0.25,
+              backgroundImage: AssetImage(
+                "assets/amerisalogo.png",
               ),
             ),
-            SizedBox(height: 20),
+            SizedBox(height: mediaQuery.size.height * 0.1),
             CircularProgressIndicator(
               valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
             ),
