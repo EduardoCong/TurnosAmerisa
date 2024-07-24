@@ -54,22 +54,23 @@ class _CustomDrawerState extends State<CustomDrawer> {
   Widget drawer() {
     return DrawerHeader(
       decoration: BoxDecoration(
-        color: Colors.blue,
+        color: Color.fromARGB(255, 35, 38, 204),
       ),
       child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.center,
         children: [
           CircleAvatar(
-            radius: 30,
+            radius: 40,
             backgroundImage: NetworkImage(
                 "https://th.bing.com/th/id/OIP.hCfHyL8u8XAbreXuaiTMQgHaHZ?rs=1&pid=ImgDetMain"),
           ),
-          SizedBox(height: 10),
+          SizedBox(height: 15),
           Text(
             '$name $apellido',
             style: TextStyle(
               color: Colors.white,
-              fontSize: 20,
+              fontSize: 22,
+              fontWeight: FontWeight.bold
             ),
           ),
         ],
@@ -212,6 +213,8 @@ class _CustomDrawerState extends State<CustomDrawer> {
     return ListTile(
       title: Text('Inicio'),
       leading: Icon(Icons.home),
+      splashColor: Colors.blue.withOpacity(0.2), 
+      selectedTileColor: Colors.blue.withOpacity(0.1),
       onTap: () {
         if (ModalRoute.of(context)?.settings.name != '/home') {
           Navigator.of(context).pushReplacementNamed('/home');

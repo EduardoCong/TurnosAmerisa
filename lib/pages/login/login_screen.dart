@@ -29,24 +29,24 @@ class _SignInScreenState extends State<SignInScreen> {
 
 
   Widget formLogin(BuildContext context) {
-    final mediaQuery = MediaQuery.of(context);
     return Stack(
       children: <Widget>[
-        logo(mediaQuery),
+        logo(),
         Container(
-          width: mediaQuery.size.width,
-          margin: EdgeInsets.only(top: mediaQuery.size.height* 0.35),
+          width: MediaQuery.of(context).size.width,
+          margin: EdgeInsets.only(top: 270),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(20),
+            color: Colors.white,
           ),
           child: Padding(
-            padding: EdgeInsets.all(mediaQuery.size.width * 0.06),
+            padding: EdgeInsets.all(23),
             child: ListView(
               children: <Widget>[
-                formUser(mediaQuery),
-                formPassword(mediaQuery),
-                buttonSubmmit(context, mediaQuery),
-                forgotPassword(mediaQuery),
+                formUser(),
+                formPassword(),
+                buttonSubmmit(context),
+                forgotPassword(),
               ],
             ),
           ),
@@ -55,22 +55,17 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget logo(MediaQueryData mediaQuery) {
+  Widget logo() {
     return Container(
-      width: mediaQuery.size.width,
-      height: mediaQuery.size.height * 0.35,
-      child: Center(
-        child: Image.asset(
-          "assets/amerisalogo.png",
-          width: mediaQuery.size.width * 0.6,
-        ),
-      ),
+      child: Image.asset("assets/amerisalogo.png"),
+      width: 1200,
+      height: 300,
     );
   }
 
-  Widget formUser(MediaQueryData mediaQuery) {
+  Widget formUser() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: mediaQuery.size.height * 0.02),
+      padding: EdgeInsets.only(top: 20, bottom: 20),
       child: Container(
         color: Color(0xfff5f5f5),
         child: TextFormField(
@@ -90,9 +85,9 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget formPassword(MediaQueryData mediaQuery) {
+  Widget formPassword() {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: mediaQuery.size.height * 0.02),
+      padding: EdgeInsets.only(top: 20, bottom: 20),
       child: Container(
         color: Color(0xfff5f5f5),
         child: TextFormField(
@@ -113,9 +108,9 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget buttonSubmmit(BuildContext context, MediaQueryData mediaQuery) {
+  Widget buttonSubmmit(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(top: mediaQuery.size.height * 0.02),
+      padding: EdgeInsets.only(top: 20),
       child: ElevatedButton(
         onPressed: () async {
           String usuarios = _userController.text;
@@ -133,7 +128,7 @@ class _SignInScreenState extends State<SignInScreen> {
         style: ElevatedButton.styleFrom(
           backgroundColor: Color.fromARGB(255, 35, 38, 204),
           elevation: 0,
-          minimumSize: Size(mediaQuery.size.width - 46, 50),
+          minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(10),
           ),
@@ -151,9 +146,9 @@ class _SignInScreenState extends State<SignInScreen> {
     );
   }
 
-  Widget forgotPassword(MediaQueryData mediaQuery) {
+  Widget forgotPassword() {
     return Padding(
-      padding: EdgeInsets.only(top: mediaQuery.size.height * 0.02),
+      padding: EdgeInsets.only(top: 20),
       child: Center(
         child: Text(
           'Olvidaste tu contraseña?',

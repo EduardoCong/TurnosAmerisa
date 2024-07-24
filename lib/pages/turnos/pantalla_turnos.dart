@@ -41,84 +41,144 @@ class _TurnosVerState extends State<TurnosVer> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      key: scaffoldKeyos,
-      appBar: AppBar(
-        centerTitle: true,
-        title: Text('Turnos'),
-        leading: IconButton(
-          icon: Icon(Icons.menu),
-          onPressed: () {
-            if (scaffoldKeyos.currentState != null) {
-              scaffoldKeyos.currentState!.openDrawer();
-            }
-          },
+    return WillPopScope(
+      onWillPop: () async {
+        return await _showCancelDialog(context);
+      },
+      child: Scaffold(
+        key: scaffoldKeyos,
+        appBar: AppBar(
+          centerTitle: true,
+          title: Text('Turnos'),
+          leading: IconButton(
+            icon: Icon(Icons.menu),
+            onPressed: () {
+              if (scaffoldKeyos.currentState != null) {
+                scaffoldKeyos.currentState!.openDrawer();
+              }
+            },
+          ),
         ),
-      ),
-      drawer: CustomDrawer(),
-      body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 20, vertical: 80),
-        child: Column(
-          children: [
-            Text(
-              'Comuniquese a la línea de atención al usuario',
-              style: TextStyle(
-                fontSize: 16,
-                color: Colors.black,
-                fontWeight: FontWeight.bold,
+        drawer: CustomDrawer(),
+        body: Padding(
+          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 80),
+          child: Column(
+            children: [
+              Text(
+                'Comuniquese a la línea de atención al usuario',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontWeight: FontWeight.bold,
+                ),
+                textAlign: TextAlign.center,
               ),
-              textAlign: TextAlign.center,
-            ),
-            SizedBox(height: 16),
-            Expanded(
-              child: ListView(
-                children: [
-                  Card(
-                    child: Padding(
-                      padding: EdgeInsets.only(bottom: 15, top: 1),
-                      child: Column(
-                        children: [
-                          SizedBox(height: 16),
-                          Text(
-                            'Lista de Turnos',
-                            style: TextStyle(
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold,
+              SizedBox(height: 16),
+              Expanded(
+                child: ListView(
+                  children: [
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 15, top: 1),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 16),
+                            Text(
+                              'Lista de Turnos',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
-                          ),
-                          Divider(),
-                          DataTable(
-                            columns: [
-                              DataColumn(label: Text('TURNO')),
-                              DataColumn(label: Text('ESTADO')),
-                              DataColumn(label: Text('MODULO')),
-                            ],
-                            rows: turnosVer.isNotEmpty
-                                ? turnosVer.map<DataRow>((turno) {
-                                    return DataRow(cells: [
-                                      DataCell(Text(turno.turno)),
-                                      DataCell(Text(turno.estado)),
-                                      DataCell(Text(turno.modulo)),
-                                    ]);
-                                  }).toList()
-                                : [
-                                    DataRow(cells: [
-                                      DataCell(Text('No hay datos')),
-                                      DataCell(Text('No hay datos')),
-                                      DataCell(Text('No hay datos')),
-                                    ])
-                                  ],
-                          ),
-                        ],
+                            Divider(),
+                            DataTable(
+                              columns: [
+                                DataColumn(label: Text('TURNO')),
+                                DataColumn(label: Text('ESTADO')),
+                                DataColumn(label: Text('MODULO')),
+                              ],
+                              rows: turnosVer.isNotEmpty
+                                  ? turnosVer.map<DataRow>((turno) {
+                                      return DataRow(cells: [
+                                        DataCell(Text(turno.turno)),
+                                        DataCell(Text(turno.estado)),
+                                        DataCell(Text(turno.modulo)),
+                                      ]);
+                                    }).toList()
+                                  : [
+                                      DataRow(cells: [
+                                        DataCell(Text('No hay datos')),
+                                        DataCell(Text('No hay datos')),
+                                        DataCell(Text('No hay datos')),
+                                      ])
+                                    ],
+                            ),
+                          ],
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
+    );
+  }
+
+  Future<bool> _showCancelDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(child: Text("Salir de la pantalla turnos")),
+          content:
+              Text("¿Estás seguro que deseas salir de la pantalla?"),
+          contentTextStyle: TextStyle(fontSize: 16, color: Colors.black),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'No',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    elevation: 0,
+                    fixedSize: Size(120, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacementNamed('/home');
+                  },
+                  child: Text(
+                    'Ir al inicio',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    elevation: 0,
+                    fixedSize: Size(120, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

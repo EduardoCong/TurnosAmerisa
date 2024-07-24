@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:turnos_amerisa/firebase/firebase_api.dart';
@@ -7,13 +8,11 @@ import 'package:turnos_amerisa/pages/home/config_drawer.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
 import 'package:turnos_amerisa/pages/login/login_screen.dart';
 import 'package:turnos_amerisa/pages/splashscreen/splash_screen.dart';
-// import 'package:turnos_amerisa/pages/rating/rating_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/cita_screen.dart';
+import 'package:turnos_amerisa/pages/turnos/generar_turno.dart';
 import 'package:turnos_amerisa/pages/turnos/pantalla_turnos.dart';
 import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
-import 'package:turnos_amerisa/pages/turnos/generar_turno.dart';
 import 'package:turnos_amerisa/provider/provider_change.dart';
-import 'package:firebase_core/firebase_core.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();

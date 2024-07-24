@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/firebase/firebase_api.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
@@ -24,8 +23,8 @@ class _HomePageState extends State<HomePage> {
   //       tokenFirebase != null &&
   //       plataformUse != '' &&
   //       idDevice != null) {
-  //     await registrarDispositivo
-  //     (idClientes, tokenFirebase, plataformUse, idDevice);
+  //     await registrarDispositivo(
+  //         idClientes, tokenFirebase, plataformUse, idDevice);
   //   } else {
   //     print('Error: No se pudo obtener todos los datos necesarios.');
   //   }
@@ -39,28 +38,25 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
-    return GetMaterialApp(
-      debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        key: scaffoldKey,
-        appBar: AppBar(
-          leading: IconButton(
-            icon: Icon(Icons.menu),
-            onPressed: () {
-              scaffoldKey.currentState!.openDrawer();
-            },
-          ),
+    final GlobalKey<ScaffoldState> scaffoldKeyta = GlobalKey<ScaffoldState>();
+    return Scaffold(
+      key: scaffoldKeyta,
+      appBar: AppBar(
+        leading: IconButton(
+          icon: Icon(Icons.menu),
+          onPressed: () {
+            scaffoldKeyta.currentState!.openDrawer();
+          },
         ),
-        drawer: CustomDrawer(),
-        body: SingleChildScrollView(
-          child: Column(
-            children: [
-              imageLogo(),
-              SizedBox(height: 20),
-              buttonsTurnoCita(context)
-            ],
-          ),
+      ),
+      drawer: CustomDrawer(),
+      body: SingleChildScrollView(
+        child: Column(
+          children: [
+            imageLogo(),
+            SizedBox(height: 20),
+            buttonsTurnoCita(context)
+          ],
         ),
       ),
     );

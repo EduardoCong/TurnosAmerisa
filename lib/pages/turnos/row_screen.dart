@@ -106,6 +106,10 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
                       textStyle: TextStyle(fontSize: 18.0),
                       padding: EdgeInsets.symmetric(horizontal: 40, vertical: 15),
                       backgroundColor: Colors.red,
+                      fixedSize: Size(400, 70),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10)
+                      )
                     ),
                   ),
                 ],
@@ -290,7 +294,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),

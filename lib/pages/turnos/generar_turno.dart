@@ -163,6 +163,58 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       return;
     }
 
+    // if ((DateTime.now().weekday >= DateTime.monday && DateTime.now().weekday <= DateTime.friday && (DateTime.now().hour < 9 || DateTime.now().hour >= 18))) {
+    //   AwesomeDialog(
+    //     context: context,
+    //     dialogType: DialogType.info,
+    //     width: 400,
+    //     buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+    //     dismissOnTouchOutside: false,
+    //     dismissOnBackKeyPress: false,
+    //     headerAnimationLoop: true,
+    //     animType: AnimType.bottomSlide,
+    //     title: 'De lunes el servicio esta disponible de 9 am a 6 pm.',
+    //     titleTextStyle: TextStyle(fontSize: 16),
+    //     desc: '¿Desea agendar una cita?',
+    //     descTextStyle: TextStyle(color: Colors.black, fontSize: 15),
+    //     btnCancel: ElevatedButton(
+    //       style: ElevatedButton.styleFrom(
+    //         backgroundColor: Colors.red,
+    //         elevation: 0,
+    //         minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+    //         shape: RoundedRectangleBorder(
+    //           borderRadius: BorderRadius.circular(10),
+    //         ),
+    //       ),
+    //       onPressed: () {
+    //         Navigator.pop(context);
+    //       },
+    //       child: Text(
+    //         'No',
+    //         style: TextStyle(color: Colors.white),
+    //       ),
+    //     ),
+    //     btnOk: ElevatedButton(
+    //       style: ElevatedButton.styleFrom(
+    //         backgroundColor: Colors.green,
+    //         elevation: 0,
+    //         minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+    //         shape: RoundedRectangleBorder(
+    //           borderRadius: BorderRadius.circular(10),
+    //         ),
+    //       ),
+    //       onPressed: () {
+    //         Navigator.of(context).pushReplacementNamed('/calendario');
+    //       },
+    //       child: Text(
+    //         'Ir a citas',
+    //         style: TextStyle(color: Colors.white),
+    //       ),
+    //     ),
+    //   ).show();
+    //   return;
+    // }
+
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
