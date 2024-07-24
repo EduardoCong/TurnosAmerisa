@@ -16,8 +16,9 @@ import 'package:turnos_amerisa/provider/provider_change.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
-  // await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
-  // await FirebaseApi().initNotifications();
+  await Firebase.initializeApp(options: DefaultFirebaseOptions.currentPlatform);
+  await FirebaseApi().initNotifications();
+  await FirebaseApi().setupMessageListeners();
   runApp(MyApp());
 }
 
@@ -52,7 +53,7 @@ class _MyAppState extends State<MyApp> {
               '/turno': (context) => GenerarTurnoView(),
               '/vercita': (context) => CitaQueueScreen(),
               '/config': (context) => ConfiguracionView(),
-              '/listurno': (context) => TurnosVer()
+              '/listurno': (context) => TurnosVer(),
             },
           );
         },

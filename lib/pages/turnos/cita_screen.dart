@@ -240,7 +240,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),

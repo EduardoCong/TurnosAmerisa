@@ -12,28 +12,28 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  // Future<void> registerDeviceReady() async {
-  //   FirebaseApi firebase = FirebaseApi();
-  //   SharedPreferences prefs = await SharedPreferences.getInstance();
-  //   String? tokenFirebase = await firebase.getToken();
-  //   String? plataformUse = await firebase.getPlatform();
-  //   String? idDevice = await firebase.getDeviceId();
-  //   int? idClientes = await prefs.getInt('ClienteId');
-  //   if (idClientes != null &&
-  //       tokenFirebase != null &&
-  //       plataformUse != '' &&
-  //       idDevice != null) {
-  //     await registrarDispositivo(
-  //         idClientes, tokenFirebase, plataformUse, idDevice);
-  //   } else {
-  //     print('Error: No se pudo obtener todos los datos necesarios.');
-  //   }
-  // }
+  Future<void> registerDeviceReady() async {
+    FirebaseApi firebase = FirebaseApi();
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    String? tokenFirebase = await firebase.getToken();
+    String? plataformUse = await firebase.getPlatform();
+    String? idDevice = await firebase.getDeviceId();
+    int? idClientes = await prefs.getInt('ClienteId');
+    if (idClientes != null &&
+        tokenFirebase != null &&
+        plataformUse != '' &&
+        idDevice != null) {
+      await registrarDispositivo(
+          idClientes, tokenFirebase, plataformUse, idDevice);
+    } else {
+      print('Error: No se pudo obtener todos los datos necesarios.');
+    }
+  }
 
   @override
   void initState() {
     super.initState();
-    // registerDeviceReady();
+    registerDeviceReady();
   }
 
   @override

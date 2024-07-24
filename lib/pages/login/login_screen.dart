@@ -60,6 +60,9 @@ class _SignInScreenState extends State<SignInScreen> {
       child: Image.asset("assets/amerisalogo.png"),
       width: 1200,
       height: 300,
+      decoration: BoxDecoration(
+        color: Colors.white
+      ),
     );
   }
 

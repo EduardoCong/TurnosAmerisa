@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
@@ -7,25 +8,43 @@ class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
   Future<void> initNotifications() async {
-    NotificationSettings settings = await _firebaseMessaging.requestPermission(
-      alert: true,
-      announcement: false,
-      badge: true,
-      carPlay: false,
-      criticalAlert: false,
-      provisional: false,
-      sound: true,
-    );
+    NotificationSettings settings =
+        await _firebaseMessaging.requestPermission();
     print('User granted permission: ${settings.authorizationStatus}');
+  }
 
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      print('Got a message whilst in the foreground!');
-      print('Message data: ${message.data}');
+  Future<void> setupMessageListeners() async {
+    FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler);
 
-      if (message.notification != null) {
-        print('Message also contained a notification: ${message.notification}');
+    FirebaseMessaging.instance.getInitialMessage().then((message) {
+      if (message != null) {
+        _firebaseMessagingBackgroundHandler(message);
       }
     });
+
+    FirebaseMessaging.onMessageOpenedApp
+        .listen(_firebaseMessagingBackgroundHandler);
+  }
+
+  Future<void> _firebaseMessagingForegroundHandler(
+      RemoteMessage? message) async {
+    print("Foreground Message Received:");
+    _printMessageDetails(message!);
+  }
+
+  Future<void> _firebaseMessagingBackgroundHandler(
+      RemoteMessage? message) async {
+    print("Background Message Received:");
+    _printMessageDetails(message!);
+  }
+
+  void _printMessageDetails(RemoteMessage message) {
+    if (message.notification != null) {
+      String thing = message.data['screen'];
+      print('Notification title: ${message.notification!.title}');
+      print('Notification body: ${message.notification!.body}');
+      print('Notification data: ${thing}');
+    }
   }
 
   Future<String?> getToken() async {

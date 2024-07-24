@@ -528,6 +528,9 @@ class _CalendarState extends State<Calendar> {
     return ElevatedButton(
       child: Text('Generar Turno', style: TextStyle(color: Colors.white)),
       onPressed: () async {
+        setState(() {
+          _timer.cancel();
+        });
         await generarTurno(context);
       },
       style: ElevatedButton.styleFrom(

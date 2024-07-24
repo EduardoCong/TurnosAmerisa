@@ -294,7 +294,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 16.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),
