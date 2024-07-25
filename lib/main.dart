@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:turnos_amerisa/firebase/firebase_api.dart';
 import 'package:turnos_amerisa/firebase_options.dart';
+import 'package:turnos_amerisa/notificaciones/llamado_notificacion.dart';
 import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
 import 'package:turnos_amerisa/pages/home/config_drawer.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
@@ -13,6 +14,8 @@ import 'package:turnos_amerisa/pages/turnos/generar_turno.dart';
 import 'package:turnos_amerisa/pages/turnos/pantalla_turnos.dart';
 import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
 import 'package:turnos_amerisa/provider/provider_change.dart';
+
+final GlobalKey<NavigatorState> navigatorKey = GlobalKey<NavigatorState>();
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,6 +40,7 @@ class _MyAppState extends State<MyApp> {
       child: Consumer<UiProvider>(
         builder: (context, UiProvider notifier, child) {
           return MaterialApp(
+            navigatorKey: navigatorKey,
             debugShowCheckedModeBanner: false,
             themeMode: notifier.isDark ? ThemeMode.dark : ThemeMode.light,
             darkTheme: notifier.darkTheme,
@@ -54,6 +58,7 @@ class _MyAppState extends State<MyApp> {
               '/vercita': (context) => CitaQueueScreen(),
               '/config': (context) => ConfiguracionView(),
               '/listurno': (context) => TurnosVer(),
+              '/llamadoTurno': (context) => LlamadoTurnoScreen(),
             },
           );
         },

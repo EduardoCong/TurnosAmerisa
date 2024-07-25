@@ -3,6 +3,8 @@ import 'dart:io';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:device_info_plus/device_info_plus.dart';
+import 'package:turnos_amerisa/main.dart';
+
 
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
@@ -14,7 +16,9 @@ class FirebaseApi {
   }
 
   Future<void> setupMessageListeners() async {
-    FirebaseMessaging.onMessage.listen(_firebaseMessagingForegroundHandler);
+    FirebaseMessaging.onMessage.listen((message){
+      _firebaseMessagingForegroundHandler(message);
+    });
 
     FirebaseMessaging.instance.getInitialMessage().then((message) {
       if (message != null) {
@@ -23,19 +27,23 @@ class FirebaseApi {
     });
 
     FirebaseMessaging.onMessageOpenedApp
-        .listen(_firebaseMessagingBackgroundHandler);
+        .listen((message){
+          _firebaseMessagingBackgroundHandler(message);
+        });
   }
 
   Future<void> _firebaseMessagingForegroundHandler(
       RemoteMessage? message) async {
     print("Foreground Message Received:");
     _printMessageDetails(message!);
+    _handleMessageNavigation(message);
   }
 
   Future<void> _firebaseMessagingBackgroundHandler(
       RemoteMessage? message) async {
     print("Background Message Received:");
     _printMessageDetails(message!);
+    _handleMessageNavigation(message);
   }
 
   void _printMessageDetails(RemoteMessage message) {
@@ -44,6 +52,18 @@ class FirebaseApi {
       print('Notification title: ${message.notification!.title}');
       print('Notification body: ${message.notification!.body}');
       print('Notification data: ${thing}');
+    }
+  }
+
+  void _handleMessageNavigation(RemoteMessage message) {
+    String? screen = message.data['screen'];
+    String? body = message.notification!.body;
+    String? title = message.notification!.title;
+    if (screen != null) {
+      navigatorKey.currentState?.pushReplacementNamed(screen, arguments: {
+        'body': body,
+        'title': title
+      });
     }
   }
 
