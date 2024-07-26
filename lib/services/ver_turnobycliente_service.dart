@@ -1,15 +1,15 @@
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 
-class Turno {
+class Turnos {
   final String turno;
   final String estado;
   final String modulo;
 
-  Turno({required this.turno, required this.estado, required this.modulo});
+  Turnos({required this.turno, required this.estado, required this.modulo});
 
-  factory Turno.fromJson(Map<String, dynamic> json) {
-    return Turno(
+  factory Turnos.fromJson(Map<String, dynamic> json) {
+    return Turnos(
       turno: json['turno'] ?? '',
       estado: json['estado'] ?? '',
       modulo: json['modulo'] ?? '-',
@@ -17,26 +17,34 @@ class Turno {
   }
 }
 
-class TurnosService {
-  Future<List<Turno>> fetchTurnosVer() async {
+class MyTurnosService {
+  Future<List<Turnos>> fetchMyTurnosVerMisMyTurnos(int idCliente) async {
+    Map<String, String> body = {
+      'accion': 'VerMisTurnos',
+      'id': idCliente.toString(),
+    };
+
     try {
       final response = await http.post(
         Uri.parse('http://192.168.1.83/models/model_pantalla.php'),
-        body: {'accion': 'Verturnos'},
+        body: body,
       );
+
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
+
         if (data['status']) {
           return (data['data'] as List)
-              .map((turnoJson) => Turno.fromJson(turnoJson))
+              .map((turnoJson) => Turnos.fromJson(turnoJson))
               .toList();
         } else {
           return [];
         }
       } else {
-        return [];
+        throw Exception('Error en la respuesta del servidor: ${response.statusCode}');
       }
     } catch (e) {
+      print('Error fetching turnos: $e');
       return [];
     }
   }

@@ -42,6 +42,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           Divider(),
           listTurnos(context),
           configMode(context),
+          VerMisTurnos(context),
           pedirTurno(context),
           pedirCita(context),
           Divider(),
@@ -218,6 +219,22 @@ class _CustomDrawerState extends State<CustomDrawer> {
       onTap: () {
         if (ModalRoute.of(context)?.settings.name != '/home') {
           Navigator.of(context).pushReplacementNamed('/home');
+        } else {
+          Navigator.pop(context);
+        }
+      },
+    );
+  }
+
+  Widget VerMisTurnos(BuildContext context) {
+    return ListTile(
+      title: Text('Ver Mis Turnos'),
+      leading: Icon(Icons.view_list_rounded),
+      splashColor: Colors.blue.withOpacity(0.2), 
+      selectedTileColor: Colors.blue.withOpacity(0.1),
+      onTap: () {
+        if (ModalRoute.of(context)?.settings.name != '/vermisturnos') {
+          Navigator.of(context).pushReplacementNamed('/vermisturnos');
         } else {
           Navigator.pop(context);
         }

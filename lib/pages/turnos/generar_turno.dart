@@ -260,8 +260,6 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     return await showDialog(
       context: context,
       builder: (BuildContext context) {
-        final Map<String, dynamic> messageData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>;
-        print(messageData);
         return AlertDialog(
           title: Center(child: Text("Cancela Turno")),
           content: Text("¿Estás seguro que deseas cancelar el turno?"),

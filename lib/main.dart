@@ -11,6 +11,7 @@ import 'package:turnos_amerisa/pages/login/login_screen.dart';
 import 'package:turnos_amerisa/pages/splashscreen/splash_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/cita_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/generar_turno.dart';
+import 'package:turnos_amerisa/pages/turnos/pantalla_mis_turnos.dart';
 import 'package:turnos_amerisa/pages/turnos/pantalla_turnos.dart';
 import 'package:turnos_amerisa/pages/turnos/row_screen.dart';
 import 'package:turnos_amerisa/provider/provider_change.dart';
@@ -59,6 +60,7 @@ class _MyAppState extends State<MyApp> {
               '/config': (context) => ConfiguracionView(),
               '/listurno': (context) => TurnosVer(),
               '/llamadoTurno': (context) => LlamadoTurnoScreen(),
+              '/vermisturnos': (context) => VerMisTurnos()
             },
           );
         },
