@@ -17,14 +17,12 @@ class _HomePageState extends State<HomePage> {
     SharedPreferences prefs = await SharedPreferences.getInstance();
     String? tokenFirebase = await firebase.getToken();
     String? plataformUse = await firebase.getPlatform();
-    String? idDevice = await firebase.getDeviceId();
     int? idClientes = await prefs.getInt('ClienteId');
     if (idClientes != null &&
         tokenFirebase != null &&
-        plataformUse != '' &&
-        idDevice != null) {
+        plataformUse != '') {
       await registrarDispositivo(
-          idClientes, tokenFirebase, plataformUse, idDevice);
+          idClientes, tokenFirebase, plataformUse);
     } else {
       print('Error: No se pudo obtener todos los datos necesarios.');
     }

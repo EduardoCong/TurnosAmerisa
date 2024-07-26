@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 Future<void> registrarDispositivo(int clienteId, String tokenDispositivo,
-    String plataforma, String deviceInfo) async {
+    String plataforma) async {
   String url = 'http://192.168.0.17/models/model_registrar_dispositivo.php';
 
   Map<String, String> body = {
@@ -10,7 +10,6 @@ Future<void> registrarDispositivo(int clienteId, String tokenDispositivo,
     'cliente_id': clienteId.toString(),
     'token_dispositivo': tokenDispositivo,
     'plataforma': plataforma,
-    'device_id': deviceInfo,
   };
 
   try {

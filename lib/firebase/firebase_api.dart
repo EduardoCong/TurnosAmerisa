@@ -26,10 +26,9 @@ class FirebaseApi {
       }
     });
 
-    FirebaseMessaging.onMessageOpenedApp
-        .listen((message){
-          _firebaseMessagingBackgroundHandler(message);
-        });
+    FirebaseMessaging.onMessageOpenedApp.listen((message){
+       _firebaseMessagingBackgroundHandler(message);
+    });
   }
 
   Future<void> _firebaseMessagingForegroundHandler(
@@ -48,10 +47,11 @@ class FirebaseApi {
 
   void _printMessageDetails(RemoteMessage message) {
     if (message.notification != null) {
-      String thing = message.data['screen'];
       print('Notification title: ${message.notification!.title}');
       print('Notification body: ${message.notification!.body}');
-      print('Notification data: ${thing}');
+      if (message.data.isNotEmpty) {
+        print('Notification data: ${message.data}');
+      }
     }
   }
 
@@ -62,7 +62,8 @@ class FirebaseApi {
     if (screen != null) {
       navigatorKey.currentState?.pushReplacementNamed(screen, arguments: {
         'body': body,
-        'title': title
+        'title': title,
+        ...message.data
       });
     }
   }
@@ -86,21 +87,5 @@ class FirebaseApi {
     }
     print('plataforma : $device');
     return device;
-  }
-
-  Future<String?> getDeviceId() async {
-    DeviceInfoPlugin deviceInfo = DeviceInfoPlugin();
-
-    String? deviceId;
-
-    if (Platform.isAndroid) {
-      AndroidDeviceInfo androidInfo = await deviceInfo.androidInfo;
-      deviceId = androidInfo.id;
-    } else if (Platform.isIOS) {
-      IosDeviceInfo iosInfo = await deviceInfo.iosInfo;
-      deviceId = iosInfo.identifierForVendor;
-    }
-    print(deviceId);
-    return deviceId;
   }
 }
