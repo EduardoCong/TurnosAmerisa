@@ -28,7 +28,7 @@ class MyTurnosService {
 
     try {
       final response = await http.post(
-        Uri.parse('http://192.168.1.83/models/model_pantalla.php'),
+        Uri.parse('http://turnos.soft-box.com.mx/models/model_pantalla.php'),
         body: body,
       );
 
