@@ -5,14 +5,16 @@ class Turnos {
   final String turno;
   final String estado;
   final String modulo;
+  final String fecha;
 
-  Turnos({required this.turno, required this.estado, required this.modulo});
+  Turnos({required this.turno, required this.estado, required this.modulo, required this.fecha});
 
   factory Turnos.fromJson(Map<String, dynamic> json) {
     return Turnos(
       turno: json['turno'] ?? '',
       estado: json['estado'] ?? '',
       modulo: json['modulo'] ?? '-',
+      fecha: json['tiempo_ingreso'] ?? '-',
     );
   }
 }

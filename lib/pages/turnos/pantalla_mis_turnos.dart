@@ -96,10 +96,12 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
                             ),
                             Divider(),
                             DataTable(
+                              columnSpacing: 25,
                               columns: [
                                 DataColumn(label: Text('TURNO')),
                                 DataColumn(label: Text('ESTADO')),
                                 DataColumn(label: Text('MODULO')),
+                                DataColumn(label: Text('FECHA')),
                               ],
                               rows: VerMisTurnos.isNotEmpty
                                   ? VerMisTurnos.map<DataRow>((turno) {
@@ -107,10 +109,12 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
                                         DataCell(Text(turno.turno)),
                                         DataCell(Text(turno.estado)),
                                         DataCell(Text(turno.modulo)),
+                                        DataCell(Text(turno.fecha)),
                                       ]);
                                     }).toList()
                                   : [
                                       DataRow(cells: [
+                                        DataCell(Text('No hay datos')),
                                         DataCell(Text('No hay datos')),
                                         DataCell(Text('No hay datos')),
                                         DataCell(Text('No hay datos')),

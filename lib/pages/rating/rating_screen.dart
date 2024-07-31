@@ -13,19 +13,13 @@ class _RatingScreenState extends State<RatingScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: Colors.transparent,
-      appBar: AppBar(
-        actions: [
-          ElevatedButton(
-            onPressed: (){
-              Navigator.pushNamed(context, '/timer');
-            },
-            child: Icon(Icons.auto_stories)
-          )
-        ],
+    return WillPopScope(
+      onWillPop: () async {
+        return await _showCancelDialog(context);
+      },
+      child: Scaffold(
+        body: centerRating()
       ),
-      body: centerRating()
     );
   }
 
@@ -35,7 +29,7 @@ class _RatingScreenState extends State<RatingScreen> {
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text('¡Gracias por tu calificación de $rating estrellas!')),
         );
-        Navigator.pushNamed(context, '/home');
+        Navigator.pushReplacementNamed(context, '/home');
       },
       child: Text('Enviar'),
     );
@@ -45,7 +39,7 @@ class _RatingScreenState extends State<RatingScreen> {
     return RatingBar.builder(
       itemCount: 5,
       initialRating: rating,
-      itemSize: 40,
+      itemSize: 60,
       itemBuilder: (context, index) {
         switch (index) {
           case 0:
@@ -113,6 +107,60 @@ class _RatingScreenState extends State<RatingScreen> {
         ),
         child: columRating(),
       ),
+    );
+  }
+
+  Future<bool> _showCancelDialog(BuildContext context) async {
+    return await showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Center(child: Text("Salir de la pantalla turnos")),
+          content: Text("¿Estás seguro que deseas salir de la pantalla?"),
+          contentTextStyle: TextStyle(fontSize: 16, color: Colors.black),
+          actions: <Widget>[
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.pop(context);
+                  },
+                  child: Text(
+                    'No',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.red,
+                    elevation: 0,
+                    fixedSize: Size(120, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+                ElevatedButton(
+                  onPressed: () {
+                    Navigator.of(context).pushReplacementNamed('/home');
+                  },
+                  child: Text(
+                    'Ir al inicio',
+                    style: TextStyle(color: Colors.white),
+                  ),
+                  style: ElevatedButton.styleFrom(
+                    backgroundColor: Colors.green,
+                    elevation: 0,
+                    fixedSize: Size(120, 50),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ],
+        );
+      },
     );
   }
 }

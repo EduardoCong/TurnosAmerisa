@@ -8,6 +8,7 @@ import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
 import 'package:turnos_amerisa/pages/home/config_drawer.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
 import 'package:turnos_amerisa/pages/login/login_screen.dart';
+import 'package:turnos_amerisa/pages/rating/rating_screen.dart';
 import 'package:turnos_amerisa/pages/splashscreen/splash_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/cita_screen.dart';
 import 'package:turnos_amerisa/pages/turnos/generar_turno.dart';
@@ -54,7 +55,7 @@ class _MyAppState extends State<MyApp> {
               '/home': (context) => HomePage(),
               '/verturno': (context) => VirtualQueueScreen(),
               '/calendario': (context) => Calendar(),
-              // '/rating': (context) => RatingScreen(),
+              '/rating': (context) => RatingScreen(),
               '/turno': (context) => GenerarTurnoView(),
               '/vercita': (context) => CitaQueueScreen(),
               '/config': (context) => ConfiguracionView(),
