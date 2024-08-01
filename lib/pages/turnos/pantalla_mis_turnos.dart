@@ -74,7 +74,7 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
         ),
         drawer: CustomDrawer(),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 80),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
               SizedBox(height: 16),

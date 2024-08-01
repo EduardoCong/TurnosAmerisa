@@ -41,10 +41,10 @@ class _CustomDrawerState extends State<CustomDrawer> {
           hometitle(context),
           Divider(),
           listTurnos(context),
-          configMode(context),
           VerMisTurnos(context),
           pedirTurno(context),
           pedirCita(context),
+          configMode(context),
           Divider(),
           logouttitle(context)
         ],

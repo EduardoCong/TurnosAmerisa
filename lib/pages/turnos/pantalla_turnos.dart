@@ -63,19 +63,9 @@ class _TurnosVerState extends State<TurnosVer> {
         ),
         drawer: CustomDrawer(),
         body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20, vertical: 80),
+          padding: EdgeInsets.symmetric(horizontal: 20),
           child: Column(
             children: [
-              Text(
-                'Comuniquese a la línea de atención al usuario',
-                style: TextStyle(
-                  fontSize: 16,
-                  color: Colors.black,
-                  fontWeight: FontWeight.bold,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              SizedBox(height: 16),
               Expanded(
                 child: ListView(
                   children: [

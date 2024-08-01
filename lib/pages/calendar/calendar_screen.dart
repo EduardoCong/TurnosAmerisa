@@ -204,7 +204,7 @@ class _CalendarState extends State<Calendar> {
               child: Text(
                 'Tiempo restante: ${_counter ~/ 60}:${(_counter % 60).toString().padLeft(2, '0')}',
                 style: TextStyle(
-                  fontSize: 16,
+                  fontSize: 15,
                   fontWeight: FontWeight.w500,
                   color: Colors.white,
                 ),
