@@ -59,7 +59,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
       drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80),
+          margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,

@@ -66,7 +66,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
       drawer: CustomDrawer(),
       body: SingleChildScrollView(
         child: Container(
-          margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 30),
+          margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
           child: Container(
             decoration: BoxDecoration(
               color: Colors.white,
@@ -147,7 +147,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 12, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -178,7 +178,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -209,7 +209,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -240,7 +240,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -271,7 +271,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -302,7 +302,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -333,7 +333,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 14.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),

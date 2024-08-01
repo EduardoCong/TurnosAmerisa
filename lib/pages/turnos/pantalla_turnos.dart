@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'package:flutter/material.dart';
 import 'package:turnos_amerisa/services/pantalla_turnos_service.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
@@ -12,10 +10,9 @@ class TurnosVer extends StatefulWidget {
 class _TurnosVerState extends State<TurnosVer> {
   final GlobalKey<ScaffoldState> scaffoldKeyos = GlobalKey<ScaffoldState>();
   List<Turno> turnosVer = [];
-  String formattedDate = '';
-  String formattedTime = '';
   final TurnosService _turnosService = TurnosService();
   bool _isDisposed = false;
+  bool _isLoading = false;
 
   @override
   void initState() {
@@ -29,16 +26,23 @@ class _TurnosVerState extends State<TurnosVer> {
     super.dispose();
   }
 
-  void fetchTurnos() async {
-    while (!_isDisposed) {
+  Future<void> fetchTurnos() async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (!_isDisposed) {
       final fetchedTurnos = await _turnosService.fetchTurnosVer();
       if (!_isDisposed) {
         setState(() {
           turnosVer = fetchedTurnos;
+          _isLoading = false;
         });
       }
-      await Future.delayed(Duration(seconds: 9));
     }
+  }
+
+  Future<void> _refreshTurnos() async {
+    await fetchTurnos();
   }
 
   @override
@@ -62,58 +66,57 @@ class _TurnosVerState extends State<TurnosVer> {
           ),
         ),
         drawer: CustomDrawer(),
-        body: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20),
-          child: Column(
-            children: [
-              Expanded(
-                child: ListView(
-                  children: [
-                    Card(
-                      child: Padding(
-                        padding: EdgeInsets.only(bottom: 15, top: 1),
-                        child: Column(
-                          children: [
-                            SizedBox(height: 16),
-                            Text(
-                              'Lista de Turnos',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontWeight: FontWeight.bold,
+        body: RefreshIndicator(
+          onRefresh: _refreshTurnos,
+          child: _isLoading
+              ? Center(child: CircularProgressIndicator())
+              : Padding(
+                  padding: EdgeInsets.symmetric(horizontal: 20),
+                  child: ListView(
+                    children: [
+                      Card(
+                        child: Padding(
+                          padding: EdgeInsets.only(bottom: 15, top: 1),
+                          child: Column(
+                            children: [
+                              SizedBox(height: 16),
+                              Text(
+                                'Lista de Turnos',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontWeight: FontWeight.bold,
+                                ),
                               ),
-                            ),
-                            Divider(),
-                            DataTable(
-                              columns: [
-                                DataColumn(label: Text('TURNO')),
-                                DataColumn(label: Text('ESTADO')),
-                                DataColumn(label: Text('MODULO')),
-                              ],
-                              rows: turnosVer.isNotEmpty
-                                  ? turnosVer.map<DataRow>((turno) {
-                                      return DataRow(cells: [
-                                        DataCell(Text(turno.turno)),
-                                        DataCell(Text(turno.estado)),
-                                        DataCell(Text(turno.modulo)),
-                                      ]);
-                                    }).toList()
-                                  : [
-                                      DataRow(cells: [
-                                        DataCell(Text('No hay datos')),
-                                        DataCell(Text('No hay datos')),
-                                        DataCell(Text('No hay datos')),
-                                      ])
-                                    ],
-                            ),
-                          ],
+                              Divider(),
+                              DataTable(
+                                columns: [
+                                  DataColumn(label: Text('TURNO')),
+                                  DataColumn(label: Text('ESTADO')),
+                                  DataColumn(label: Text('MODULO')),
+                                ],
+                                rows: turnosVer.isNotEmpty
+                                    ? turnosVer.map<DataRow>((turno) {
+                                        return DataRow(cells: [
+                                          DataCell(Text(turno.turno)),
+                                          DataCell(Text(turno.estado)),
+                                          DataCell(Text(turno.modulo)),
+                                        ]);
+                                      }).toList()
+                                    : [
+                                        DataRow(cells: [
+                                          DataCell(Text('No hay datos')),
+                                          DataCell(Text('No hay datos')),
+                                          DataCell(Text('No hay datos')),
+                                        ])
+                                      ],
+                              ),
+                            ],
+                          ),
                         ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-            ],
-          ),
         ),
       ),
     );
@@ -125,8 +128,7 @@ class _TurnosVerState extends State<TurnosVer> {
       builder: (BuildContext context) {
         return AlertDialog(
           title: Center(child: Text("Salir de la pantalla turnos")),
-          content:
-              Text("¿Estás seguro que deseas salir de la pantalla?"),
+          content: Text("¿Estás seguro que deseas salir de la pantalla?"),
           contentTextStyle: TextStyle(fontSize: 16, color: Colors.black),
           actions: <Widget>[
             Row(
@@ -171,33 +173,6 @@ class _TurnosVerState extends State<TurnosVer> {
           ],
         );
       },
-    );
-  }
-}
-
-class MarqueeWidget extends StatefulWidget {
-  final String text;
-  final TextStyle style;
-
-  MarqueeWidget({required this.text, required this.style});
-
-  @override
-  _MarqueeWidgetState createState() => _MarqueeWidgetState();
-}
-
-class _MarqueeWidgetState extends State<MarqueeWidget> {
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      height: 50,
-      child: ListView(
-        scrollDirection: Axis.horizontal,
-        children: [
-          Center(
-            child: Text(widget.text, style: widget.style),
-          ),
-        ],
-      ),
     );
   }
 }
