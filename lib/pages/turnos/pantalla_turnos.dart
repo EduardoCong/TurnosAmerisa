@@ -1,3 +1,4 @@
+import 'dart:async';  // Agrega esta importación para el temporizador
 import 'package:flutter/material.dart';
 import 'package:turnos_amerisa/services/pantalla_turnos_service.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
@@ -13,16 +14,19 @@ class _TurnosVerState extends State<TurnosVer> {
   final TurnosService _turnosService = TurnosService();
   bool _isDisposed = false;
   bool _isLoading = false;
+  Timer? _updateTimer;  // Temporizador para actualización periódica
 
   @override
   void initState() {
     super.initState();
     fetchTurnos();
+    _startPeriodicUpdate();  // Inicia el temporizador para actualización periódica
   }
 
   @override
   void dispose() {
     _isDisposed = true;
+    _updateTimer?.cancel();  // Cancela el temporizador al desechar el widget
     super.dispose();
   }
 
@@ -39,6 +43,14 @@ class _TurnosVerState extends State<TurnosVer> {
         });
       }
     }
+  }
+
+  void _startPeriodicUpdate() {
+    _updateTimer = Timer.periodic(Duration(minutes: 5), (timer) async {
+      if (!_isDisposed) {
+        await fetchTurnos();
+      }
+    });
   }
 
   Future<void> _refreshTurnos() async {

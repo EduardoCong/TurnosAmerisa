@@ -20,7 +20,7 @@ class Turnos {
       turno: json['turno'] ?? '',
       estado: json['estado'] ?? '',
       modulo: json['modulo'] ?? '-',
-      fecha: json['tiempo_ingreso'] ?? '-', // Almacenar la fecha sin procesar
+      fecha: json['tiempo_ingreso'] ?? '-',
     );
   }
 }

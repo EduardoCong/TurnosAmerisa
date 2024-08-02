@@ -1,3 +1,4 @@
+import 'dart:async';  // Agrega esta importación para el temporizador
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
@@ -16,6 +17,7 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
   int? idCliente;
   late PageController _pageController;
   bool _loading = true;
+  Timer? _updateTimer;  // Temporizador para actualización periódica
 
   Future<void> getDataClienteId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -31,12 +33,14 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
     getDataClienteId().then((_) {
       fetchTurnos();
     });
+    _startPeriodicUpdate();
   }
 
   @override
   void dispose() {
     _isDisposed = true;
     _pageController.dispose();
+    _updateTimer?.cancel();
     super.dispose();
   }
 
@@ -53,6 +57,18 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
         });
       }
     }
+  }
+
+  void _startPeriodicUpdate() {
+    _updateTimer = Timer.periodic(Duration(minutes: 5), (timer) async {
+      if (!_isDisposed) {
+        await fetchTurnos();
+      }
+    });
+  }
+
+  Future<void> _refreshData() async {
+    await fetchTurnos();
   }
 
   @override
@@ -76,69 +92,72 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
           ),
         ),
         drawer: CustomDrawer(),
-        body: _loading
-            ? Center(child: CircularProgressIndicator())
-            : PageView.builder(
-                controller: _pageController,
-                itemCount: (turnos.length / 10).ceil(),
-                itemBuilder: (context, pageIndex) {
-                  final start = pageIndex * 10;
-                  final end = (pageIndex + 1) * 10;
-                  final pageTurnos = turnos.sublist(start, end > turnos.length ? turnos.length : end);
+        body: RefreshIndicator(
+          onRefresh: _refreshData,
+          child: _loading
+              ? Center(child: CircularProgressIndicator())
+              : PageView.builder(
+                  controller: _pageController,
+                  itemCount: (turnos.length / 10).ceil(),
+                  itemBuilder: (context, pageIndex) {
+                    final start = pageIndex * 10;
+                    final end = (pageIndex + 1) * 10;
+                    final pageTurnos = turnos.sublist(start, end > turnos.length ? turnos.length : end);
 
-                  return Padding(
-                    padding: EdgeInsets.symmetric(horizontal: 20),
-                    child: ListView(
-                      children: [
-                        Card(
-                          child: Padding(
-                            padding: EdgeInsets.only(bottom: 15, top: 1),
-                            child: Column(
-                              children: [
-                                SizedBox(height: 16),
-                                Text(
-                                  'Mi Historial de Turnos (Página ${pageIndex + 1})',
-                                  style: TextStyle(
-                                    fontSize: 20,
-                                    fontWeight: FontWeight.bold,
+                    return Padding(
+                      padding: EdgeInsets.symmetric(horizontal: 20),
+                      child: ListView(
+                        children: [
+                          Card(
+                            child: Padding(
+                              padding: EdgeInsets.only(bottom: 15, top: 1),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: 16),
+                                  Text(
+                                    'Mi Historial de Turnos (Página ${pageIndex + 1})',
+                                    style: TextStyle(
+                                      fontSize: 20,
+                                      fontWeight: FontWeight.bold,
+                                    ),
                                   ),
-                                ),
-                                Divider(),
-                                DataTable(
-                                  columnSpacing: 18,
-                                  columns: [
-                                    DataColumn(label: Text('TURNO')),
-                                    DataColumn(label: Text('ESTADO')),
-                                    DataColumn(label: Text('MODULO')),
-                                    DataColumn(label: Text('FECHA')),
-                                  ],
-                                  rows: pageTurnos.isNotEmpty
-                                      ? pageTurnos.map<DataRow>((turno) {
-                                          return DataRow(cells: [
-                                            DataCell(Text(turno.turno)),
-                                            DataCell(Text(turno.estado)),
-                                            DataCell(Text(turno.modulo)),
-                                            DataCell(Text(turno.fecha)),
-                                          ]);
-                                        }).toList()
-                                      : [
-                                          DataRow(cells: [
-                                            DataCell(Text('No hay datos')),
-                                            DataCell(Text('No hay datos')),
-                                            DataCell(Text('No hay datos')),
-                                            DataCell(Text('No hay datos')),
-                                          ])
-                                        ],
-                                ),
-                              ],
+                                  Divider(),
+                                  DataTable(
+                                    columnSpacing: 18,
+                                    columns: [
+                                      DataColumn(label: Text('TURNO')),
+                                      DataColumn(label: Text('ESTADO')),
+                                      DataColumn(label: Text('MODULO')),
+                                      DataColumn(label: Text('FECHA')),
+                                    ],
+                                    rows: pageTurnos.isNotEmpty
+                                        ? pageTurnos.map<DataRow>((turno) {
+                                            return DataRow(cells: [
+                                              DataCell(Text(turno.turno)),
+                                              DataCell(Text(turno.estado)),
+                                              DataCell(Text(turno.modulo)),
+                                              DataCell(Text(turno.fecha)),
+                                            ]);
+                                          }).toList()
+                                        : [
+                                            DataRow(cells: [
+                                              DataCell(Text('No hay datos')),
+                                              DataCell(Text('No hay datos')),
+                                              DataCell(Text('No hay datos')),
+                                              DataCell(Text('No hay datos')),
+                                            ])
+                                          ],
+                                  ),
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                      ],
-                    ),
-                  );
-                },
-              ),
+                        ],
+                      ),
+                    );
+                  },
+                ),
+        ),
       ),
     );
   }
