@@ -40,10 +40,10 @@ class _LlamadoTurnoScreenState extends State<LlamadoTurnoScreen> {
   @override
   Widget build(BuildContext context) {
     final args = ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
-    final modulo = args?['modulos'];
-    final turno = args?['turnos'];
-    final usuario = args?['user'];
-    final servicio = args?['service'];
+    final modulo = args?['modulo'];
+    final turno = args?['turn'];
+    final usuario = args?['usuario'];
+    final servicio = args?['servicio'];
     return WillPopScope(
       onWillPop: () async {
         return await _showCancelDialog(context);
@@ -62,7 +62,7 @@ class _LlamadoTurnoScreenState extends State<LlamadoTurnoScreen> {
         drawer: CustomDrawer(),
         body: SingleChildScrollView(
           child: Container(
-            margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 80),
+            margin: EdgeInsets.symmetric(horizontal: 20.0, vertical: 10),
             child: Container(
               decoration: BoxDecoration(
                 color: Colors.white,
@@ -94,8 +94,8 @@ class _LlamadoTurnoScreenState extends State<LlamadoTurnoScreen> {
                         'Cliente:', '$name $sname $apellido $sapellido',),
                     _buildTicketSectionNumber('Número de Cliente:', num),
                     _buildTicketSectionUsuario(
-                        'Usuario que atiende:', usuario ?? 'No existe turno'),
-                    _buildTicketSectionTurno('Su turno:', turno ?? ''),
+                        'Usuario que atiende:', usuario ?? 'No existe usuario'),
+                    _buildTicketSectionTurno('Su turno:', turno ?? 'No existe turno'),
                     _buildTicketSectionModulo('Anden:', modulo ?? ''),
                     _buildTicketSectionServicio('Servicio Elegido:', servicio ?? 'No existe anden'),
                     SizedBox(height: 40.0),

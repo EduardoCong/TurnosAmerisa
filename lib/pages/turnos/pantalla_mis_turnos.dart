@@ -1,4 +1,6 @@
-import 'dart:async';  // Agrega esta importación para el temporizador
+// ignore_for_file: deprecated_member_use
+
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
@@ -11,13 +13,12 @@ class VerMisTurnos extends StatefulWidget {
 
 class _VerMisTurnosState extends State<VerMisTurnos> {
   final GlobalKey<ScaffoldState> scaffoldKeyos = GlobalKey<ScaffoldState>();
-  List<Turnos> turnos = [];
+  List<Map<String, dynamic>> turnos = [];
   final MyTurnosService _turnosService = MyTurnosService();
-  bool _isDisposed = false;
   int? idCliente;
   late PageController _pageController;
-  bool _loading = true;
-  Timer? _updateTimer;  // Temporizador para actualización periódica
+  Timer? _updateTimer;
+  bool _isDisposed = false;
 
   Future<void> getDataClienteId() async {
     SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -31,9 +32,11 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
     super.initState();
     _pageController = PageController();
     getDataClienteId().then((_) {
-      fetchTurnos();
+      if (idCliente != null) {
+        fetchTurnos();
+        _startPeriodicUpdate();
+      }
     });
-    _startPeriodicUpdate();
   }
 
   @override
@@ -44,31 +47,29 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
     super.dispose();
   }
 
-  Future<void> fetchTurnos() async {
-    setState(() {
-      _loading = true;
-    });
-    if (idCliente != null) {
-      final fetchedTurnos = await _turnosService.fetchMyTurnosVerMisMyTurnos(idCliente!);
-      if (!_isDisposed) {
-        setState(() {
-          turnos = fetchedTurnos;
-          _loading = false;
-        });
-      }
-    }
-  }
-
   void _startPeriodicUpdate() {
-    _updateTimer = Timer.periodic(Duration(minutes: 5), (timer) async {
+    _updateTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       if (!_isDisposed) {
         await fetchTurnos();
       }
     });
   }
 
-  Future<void> _refreshData() async {
-    await fetchTurnos();
+  Future<void> fetchTurnos() async {
+    if (!mounted) return;
+
+    if (idCliente != null) {
+      try {
+        final fetchedTurnos = await _turnosService.fetchMyTurnosVerMisMyTurnos(idCliente!.toInt());
+        if (mounted) {
+          setState(() {
+            turnos = fetchedTurnos;
+          });
+        }
+      } catch (e) {
+        print('Error en fetchTurnos: $e');
+      }
+    }
   }
 
   @override
@@ -92,71 +93,75 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
           ),
         ),
         drawer: CustomDrawer(),
-        body: RefreshIndicator(
-          onRefresh: _refreshData,
-          child: _loading
-              ? Center(child: CircularProgressIndicator())
-              : PageView.builder(
-                  controller: _pageController,
-                  itemCount: (turnos.length / 10).ceil(),
-                  itemBuilder: (context, pageIndex) {
-                    final start = pageIndex * 10;
-                    final end = (pageIndex + 1) * 10;
-                    final pageTurnos = turnos.sublist(start, end > turnos.length ? turnos.length : end);
+        body: PageView.builder(
+          controller: _pageController,
+          itemCount: (turnos.length / 10).ceil(),
+          itemBuilder: (context, pageIndex) {
+            final start = pageIndex * 10;
+            final end = (pageIndex + 1) * 10;
+            final pageTurnos = turnos.sublist(start, end > turnos.length ? turnos.length : end);
 
-                    return Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 20),
-                      child: ListView(
-                        children: [
-                          Card(
-                            child: Padding(
-                              padding: EdgeInsets.only(bottom: 15, top: 1),
-                              child: Column(
-                                children: [
-                                  SizedBox(height: 16),
-                                  Text(
-                                    'Mi Historial de Turnos (Página ${pageIndex + 1})',
-                                    style: TextStyle(
-                                      fontSize: 20,
-                                      fontWeight: FontWeight.bold,
-                                    ),
-                                  ),
-                                  Divider(),
-                                  DataTable(
-                                    columnSpacing: 18,
-                                    columns: [
-                                      DataColumn(label: Text('TURNO')),
-                                      DataColumn(label: Text('ESTADO')),
-                                      DataColumn(label: Text('MODULO')),
-                                      DataColumn(label: Text('FECHA')),
-                                    ],
-                                    rows: pageTurnos.isNotEmpty
-                                        ? pageTurnos.map<DataRow>((turno) {
-                                            return DataRow(cells: [
-                                              DataCell(Text(turno.turno)),
-                                              DataCell(Text(turno.estado)),
-                                              DataCell(Text(turno.modulo)),
-                                              DataCell(Text(turno.fecha)),
-                                            ]);
-                                          }).toList()
-                                        : [
-                                            DataRow(cells: [
-                                              DataCell(Text('No hay datos')),
-                                              DataCell(Text('No hay datos')),
-                                              DataCell(Text('No hay datos')),
-                                              DataCell(Text('No hay datos')),
-                                            ])
-                                          ],
-                                  ),
-                                ],
+            return Padding(
+              padding: EdgeInsets.symmetric(horizontal: 20),
+              child: AnimatedSwitcher(
+                duration: Duration(seconds: 3),
+                transitionBuilder: (Widget child, Animation<double> animation) {
+                  return FadeTransition(opacity: animation, child: child);
+                },
+                child: ListView(
+                  key: ValueKey<List<Map<String, dynamic>>>(pageTurnos),
+                  children: [
+                    Card(
+                      child: Padding(
+                        padding: EdgeInsets.only(bottom: 15, top: 1),
+                        child: Column(
+                          children: [
+                            SizedBox(height: 16),
+                            Text(
+                              'Mi Historial de Turnos (Página ${pageIndex + 1})',
+                              style: TextStyle(
+                                fontSize: 20,
+                                fontWeight: FontWeight.bold,
                               ),
                             ),
-                          ),
-                        ],
+                            Divider(),
+                            DataTable(
+                              columnSpacing: 13,
+                              columns: [
+                                DataColumn(label: Text('TURNO')),
+                                DataColumn(label: Text('ESTADO')),
+                                DataColumn(label: Text('MODULO')),
+                                DataColumn(label: Text('FECHA')),
+                              ],
+                              rows: pageTurnos.isNotEmpty
+                                  ? pageTurnos.map<DataRow>((turno) {
+                                      return DataRow(cells: [
+                                        DataCell(Text(turno['turno'] ?? 'No disponible')),
+                                        DataCell(Text(turno['estado'] ?? 'No disponible')),
+                                        DataCell(Text(turno['modulo'] ?? 'No disponible')),
+                                        DataCell(Text(turno['tiempo_ingreso'] ?? 'No disponible')),
+                                      ],
+                                      mouseCursor: WidgetStateMouseCursor.clickable
+                                      );
+                                    }).toList()
+                                  : [
+                                      DataRow(cells: [
+                                        DataCell(Text('No hay datos')),
+                                        DataCell(Text('No hay datos')),
+                                        DataCell(Text('No hay datos')),
+                                        DataCell(Text('No hay datos')),
+                                      ])
+                                    ],
+                            ),
+                          ],
+                        ),
                       ),
-                    );
-                  },
+                    ),
+                  ],
                 ),
+              ),
+            );
+          },
         ),
       ),
     );

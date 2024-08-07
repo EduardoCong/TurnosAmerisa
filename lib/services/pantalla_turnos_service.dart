@@ -21,7 +21,7 @@ class TurnosService {
   Future<List<Turno>> fetchTurnosVer() async {
     try {
       final response = await http.post(
-        Uri.parse('http://turnos.soft-box.com.mx/models/model_pantalla.php'),
+        Uri.parse('http://192.168.0.17/models/model_pantalla.php'),
         body: {'accion': 'Verturnos'},
       );
       if (response.statusCode == 200) {

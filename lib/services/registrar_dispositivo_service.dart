@@ -3,7 +3,7 @@ import 'dart:convert';
 
 Future<void> registrarDispositivo(int clienteId, String tokenDispositivo,
     String plataforma) async {
-  String url = 'http://turnos.soft-box.com.mx/models/model_registrar_dispositivo.php';
+  String url = 'http://192.168.0.17/models/model_registrar_dispositivo.php';
 
   Map<String, String> body = {
     'accion': 'RegistrarDispositivo',

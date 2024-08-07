@@ -2,7 +2,7 @@ import 'package:http/http.dart' as http;
 
 class TurnoScreen {
   final String apiUrl =
-      'http://turnos.soft-box.com.mx/models/model_turno_actual.php';
+      'http://192.168.0.17/models/model_turno_actual.php';
 
   Future<String> obtenerTurnoCarga() async {
     try {

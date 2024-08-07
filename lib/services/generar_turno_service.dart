@@ -4,7 +4,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class ApiService {
-  static const String baseUrl = 'http://turnos.soft-box.com.mx/models/model_generar_turno.php';
+  static const String baseUrl = 'http://192.168.0.17/models/model_generar_turno.php';
 
   static Future<Map<String, dynamic>> generarTurno(Map<String, dynamic> datos, BuildContext context) async {
     try {

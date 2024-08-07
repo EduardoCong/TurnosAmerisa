@@ -4,7 +4,6 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/foundation.dart';
 import 'package:turnos_amerisa/main.dart';
 
-
 class FirebaseApi {
   final _firebaseMessaging = FirebaseMessaging.instance;
 
@@ -55,17 +54,26 @@ class FirebaseApi {
   }
 
   void _handleMessageNavigation(RemoteMessage message) {
-    String? screen = message.data['screen'];
-    String? body = message.notification!.body;
-    String? title = message.notification!.title;
-    if (screen != null) {
-      navigatorKey.currentState?.pushReplacementNamed(screen, arguments: {
-        'body': body,
-        'title': title,
-        ...message.data
-      });
-    }
+  String? screen = message.data['screen'];
+  String? body = message.notification?.body;
+  String? title = message.notification?.title;
+  String? modulo = message.data['modulo'];
+  String? turno = message.data['turn'];
+  String? usuario = message.data['usuario'];
+  String? servicio = message.data['servicio'];
+  
+  if (screen != null) {
+    navigatorKey.currentState?.pushReplacementNamed(screen, arguments: {
+      'body': body,
+      'title': title,
+      'modulo': modulo,
+      'turn': turno,
+      'usuario': usuario,
+      'servicio': servicio,
+    });
   }
+}
+
 
   Future<String?> getToken() async {
     final fCMToken = await _firebaseMessaging.getToken();

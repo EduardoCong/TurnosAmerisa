@@ -1,4 +1,4 @@
-import 'dart:async';  // Agrega esta importación para el temporizador
+import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:turnos_amerisa/services/pantalla_turnos_service.dart';
 import 'package:turnos_amerisa/pages/home/drawer_screen.dart';
@@ -13,40 +13,35 @@ class _TurnosVerState extends State<TurnosVer> {
   List<Turno> turnosVer = [];
   final TurnosService _turnosService = TurnosService();
   bool _isDisposed = false;
-  bool _isLoading = false;
-  Timer? _updateTimer;  // Temporizador para actualización periódica
+  Timer? _updateTimer;
 
   @override
   void initState() {
     super.initState();
-    fetchTurnos();
-    _startPeriodicUpdate();  // Inicia el temporizador para actualización periódica
+    fetchTurnos(initialLoad: true);
+    _startPeriodicUpdate();
   }
 
   @override
   void dispose() {
     _isDisposed = true;
-    _updateTimer?.cancel();  // Cancela el temporizador al desechar el widget
+    _updateTimer?.cancel();
     super.dispose();
   }
 
-  Future<void> fetchTurnos() async {
-    setState(() {
-      _isLoading = true;
-    });
+  Future<void> fetchTurnos({bool initialLoad = false}) async {
     if (!_isDisposed) {
       final fetchedTurnos = await _turnosService.fetchTurnosVer();
-      if (!_isDisposed) {
+      if (!_isDisposed && mounted) {
         setState(() {
           turnosVer = fetchedTurnos;
-          _isLoading = false;
         });
       }
     }
   }
 
   void _startPeriodicUpdate() {
-    _updateTimer = Timer.periodic(Duration(minutes: 5), (timer) async {
+    _updateTimer = Timer.periodic(Duration(seconds: 5), (timer) async {
       if (!_isDisposed) {
         await fetchTurnos();
       }
@@ -80,55 +75,59 @@ class _TurnosVerState extends State<TurnosVer> {
         drawer: CustomDrawer(),
         body: RefreshIndicator(
           onRefresh: _refreshTurnos,
-          child: _isLoading
-              ? Center(child: CircularProgressIndicator())
-              : Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 20),
-                  child: ListView(
-                    children: [
-                      Card(
-                        child: Padding(
-                          padding: EdgeInsets.only(bottom: 15, top: 1),
-                          child: Column(
-                            children: [
-                              SizedBox(height: 16),
-                              Text(
-                                'Lista de Turnos',
-                                style: TextStyle(
-                                  fontSize: 20,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                              ),
-                              Divider(),
-                              DataTable(
-                                columns: [
-                                  DataColumn(label: Text('TURNO')),
-                                  DataColumn(label: Text('ESTADO')),
-                                  DataColumn(label: Text('MODULO')),
-                                ],
-                                rows: turnosVer.isNotEmpty
-                                    ? turnosVer.map<DataRow>((turno) {
-                                        return DataRow(cells: [
-                                          DataCell(Text(turno.turno)),
-                                          DataCell(Text(turno.estado)),
-                                          DataCell(Text(turno.modulo)),
-                                        ]);
-                                      }).toList()
-                                    : [
-                                        DataRow(cells: [
-                                          DataCell(Text('No hay datos')),
-                                          DataCell(Text('No hay datos')),
-                                          DataCell(Text('No hay datos')),
-                                        ])
-                                      ],
-                              ),
-                            ],
+          child: Padding(
+            padding: EdgeInsets.symmetric(horizontal: 20),
+            child: ListView(
+              children: [
+                Card(
+                  child: Padding(
+                    padding: EdgeInsets.only(bottom: 15, top: 1),
+                    child: Column(
+                      children: [
+                        SizedBox(height: 16),
+                        Text(
+                          'Lista de Turnos',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.bold,
                           ),
                         ),
-                      ),
-                    ],
+                        Divider(),
+                        AnimatedSwitcher(
+                          duration: Duration(milliseconds: 300),
+                          transitionBuilder: (Widget child, Animation<double> animation) {
+                            return FadeTransition(opacity: animation, child: child);
+                          },
+                          child: turnosVer.isNotEmpty
+                              ? DataTable(
+                                  key: ValueKey<List<Turno>>(turnosVer),
+                                  columns: [
+                                    DataColumn(label: Text('TURNO')),
+                                    DataColumn(label: Text('ESTADO')),
+                                    DataColumn(label: Text('MODULO')),
+                                  ],
+                                  rows: turnosVer.map<DataRow>((turno) {
+                                    return DataRow(cells: [
+                                      DataCell(Text(turno.turno)),
+                                      DataCell(Text(turno.estado)),
+                                      DataCell(Text(turno.modulo)),
+                                    ]);
+                                  }).toList(),
+                                )
+                              : DataTable(
+                                  key: ValueKey('NoTurnos'),
+                                  columns: [
+                                    DataColumn(label: Text('SIN TURNOS DEL DÍA')),
+                                  ], rows: [],
+                                ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
+              ],
+            ),
+          ),
         ),
       ),
     );

@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:turnos_amerisa/firebase/firebase_api.dart';
 import 'package:turnos_amerisa/firebase_options.dart';
-import 'package:turnos_amerisa/notificaciones/llamado_notificacion.dart';
+import 'package:turnos_amerisa/pages/notificaciones/llamado_notificacion.dart';
 import 'package:turnos_amerisa/pages/calendar/calendar_screen.dart';
 import 'package:turnos_amerisa/pages/home/config_drawer.dart';
 import 'package:turnos_amerisa/pages/home/home_screen.dart';
