@@ -11,7 +11,7 @@ class RatingScreen extends StatefulWidget {
 }
 
 class _RatingScreenState extends State<RatingScreen> {
-  double rating = 2.0;
+  double rating = 2;
 
   @override
   Widget build(BuildContext context) {
@@ -117,8 +117,8 @@ class _RatingScreenState extends State<RatingScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Center(child: Text("Salir de la pantalla turnos")),
-          content: Text("¿Estás seguro que deseas salir de la pantalla?"),
+          title: Center(child: Text("Salir de la pantalla")),
+          content: Text("¿Estás seguro que deseas salir?"),
           contentTextStyle: TextStyle(fontSize: 16, color: Colors.black),
           actions: <Widget>[
             Row(

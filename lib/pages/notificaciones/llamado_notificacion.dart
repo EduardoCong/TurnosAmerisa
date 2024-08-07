@@ -315,7 +315,7 @@ class _LlamadoTurnoScreenState extends State<LlamadoTurnoScreen> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Center(child: Text("Cancela Turno")),
+          title: Center(child: Text("")),
           content:
               Text("¿Estás seguro que deseas cancelar el agendado de citas?"),
           contentTextStyle: TextStyle(fontSize: 16, color: Colors.black),

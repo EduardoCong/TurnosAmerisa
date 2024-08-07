@@ -172,8 +172,8 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Center(child: Text("Salir de la pantalla turnos")),
-          content: Text("¿Estás seguro que deseas salir de la pantalla?"),
+          title: Center(child: Text("Salir de la pantalla")),
+          content: Text("¿Estás seguro que deseas salir del historial?"),
           contentTextStyle: TextStyle(fontSize: 16, color: Colors.black),
           actions: <Widget>[
             Row(
