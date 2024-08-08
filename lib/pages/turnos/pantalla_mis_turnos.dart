@@ -1,5 +1,3 @@
-// ignore_for_file: deprecated_member_use
-
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -126,7 +124,7 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
                             ),
                             Divider(),
                             DataTable(
-                              columnSpacing: 13,
+                              columnSpacing: 17,
                               columns: [
                                 DataColumn(label: Text('TURNO')),
                                 DataColumn(label: Text('ESTADO')),
@@ -138,8 +136,8 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
                                       return DataRow(cells: [
                                         DataCell(Text(turno['turno'] ?? 'No disponible')),
                                         DataCell(Text(turno['estado'] ?? 'No disponible')),
-                                        DataCell(Text(turno['modulo'] ?? 'No disponible')),
-                                        DataCell(Text(turno['tiempo_ingreso'] ?? 'No disponible')),
+                                        DataCell(Text(turno['modulo'] ?? '-')),
+                                        DataCell(Text(turno['tiempo_atencion'] ?? '-')),
                                       ],
                                       mouseCursor: WidgetStateMouseCursor.clickable
                                       );
@@ -172,7 +170,7 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
       context: context,
       builder: (BuildContext context) {
         return AlertDialog(
-          title: Center(child: Text("Salir de la pantalla")),
+          title: Center(child: Text("¿Salir de la pantalla?")),
           content: Text("¿Estás seguro que deseas salir del historial?"),
           contentTextStyle: TextStyle(fontSize: 16, color: Colors.black),
           actions: <Widget>[

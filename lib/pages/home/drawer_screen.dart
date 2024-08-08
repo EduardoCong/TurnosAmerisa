@@ -81,7 +81,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget logouttitle(BuildContext context) {
     return ListTile(
-      title: Text('Logout'),
+      title: Text('Salir Sesión'),
       leading: Icon(Icons.exit_to_app),
       onTap: () async {
         AwesomeDialog(
@@ -94,7 +94,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
           dismissOnTouchOutside: false,
           dismissOnBackKeyPress: false,
           animType: AnimType.topSlide,
-          title: '¿Estas seguro que deseas salir de la sesion?',
+          title: '¿Estas seguro que deseas salir de la sesión?',
           descTextStyle: TextStyle(color: Colors.green, fontSize: 18),
           btnCancel: ElevatedButton(
             style: ElevatedButton.styleFrom(
@@ -129,7 +129,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
                 Navigator.of(context).pushReplacementNamed('/login');
               } else {
                 ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                    content: Text('No se pudo salir de la sesion, intente de nuevo')
+                    content: Text('No se pudo salir de la sesión, intente de nuevo')
                   )
                 );
               }
@@ -188,7 +188,7 @@ class _CustomDrawerState extends State<CustomDrawer> {
 
   Widget configMode(BuildContext context) {
     return ListTile(
-      title: Text('Configuracion'),
+      title: Text('Configuración'),
       leading: Icon(Icons.settings),
       onTap: () {
         if (ModalRoute.of(context)?.settings.name != '/config') {

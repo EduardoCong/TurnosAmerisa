@@ -39,6 +39,7 @@ class _CalendarState extends State<Calendar> {
   String segundoApellidoCita = '';
   String numeroClienteCita = '';
   String _turnoCita = '';
+  String tipoTurno = 'cita';
 
   final scaffoldKeys = GlobalKey<ScaffoldState>();
 
@@ -451,6 +452,7 @@ class _CalendarState extends State<Calendar> {
         'id_servicio': servicioSeleccionado!.id,
         'letra': servicioSeleccionado!.letra,
         'fechaInicio': '$formattedDateTime',
+        'tipo': tipoTurno
       };
       try {
         final result = await ApiService.generarTurno(datos, context);

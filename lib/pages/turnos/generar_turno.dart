@@ -25,6 +25,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   String apellido = '';
   String segundoApellido = '';
   String numeroCliente = '';
+  String tipoTurno = 'turno';
 
   String _turnoGenerado = '';
 
@@ -485,6 +486,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
       'id_servicio': servicioSeleccionado!.id,
       'letra': servicioSeleccionado!.letra,
       'fechaInicio': null,
+      'tipo': tipoTurno
     };
 
     try {

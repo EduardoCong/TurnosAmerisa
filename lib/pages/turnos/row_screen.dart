@@ -91,8 +91,8 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
                       'Cliente:', '$name $sname $apellido $sapellido',),
                   _buildTicketSectionNumber('Número de Cliente:', num),
                   _buildTicketSectionTurno(
-                      'Su Turno:', turnos, isBold: true, color: Colors.red),
-                  _buildTicketSectionTurnoActual('Turno Actual', currentTurn),
+                      'Su Turno:', turnos),
+                  _buildTicketSectionTurnoActual('Turno Actual:', currentTurn),
                   _buildTicketSectionServicio('Servicio Elegido:', nombreServicio ?? ''),
                   _buildTicketSectionAnden('Anden:', 'Por Seleccionar'),
 
@@ -121,8 +121,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionName(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionName(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -133,8 +132,8 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold ,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -152,8 +151,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionNumber(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionNumber(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -164,8 +162,8 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -183,8 +181,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionTurno(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionTurno(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -195,8 +192,8 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -214,8 +211,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionServicio(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionServicio(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -226,8 +222,8 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -245,8 +241,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionAnden(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionAnden(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -257,8 +252,8 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -276,8 +271,7 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionTurnoActual(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionTurnoActual(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -288,13 +282,13 @@ class _VirtualQueueScreenState extends State<VirtualQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
               value,
-              style: TextStyle(fontSize: 10.0, fontWeight: FontWeight.bold),
+              style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold),
             ),
           ],
         ),

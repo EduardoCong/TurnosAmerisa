@@ -19,25 +19,33 @@ class _RatingScreenState extends State<RatingScreen> {
       onWillPop: () async {
         return await _showCancelDialog(context);
       },
-      child: Scaffold(
-        body: centerRating()
+      child: Scaffold(body: centerRating()),
+    );
+  }
+
+  Widget buttonRating() {
+    return ElevatedButton(
+      onPressed: () {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+              content:
+                  Text('¡Gracias por tu calificación de $rating estrellas!')),
+        );
+        Navigator.pushReplacementNamed(context, '/home');
+      },
+      child: Text('Enviar', style: TextStyle(color: Colors.white)),
+      style: ElevatedButton.styleFrom(
+        backgroundColor: Color.fromARGB(255, 35, 38, 204),
+        elevation: 0,
+        minimumSize: Size(MediaQuery.of(context).size.width - 46, 50),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(10),
+        ),
       ),
     );
   }
 
-  Widget buttonRating(){
-    return ElevatedButton(
-      onPressed: () {
-        ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('¡Gracias por tu calificación de $rating estrellas!')),
-        );
-        Navigator.pushReplacementNamed(context, '/home');
-      },
-      child: Text('Enviar'),
-    );
-  }
-
-  Widget ratingBar(){
+  Widget ratingBar() {
     return RatingBar.builder(
       itemCount: 5,
       initialRating: rating,
@@ -66,7 +74,7 @@ class _RatingScreenState extends State<RatingScreen> {
     );
   }
 
-  Widget textRating(){
+  Widget textRating() {
     return Text(
       'Califica tu experiencia',
       style: TextStyle(
@@ -77,7 +85,7 @@ class _RatingScreenState extends State<RatingScreen> {
     );
   }
 
-  Widget columRating(){
+  Widget columRating() {
     return Column(
       mainAxisSize: MainAxisSize.min,
       crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -91,7 +99,7 @@ class _RatingScreenState extends State<RatingScreen> {
     );
   }
 
-  Widget centerRating(){
+  Widget centerRating() {
     return Center(
       child: Container(
         margin: EdgeInsets.symmetric(horizontal: 20),
