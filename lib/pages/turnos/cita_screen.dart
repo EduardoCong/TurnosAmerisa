@@ -96,8 +96,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
                   SizedBox(height: 20.0),
                   _buildTicketSectionNames('Cliente', '$name $sname $apellido $sapellido'),
                   _buildTicketSectionNumero('Número de Cliente', num),
-                  _buildTicketSectionTurnoCita('Su Turno', turnoCita, isBold: true, color: Colors.red),
-                  _buildTicketSectionCurrentTurno('Turno Actual \nde ${nombreServicio??''.toLowerCase()}', turnoCurrent, isBold: true, color: Colors.green),
+                  _buildTicketSectionTurnoCita('Su Turno', turnoCita),
+                  _buildTicketSectionCurrentTurno('Turno Actual \nde ${nombreServicio??''.toLowerCase()}', turnoCurrent),
                   _buildTicketSectionServicio('Servicio Elegido', nombreServicio ?? ''),
                   _buildTicketSectionDate('Fecha', 'Para el $day $month $year a las $time'),
                   _buildTicketSectionAnden('Anden', 'Por seleccionar'),
@@ -129,8 +129,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionNames(String title, String value,
-      {bool isBold = false, Color color = Colors.black}) {
+  Widget _buildTicketSectionNames(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -141,8 +140,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 18.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -160,8 +159,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionNumero(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionNumero(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -172,8 +170,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -191,8 +189,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionTurnoCita(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionTurnoCita(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -203,8 +200,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -222,8 +219,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionCurrentTurno(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionCurrentTurno(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -234,8 +230,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -253,8 +249,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionServicio(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionServicio(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -265,8 +260,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -284,8 +279,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionDate(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionDate(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -296,8 +290,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(
@@ -315,8 +309,7 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
     );
   }
 
-  Widget _buildTicketSectionAnden(String title, String value,
-      {bool isBold = false, Color color = Colors.grey}) {
+  Widget _buildTicketSectionAnden(String title, String value) {
     return Column(
       children: [
         SizedBox(height: 10.0),
@@ -327,8 +320,8 @@ class _CitaQueueScreenState extends State<CitaQueueScreen> {
               title,
               style: TextStyle(
                 fontSize: 16.0,
-                fontWeight: isBold ? FontWeight.bold : FontWeight.normal,
-                color: color,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
               ),
             ),
             Text(

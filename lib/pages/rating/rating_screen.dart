@@ -53,17 +53,17 @@ class _RatingScreenState extends State<RatingScreen> {
       itemBuilder: (context, index) {
         switch (index) {
           case 0:
-            return Icon(Icons.sentiment_very_dissatisfied, color: Colors.red);
+            return Icon(Icons.star, color: Colors.red);
           case 1:
-            return Icon(Icons.sentiment_dissatisfied, color: Colors.redAccent);
+            return Icon(Icons.star, color: Colors.redAccent);
           case 2:
-            return Icon(Icons.sentiment_neutral, color: Colors.amber);
+            return Icon(Icons.star, color: Colors.amber);
           case 3:
-            return Icon(Icons.sentiment_satisfied, color: Colors.greenAccent);
+            return Icon(Icons.star, color: Colors.greenAccent);
           case 4:
-            return Icon(Icons.sentiment_very_satisfied, color: Colors.green);
+            return Icon(Icons.star, color: Colors.green);
           default:
-            return Icon(Icons.sentiment_neutral, color: Colors.grey);
+            return Icon(Icons.star, color: Colors.grey);
         }
       },
       onRatingUpdate: (value) {

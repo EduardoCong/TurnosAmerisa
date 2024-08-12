@@ -124,7 +124,7 @@ class _VerMisTurnosState extends State<VerMisTurnos> {
                             ),
                             Divider(),
                             DataTable(
-                              columnSpacing: 17,
+                              columnSpacing: 25,
                               columns: [
                                 DataColumn(label: Text('TURNO')),
                                 DataColumn(label: Text('ESTADO')),

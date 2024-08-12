@@ -19,14 +19,18 @@ class _SplashScreenState extends State<SplashScreen> with SingleTickerProviderSt
 
   void _startSplash() async {
     await Future.delayed(Duration(seconds: 5));
-    await _checkSharedPreferences();
+    if (mounted) {
+      await _checkSharedPreferences();
+    }
   }
 
   Future<void> _checkSharedPreferences() async {
     SharedPrefsService sharedprefs = SharedPrefsService();
     String? numero = await sharedprefs.readCache(key: 'numero');
     if (numero != null) {
-      Navigator.of(context).pushReplacementNamed('/home');
+      if (mounted) {
+        Navigator.of(context).pushReplacementNamed('/home');
+      }
     } else {
       Navigator.of(context).pushReplacementNamed('/login');
     }

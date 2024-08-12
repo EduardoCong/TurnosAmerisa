@@ -216,6 +216,38 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
     //   return;
     // }
 
+    if (servicioSeleccionado == null) {
+      AwesomeDialog(
+        context: context,
+        dialogType: DialogType.warning,
+        width: 400,
+        buttonsBorderRadius: BorderRadius.all(Radius.circular(2)),
+        dismissOnTouchOutside: false,
+        dismissOnBackKeyPress: false,
+        animType: AnimType.bottomSlide,
+        title: 'Seleccione un servicio',
+        descTextStyle: TextStyle(color: Colors.black, fontSize: 18),
+        btnOk: ElevatedButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          child: Text(
+            'Cerrar',
+            style: TextStyle(color: Colors.white),
+          ),
+          style: ElevatedButton.styleFrom(
+            backgroundColor: Colors.green,
+            elevation: 0,
+            fixedSize: Size(120, 50),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+          ),
+        ),
+      ).show();
+      return;
+    }
+
     AwesomeDialog(
       context: context,
       dialogType: DialogType.success,
@@ -476,6 +508,7 @@ class _GenerarTurnoViewState extends State<GenerarTurnoView> {
   }
 
   Future<void> generarTurno(BuildContext context) async {
+
     Map<String, dynamic> datos = {
       'numero': numeroCliente,
       'pnombre': nombre,
